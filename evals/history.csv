@@ -1,3 +1,5 @@
 timestamp,target,database,passed,total,p50_seconds,label
 20261109-154912,local,h1b.duckdb,26,26,12.1,first real-data run
 20261109-160642,local,h1b.duckdb,1,1,26.3,replaced cognizant check
+20261109-165323,local,h1b.duckdb,3,3,22.0,AI-era role families
+20261109-165511,local,h1b.duckdb,1,1,17.2,Forward Deployed family incl. PMs

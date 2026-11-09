@@ -53,8 +53,8 @@ Status as of **Nov 9, 2026**. Team: Ketaki Dabade (kvd2112) and Anamika Mishra (
 | 1 | ~~Link GitHub for continuous deploy~~ ✅ done (Cloud Build trigger on `main`) | – | – |
 | 2 | ~~Put the live URL in `submission.json` and the README~~ ✅ done | – | – |
 | 3 | Add collaborators `codeboi07`, `bhuvighosh3`, `nniishhh`, `x`, and Anamika, on GitHub → Settings → Collaborators | Ketaki | 2 min |
-| 4 | Write README **"Why we built this"** (2-3 sentences, your own voice: this is the Originality & Voice score) | Ketaki / Anamika | 10 min |
-| 5 | Fill in the `correct (y/n)` column in `evals/role_spotcheck.csv` (100 rows), then put "X/100 correct" in the README's **Role classifier accuracy** line | either | 15 min |
+| 4 | ~~Write README "Why we built this"~~ ✅ done | – | – |
+| 5 | ~~Role spot-check~~ ✅ done: 93/100, misses fixed (in README) | – | – |
 | 6 | Add a screenshot or GIF of a chart answer to the top of the README | either | 5 min |
 | 7 | Run the self-check against the live URL: `uv run python evals/check.py --url <URL> --label deployed`, and add the row to the README's evals table | Ketaki | 10 min |
 | 8 | Billing → Budgets & alerts: a budget for `ieor-project-1-kvd2112` | Ketaki | 2 min |
@@ -104,6 +104,8 @@ gcloud run deploy h1b-pay-explorer --source . --region us-east1 --project ieor-p
 - **Google files almost every engineer, ML included, as "Software Engineer"**, so "Google ML engineers in NYC" has no filings.
 - **Bloomberg** filed the most NYC ML engineer positions in FY2025 (173), six times the next employer.
 - **Goldman Sachs** was the top data scientist sponsor in FY2025 by positions (2,817), filing "Associate" roles in batches of 100.
+- **AI engineer filings grew about 5x**: 335 certified (FY2024), then 923 (FY2025), then 1,734 (FY2026 Q1-Q3). Forward Deployed roles are led by Palantir, BCG and Salesforce.
+- **FY2025 median offers:** ML Engineer $175k, Forward Deployed $163k, Research Scientist $159k, AI Engineer $138k, Data Scientist $135k.
 - No-tools Gemini says a lottery offer gets "exactly 1 entry". It doesn't know about the 2026 wage-weighted rule.
 
 ## How it's built (one paragraph)

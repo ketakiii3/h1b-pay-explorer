@@ -88,3 +88,19 @@ def test_no_join_fanout_and_wages_clean():
     n, ok_bad = app.store.q("""SELECT count(*), count(*) FILTER (wage_flag = 'ok' AND wage_annual_from <= 0) FROM lca""")[0]
     assert n == app.store.q("SELECT count(DISTINCT case_number) FROM lca")[0][0]
     assert ok_bad == 0
+
+
+@pytest.mark.parametrize("title,soc,family", [
+    ("Forward Deployed AI Engineer", "15-1252", "Forward Deployed"),
+    ("Forward Deployed Product Manager", "15-1299", "Forward Deployed"),
+    ("Gen AI Engineer", "15-1252", "AI Engineer (GenAI / LLM)"),
+    ("Full Stack LLM Development Manager", "15-1252", "AI Engineer (GenAI / LLM)"),
+    ("AI/ML Engineer", "15-1252", "Machine Learning Engineer"),
+    ("Software Engineer, Computer Vision", "15-1252", "Machine Learning Engineer"),
+    ("Order Fulfillment Specialist III", "43-5081", "Analyst (other)"),
+    ("Package Consultant 2", "15-1299", "IT Specialist (other)"),
+    ("Technical Architect", "15-1299", "IT Architect"),
+    ("Technical Project Lead", "15-1299", "Project / Program Manager"),
+])
+def test_ai_era_titles(title, soc, family):
+    assert hc.classify(hc.normalize_title(title), soc)[0] == family

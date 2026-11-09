@@ -75,10 +75,14 @@ _SENIORITY = [
 
 # Order matters: the first match wins, so specific families come before general ones.
 ROLE_RULES: list[tuple[str, str]] = [
+    ("Forward Deployed", r"forward deploy(ed|ment)"),
+    ("AI Engineer (GenAI / LLM)", r"\bgenai\b|gen artificial intelligence|generative artificial intelligence|\bllms?\b|large language model|prompt engineer|\bagentic\b|artificial intelligence agent|"
+     r"(applied |founding |senior |staff |lead |principal )?artificial intelligence (engineer|developer|software|solutions?|application|platform|architect|specialist|lead)|"
+     r"(engineer|developer),? (generative )?artificial intelligence$"),
     ("Postdoc / Research Associate", r"post ?doc|postdoctoral|research (associate|fellow|assistant)|research scholar|visiting scholar"),
-    ("Machine Learning Engineer", r"machine learning (engineer|developer|scientist engineer)|(engineer|developer).{0,25}machine learning|artificial intelligence machine learning|machine learning (lead|architect)|\bmlops\b|deep learning engineer|artificial intelligence engineer|ai/ml engineer|applied (ml|machine learning)|computer vision engineer|\bnlp engineer"),
+    ("Machine Learning Engineer", r"machine learning (engineer|developer|scientist engineer|ops|platform|infrastructure)|(engineer|developer).{0,25}(computer vision|deep learning|\\bnlp\\b|natural language)|(engineer|developer).{0,25}machine learning|artificial intelligence machine learning|machine learning (lead|architect)|\bmlops\b|deep learning engineer|artificial intelligence engineer|ai/ml engineer|applied (ml|machine learning)|computer vision engineer|\bnlp engineer"),
     ("Research Scientist", r"research scientist|applied scientist|machine learning scientist|research engineer|ai scientist|artificial intelligence scientist"),
-    ("Data Scientist", r"data scien|decision scientist|machine learning$"),
+    ("Data Scientist", r"data scien|decision scientist|product scientist|machine learning$|statistical model|quantitative scientist"),
     ("Data Engineer", r"data engineer|big data|etl developer|data platform engineer|analytics engineer|data architect"),
     ("Quant", r"\bquant|quantitative (analyst|researcher|developer|trader|strategist)|\balgo(rithmic)? trad"),
     ("Data Analyst", r"data analyst|analytics (analyst|specialist|manager)|business intelligence|\bbi (developer|analyst|engineer)|reporting analyst|insights analyst"),
@@ -88,7 +92,7 @@ ROLE_RULES: list[tuple[str, str]] = [
     ("QA / Test Engineer", r"quality assurance|\btest(ing)? (engineer|analyst|lead|automation)|\bsdet\b|automation test|validation engineer"),
     ("Hardware / Semiconductor Engineer", r"hardware|asic|fpga|silicon|semiconductor|chip design|vlsi|rtl|physical design|layout engineer|design verification|process engineer|firmware"),
     ("Database / Systems Admin", r"database administrator|\bdba\b|systems? administrator|network (engineer|administrator)|sap basis"),
-    ("Software Engineer", r"software|developer|programmer|full ?stack|front ?end|back ?end|web (engineer|developer)|mobile (engineer|developer)|\bios\b|android|java|\.net|python|member of technical staff|application engineer|applications? developer|computer (systems )?engineer|systems engineer|technical lead|technology lead|tech lead|salesforce|sap (consultant|developer|abap)|oracle (developer|consultant)|engineer,? (software|development)|solutions? architect|technical architect|enterprise architect|it architect"),
+    ("Software Engineer", r"software|developer|programmer|full ?stack|front ?end|back ?end|web (engineer|developer)|mobile (engineer|developer)|\bios\b|android|java|\.net|python|member of technical staff|application engineer|applications? developer|computer (systems )?engineer|systems engineer|technical lead|technology lead|tech lead|salesforce|sap (consultant|developer|abap)|oracle (developer|consultant)|engineer,? (software|development)"),
     ("Business / Systems Analyst", r"business analyst|systems analyst|business systems|functional (analyst|consultant)|requirements analyst|technical analyst|it analyst|programmer analyst"),
     ("Consultant", r"consultant|consulting|advisory"),
     ("Financial Analyst", r"financial analyst|finance analyst|investment (analyst|banking)|credit (risk )?analyst|risk analyst|equity research|associate, investment|portfolio (analyst|manager)|actuar|underwrit"),
@@ -98,7 +102,7 @@ ROLE_RULES: list[tuple[str, str]] = [
     ("Physician / Healthcare", r"physician|hospitalist|\bresident\b|surgeon|\bmd\b|medical|nurse|therapist|pharmac|dentist|psychiatr|clinical|radiolog|anesthes|patholog|cardiolog|oncolog|pediatric"),
     ("Mechanical / Civil / Electrical Engineer", r"mechanical|civil|structural|electrical|electronics|manufacturing|industrial engineer|chemical engineer|aerospace|automotive|controls engineer|design engineer|project engineer"),
     ("Lawyer / Legal", r"attorney|lawyer|(legal|general|associate|corporate|patent|tax) counsel\b|\bcounsel$|law clerk|paralegal|\blegal\b"),
-    ("Sales / Solutions Engineer", r"(customer|sales|solutions?|pre sales|presales|field) engineer|customer solutions|technical solutions"),
+    ("Sales / Solutions Engineer", r"(customer|sales|solutions?|pre sales|presales) engineer|customer solutions|technical solutions"),
     ("Project / Program Manager", r"project (manager|lead|leader|coordinator)|program (manager|management)|scrum master|delivery (manager|lead)|technology project"),
     ("IT Architect", r"\barchitect\b"),
     ("Scientist (other)", r"scientist|chemist|biologist|physicist|research and development"),
@@ -110,7 +114,7 @@ ROLE_RULES: list[tuple[str, str]] = [
 
 # Title families too vague to trust when the SOC code says something specific
 # ("Engineer II" filed under SOC 15-1252 is a software engineer).
-GENERIC_FAMILIES = {"Engineer (other)", "Management", "Analyst (other)", "Consultant", "Project / Program Manager"}
+GENERIC_FAMILIES = {"Engineer (other)", "Management", "Analyst (other)", "Consultant"}
 
 # SOC code -> role family, used when the title is vague or unmatched.
 SOC_FAMILY = {
@@ -128,7 +132,7 @@ SOC_FAMILY = {
     "17-2112": "Mechanical / Civil / Electrical Engineer", "17-2011": "Mechanical / Civil / Electrical Engineer",
     "17-2041": "Mechanical / Civil / Electrical Engineer", "11-3021": "Management", "11-2021": "Management",
     "11-1021": "Management", "11-9041": "Management", "11-3031": "Management",
-    "15-1299": "Project / Program Manager", "13-1082": "Project / Program Manager", "23-1011": "Lawyer / Legal",
+    "15-1299": "IT Specialist (other)", "13-1082": "Project / Program Manager", "23-1011": "Lawyer / Legal",
     "41-9031": "Sales / Solutions Engineer", "13-1081": "Supply Chain / Logistics", "11-3071": "Supply Chain / Logistics",
     "19-2031": "Scientist (other)", "19-1021": "Scientist (other)", "19-2012": "Scientist (other)",
     "17-1011": "Architect (buildings)", "17-2199": "Mechanical / Civil / Electrical Engineer",
@@ -185,10 +189,21 @@ ROLE_FAMILIES = [family for family, _ in ROLE_RULES] + ["Other"]
 
 # What users type -> a role family. Checked before the title rules.
 ROLE_ALIASES = {
-    "mle": "Machine Learning Engineer", "ml engineer": "Machine Learning Engineer",
-    "ai engineer": "Machine Learning Engineer", "ml": "Machine Learning Engineer",
+    "mle": "Machine Learning Engineer", "ml engineer": "Machine Learning Engineer", "ml": "Machine Learning Engineer",
+    "mlops": "Machine Learning Engineer", "computer vision": "Machine Learning Engineer", "cv engineer": "Machine Learning Engineer",
+    "nlp engineer": "Machine Learning Engineer", "ai/ml engineer": "Machine Learning Engineer",
+    "ai engineer": "AI Engineer (GenAI / LLM)", "ai": "AI Engineer (GenAI / LLM)", "genai": "AI Engineer (GenAI / LLM)",
+    "gen ai": "AI Engineer (GenAI / LLM)", "genai engineer": "AI Engineer (GenAI / LLM)", "llm engineer": "AI Engineer (GenAI / LLM)",
+    "generative ai engineer": "AI Engineer (GenAI / LLM)", "prompt engineer": "AI Engineer (GenAI / LLM)",
+    "applied ai engineer": "AI Engineer (GenAI / LLM)", "ai developer": "AI Engineer (GenAI / LLM)",
+    "fde": "Forward Deployed", "forward deployed": "Forward Deployed",
+    "forward deployed engineer": "Forward Deployed", "forward deployed ai engineer": "Forward Deployed",
+    "applied scientist": "Research Scientist", "ai researcher": "Research Scientist", "ai scientist": "Research Scientist",
+    "ml scientist": "Research Scientist", "research engineer": "Research Scientist",
+    "data science": "Data Scientist", "decision scientist": "Data Scientist", "product data scientist": "Data Scientist",
+    "analytics engineer": "Data Engineer", "ml platform engineer": "Machine Learning Engineer",
     "swe": "Software Engineer", "sde": "Software Engineer", "software": "Software Engineer",
-    "ds": "Data Scientist", "data science": "Data Scientist",
+    "ds": "Data Scientist",
     "de": "Data Engineer", "quant": "Quant", "pm": "Product Manager", "sre": "DevOps / SRE / Cloud",
     "devops": "DevOps / SRE / Cloud", "analyst": "Data Analyst", "researcher": "Research Scientist",
     "postdoc": "Postdoc / Research Associate", "doctor": "Physician / Healthcare",

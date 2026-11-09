@@ -1,6 +1,6 @@
 # Build report
 
-Generated 2026-11-09 16:08 by `uv run build.py`.
+Generated 2026-11-09 16:54 by `uv run build.py`.
 
 | Fiscal year | Filings | Certified | Certified positions |
 | --- | --- | --- | --- |
@@ -18,4 +18,4 @@ Generated 2026-11-09 16:08 by `uv run build.py`.
 
 Employers after resolution: 107,638.
 
-Role families assigned by: title_rule 1,142,144, soc_code 366,655, unmatched 23,290
+Role families assigned by: title_rule 1,176,854, soc_code 331,945, unmatched 23,290

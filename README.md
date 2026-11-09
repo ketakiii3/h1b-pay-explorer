@@ -513,9 +513,15 @@ It also writes `data/mappings.json`, the agent's offline context: every table an
 | Mapped to an OFLC wage area | 99.9% |
 | Offer wage level computed | 98.4% |
 
-**What the build taught us:** Google files almost every engineer, ML included, as plain "Software Engineer", so "Google ML engineers in NYC" has no filings. The agent explains that instead of reporting zero.
+**What the build taught us:**
 
-**Role classifier accuracy:** TODO. We hand-checked 100 random (title, role family) labels: X/100 correct.
+- Google files almost every engineer, ML included, as plain "Software Engineer", so "Google ML engineers in NYC" has no filings. The agent explains that instead of reporting zero.
+- **AI-era roles get their own families.** About 7,900 filings have AI in the title, and they were scattered across Software Engineer, Data Scientist, ML Engineer and even Hardware. The build now separates **AI Engineer (GenAI / LLM)** (AI engineer, GenAI, LLM, agentic, prompt engineer, applied AI) and **Forward Deployed** (forward-deployed engineers, AI scientists and PMs) from **Machine Learning Engineer** (ML, MLOps, computer vision, NLP), **Research Scientist** (applied, AI and ML scientists) and **Data Scientist**.
+- **AI engineer filings grew about 5x:** 335 certified in FY2024, 923 in FY2025, and 1,734 in just the first three quarters of FY2026.
+- **Forward Deployed** is led by Palantir (90 certified filings), Boston Consulting Group (57) and Salesforce (35).
+- **FY2025 median offers:** ML Engineer $175k, Forward Deployed $163k, Research Scientist $159k, AI Engineer $138k, Data Scientist $135k, Software Engineer $130k.
+
+**Role classifier accuracy: 93/100** on a random sample of 100 filings (`evals/role_spotcheck.csv`, seed 42, every label marked with a note on each miss). The misses showed three patterns, all now fixed and covered by tests in `tests/test_app.py`: SOC 15-1299 ("computer occupations, all other") was treated as project management, "Field Engineer" on a civil-engineering code was treated as sales, and "Technical Architect" went to Software Engineer instead of IT Architect. The other two misses were judgment calls where the SOC code overrode a vague title ("Sr. Director", "Project Delivery Specialist"). The same review found "Habilitation Counselor" filed as a lawyer ("counsel"), fixed before the sample was scored.
 
 ## How the agent works
 
@@ -540,11 +546,12 @@ It also writes `data/mappings.json`, the agent's offline context: every table an
 
 ## Self-check (evals)
 
-`evals/checks.jsonl` holds 26 questions with gold SQL: 11 numbers, 3 offer calculations, 7 top-k rankings and 5 questions the data can't answer. Gold values come from running the gold SQL on the same database. `uv run python evals/check.py` scores the agent (`--url` scores the deployed app). None of them is a few-shot example in the prompt.
+`evals/checks.jsonl` holds 29 questions with gold SQL: 13 numbers, 3 offer calculations, 8 top-k rankings and 5 questions the data can't answer. Gold values come from running the gold SQL on the same database. `uv run python evals/check.py` scores the agent (`--url` scores the deployed app). None of them is a few-shot example in the prompt.
 
 | Date | Target | Score | Change |
 | --- | --- | --- | --- |
 | 2026-11-09 | local, full database | **26/26** (p50 12 s per answer) | first run on real data |
+| 2026-11-09 | local, full database | **3/3** new checks; 26/26 unchanged | added AI Engineer (GenAI / LLM) and Forward Deployed role families |
 
 ## What it can't answer
 
