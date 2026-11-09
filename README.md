@@ -4,7 +4,7 @@ Who sponsors your role, what they actually offer, and what your offer is worth i
 
 **Live app:** https://h1b-pay-explorer-314308831335.us-east1.run.app
 
-**Team:** Anamika Mishra (akm2259) and Ketaki (kvd2112) · **Path:** Text2SQL
+**Team:** Ketaki Dabade (kvd2112) and Anamika Mishra (akm2259) · **Path:** Text2SQL
 
 <!-- TODO: screenshot or GIF of a chart answer -->
 

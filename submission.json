@@ -1,5 +1,5 @@
 {
   "deploy_url": "https://h1b-pay-explorer-314308831335.us-east1.run.app",
-  "authors": ["akm2259", "kvd2112"],
+  "authors": ["kvd2112", "akm2259"],
   "path": "text2sql"
 }

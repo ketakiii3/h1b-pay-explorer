@@ -78,7 +78,7 @@ gh repo create h1b-pay-explorer --private --source . --push
 for u in codeboi07 bhuvighosh3 nniishhh x; do gh api -X PUT repos/{owner}/h1b-pay-explorer/collaborators/$u; done
 ```
 
-Also add Anamika as a collaborator if she isn't the repo owner.
+Also add Anamika Mishra as a collaborator.
 
 ✅ **Check:** the repo on GitHub has `app.py`, `pyproject.toml`, `uv.lock`, `Procfile`, `README.md`, `submission.json` at the root, and no file over 100 MB.
 

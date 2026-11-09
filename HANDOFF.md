@@ -1,6 +1,6 @@
 # H-1B Pay Explorer: handoff
 
-Status as of **Nov 9, 2026**. Team: Anamika Mishra (akm2259), Ketaki (kvd2112). Path: **Text2SQL**.
+Status as of **Nov 9, 2026**. Team: Ketaki Dabade (kvd2112) and Anamika Mishra (akm2259). Path: **Text2SQL**.
 
 **In one line:** the project is built, tested on the real data (26/26), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Continuous deploy from GitHub is on: every push to `main` redeploys automatically. Left: a few README items only we can write, collaborators, and submitting.
 
