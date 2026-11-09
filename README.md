@@ -192,20 +192,21 @@ GROUP BY job_title;
    ```
    → `{"columns": ["job_title", "count_star()"], "rows": [["Data Scientist", 267], ["Data scientist", 1]], "truncated": false}`
 
-**Answer:** In FY2025, the number of certified data scientist positions Meta filed for depends on how "Data Scientist" is defined (by exact job title, broader job title variations, or the official SOC occupation code). 
+**Answer:**
 
-Here is the exact breakdown for **Meta Platforms, Inc.** (the primary filing entity) in the FY2025 LCA disclosure data:
-
-### 1. By Job Title
-* **Exact Job Title ("Data Scientist"):** 
-  * **Certified Applications:** 268
-  * **Total Certified Positions:** **532**
-* **Any Job Title containing "Data Scientist"** *(includes "Senior Data Scientist", "Data Scientist, Analytics", "Research Data Scientist", etc.)*:
-  * **Certified Applications:** 338
-  * **Total Certified Positions:** **602**
-
-### 2. By SOC Occupational Classification ("Data Scientists" - SOC Code 15-2051.00)
-Under this official Department of Labor category, employers can classify internal titles (such as Software Engineer 
+> In FY2025, the number of certified data scientist positions Meta filed for depends on how "Data Scientist" is defined (by exact job title, broader job title variations, or the official SOC occupation code). 
+>
+> Here is the exact breakdown for **Meta Platforms, Inc.** (the primary filing entity) in the FY2025 LCA disclosure data:
+>
+> **1. By Job Title**
+> * **Exact Job Title ("Data Scientist"):** 
+>   * **Certified Applications:** 268
+>   * **Total Certified Positions:** **532**
+> * **Any Job Title containing "Data Scientist"** *(includes "Senior Data Scientist", "Data Scientist, Analytics", "Research Data Scientist", etc.)*:
+>   * **Certified Applications:** 338
+>   * **Total Certified Positions:** **602**
+>
+> *(answer shortened here; the full text is in `traces/`)*
 
 </details>
 
@@ -347,7 +348,9 @@ ORDER BY 2 DESC;
    ```
    → `{"columns": ["employer_name", "count_star()"], "rows": [["Meta Platforms, Inc", 6397], ["Meta Platforms, Inc.", 23], ["Metaforge IT Solutions", 20], ["METAFORGE IT SOLUTIONS", 19], ["META IT CORP", 12], ["Metanoia Soluti…`
 
-**Answer:** FAILED: MaxTurnsExceeded: Max turns (15) exceeded
+**Answer:**
+
+> FAILED: MaxTurnsExceeded: Max turns (15) exceeded
 
 </details>
 
@@ -368,11 +371,13 @@ ORDER BY 2 DESC;
    → `{"columns": ["fiscal_year", "filings", "positions", "median_pay"], "rows": [[2024, 463, 463, 190120.0], [2025, 425, 689, 200527.0], [2026, 317, 1157, 208000.0]], "row_count": 3, "truncated": false}`
 6. `make_chart` `{"mark": "line", "title": "Meta Certified Data Scientist Positions by Fiscal Year", "y": "positions", "color": null, "x": "fiscal_year"}` → `{"ok": true, "note": "Chart shown to the user. Do not describe the chart's styling."}`
 
-**Answer:** Meta filed for **689 certified data scientist positions** across 425 Labor Condition Applications (LCAs) in FY2025.
+**Answer:**
 
-* **Rising demand:** Certified positions grew from 463 in FY2024 (across 463 filings) to 689 in FY2025, continuing to surge with 1,157 positions in partial FY2026.
-* **Offered pay:** The median offered salary for these certified data scientists in FY2025 was $201k (based on 425 filings with valid salary data).
-* **Filing structure:** Meta began using bulk filings in FY2025, averaging about 1.6 positions per certified LCA, whereas in FY2024 every certified LCA requested exactly one worker position.
+> Meta filed for **689 certified data scientist positions** across 425 Labor Condition Applications (LCAs) in FY2025.
+>
+> * **Rising demand:** Certified positions grew from 463 in FY2024 (across 463 filings) to 689 in FY2025, continuing to surge with 1,157 positions in partial FY2026.
+> * **Offered pay:** The median offered salary for these certified data scientists in FY2025 was $201k (based on 425 filings with valid salary data).
+> * **Filing structure:** Meta began using bulk filings in FY2025, averaging about 1.6 positions per certified LCA, whereas in FY2024 every certified LCA requested exactly one worker position.
 
 </details>
 
@@ -434,21 +439,20 @@ ORDER BY pw_wage_level;
    ```
    → `{"columns": ["pw_wage_level", "min_pw", "max_pw", "avg_pw", "cnt"], "rows": [["I", 50378.0, 82763.0, 80035.69018404908, 652], ["II", 77272.0, 111996.0, 108962.82503192849, 1566], ["III", 90272.0, 164403.0, 138645.1102941…`
 
-**Answer:** Under current H-1B selection rules, a candidate with a $120,000 Data Scientist offer in New York City would get **exactly 1 entry** in the H-1B lottery. 
+**Answer:**
 
-Here is a breakdown of why this is the case, how your salary compares to real LCA (Labor Condition Application) wage levels in NYC, and how previous policy proposals might have affected this.
-
----
-
-### 1. Current Rules: The Beneficiary-Centric Lottery
-Under the modern **beneficiary-centric selection system** (implemented by USCIS starting in March 2024 for the FY 2025 cap), the H-1B lottery is based on **unique passport/travel document numbers**, not the number of job offers or the salary of those offers. 
-
-* **One Entry per Person:** Each unique candidate gets exactly **one entry** in the lottery pool, regardless of whether they have a $120,000 offer, a $300,000 offer, or multiple offers from different employers.
-* **Employer Registration:** The employer offering $120,000 will submit **one registration** for you. If you are selected, that employer (and any other employer who registered you) is notified and allowed to file an H-1B petition on your behalf.
-
----
-
-### 2. How a $120,000 Offer Compares to NYC Data Scientist Wage Level
+> Under current H-1B selection rules, a candidate with a $120,000 Data Scientist offer in New York City would get **exactly 1 entry** in the H-1B lottery. 
+>
+> Here is a breakdown of why this is the case, how your salary compares to real LCA (Labor Condition Application) wage levels in NYC, and how previous policy proposals might have affected this.
+>
+> ---
+>
+> **1. Current Rules: The Beneficiary-Centric Lottery**
+> Under the modern **beneficiary-centric selection system** (implemented by USCIS starting in March 2024 for the FY 2025 cap), the H-1B lottery is based on **unique passport/travel document numbers**, not the number of job offers or the salary of those offers. 
+>
+> * **One Entry per Person:** Each unique candidate gets exactly **one entry** in the lottery pool, regardless of whether they have a $120,000 offer, a $300,000 offer, or multiple offers from different employers.
+> * **Employer Registration:** The employer offering $120,000 will submit **one registration** for you. If you are selected, that employer (and any other employer who registered you) is notified and allowed to file an H-1B petition on your behalf.
+> *(answer shortened here; the full text is in `traces/`)*
 
 </details>
 
@@ -465,11 +469,13 @@ Under the modern **beneficiary-centric selection system** (implemented by USCIS 
    → `{"columns": ["offer_lottery_entries", "filings", "pct"], "rows": [[0, 678, 8.2], [1, 1640, 19.8], [2, 1924, 23.2], [3, 2026, 24.4], [4, 2017, 24.3], [null, 8, 0.1]], "row_count": 6, "truncated": false}`
 6. `make_chart` `{"title": "Distribution of H-1B Lottery Entries, NYC Data Scientists (FY24-FY26)", "y": "filings", "color": null, "x": "offer_lottery_entries", "mark": "bar"}` → `{"ok": true, "note": "Chart shown to the user. Do not describe the chart's styling."}`
 
-**Answer:** A $120,000 data scientist offer in the New York City metro area would receive **2 entries** in the wage-weighted H-1B lottery.
+**Answer:**
 
-* **Wage Level II:** This salary ($120k) passes the Level II threshold of $115,835 but falls $24k short of Level III ($144k) for Data Scientists (SOC 15-2051) under the 2026–27 OFLC wage tables.
-* **Peer Comparison:** A $120k offer sits in the 29th percentile. The median offered pay across 8,293 certified Data Scientist filings in NYC from FY2024 to FY2026 Q3 was $145k. 
-* **Overall NYC Distribution:** Among those 8,293 certified NYC filings, 23.2% (1,924 filings) qualified for exactly 2 entries, whereas 48.7% (4,043 filings) secured 3 or 4 entries by meeting higher wage levels.
+> A $120,000 data scientist offer in the New York City metro area would receive **2 entries** in the wage-weighted H-1B lottery.
+>
+> * **Wage Level II:** This salary ($120k) passes the Level II threshold of $115,835 but falls $24k short of Level III ($144k) for Data Scientists (SOC 15-2051) under the 2026–27 OFLC wage tables.
+> * **Peer Comparison:** A $120k offer sits in the 29th percentile. The median offered pay across 8,293 certified Data Scientist filings in NYC from FY2024 to FY2026 Q3 was $145k. 
+> * **Overall NYC Distribution:** Among those 8,293 certified NYC filings, 23.2% (1,924 filings) qualified for exactly 2 entries, whereas 48.7% (4,043 filings) secured 3 or 4 entries by meeting higher wage levels.
 
 </details>
 
