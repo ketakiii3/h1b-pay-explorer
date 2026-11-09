@@ -133,7 +133,7 @@ Same flow as your last project ("Deploying to Cloud Run from GitHub"):
 
 ```bash
 URL=$(gcloud run services describe h1b-pay-explorer --region $REGION --format='value(status.url)')
-curl -s $URL/healthz                         # {"ok":true,"database":"h1b.duckdb"}  ← must say h1b.duckdb, not h1b_sample
+curl -s $URL/health                         # {"ok":true,"database":"h1b.duckdb"}  ← must say h1b.duckdb, not h1b_sample
 curl -s -X POST $URL/api/offer -H 'content-type: application/json' \
   -d '{"salary":175000,"role":"ML engineer","location":"San Jose"}' | head -c 300; echo
 time curl -s -X POST $URL/chat -H 'content-type: application/json' \
@@ -147,7 +147,7 @@ Finally, score the live app:
 uv run python evals/check.py --url $URL --label "deployed"
 ```
 
-✅ **Check:** `/healthz` says `h1b.duckdb`; `/chat` answers in under 60 seconds with a `chart`; the live self-check scores within 1-2 of your local score.
+✅ **Check:** `/health` says `h1b.duckdb`; `/chat` answers in under 60 seconds with a `chart`; the live self-check scores within 1-2 of your local score.
 
 **If something fails:**
 
@@ -155,7 +155,7 @@ uv run python evals/check.py --url $URL --label "deployed"
 | --- | --- |
 | Build fails | Cloud Build → History → the failed build's log. Usually a missing `uv.lock` commit. |
 | Service won't start | Cloud Run → Logs. `403` on storage → step 6 bucket binding; out of memory → raise memory to 4 GiB. |
-| `/healthz` says `h1b_sample.duckdb` | `GCS_BUCKET` isn't set on the service. |
+| `/health` says `h1b_sample.duckdb` | `GCS_BUCKET` isn't set on the service. |
 | Chat says "model call failed … PermissionDenied" | The service account lacks `roles/aiplatform.user`, or the model isn't available in `global` for your project: try `MODEL=vertex_ai/gemini-3.5-flash-lite`. |
 | First answer is slow | Cold start downloads the database. Set min instances to 1 during grading (costs money: check your budget). |
 

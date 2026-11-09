@@ -2,7 +2,7 @@
 
 Who sponsors your role, what they actually offer, and what your offer is worth in the new wage-weighted H-1B lottery, answered from every H-1B filing the Department of Labor published from FY2024 to FY2026 Q3.
 
-**Live app:** https://REPLACE-AFTER-FIRST-DEPLOY.run.app
+**Live app:** https://h1b-pay-explorer-314308831335.us-east1.run.app
 
 **Team:** Anamika Mishra (akm2259) and Ketaki (kvd2112) · **Path:** Text2SQL
 

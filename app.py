@@ -560,8 +560,8 @@ def index():
     return FileResponse(ROOT / "index.html")
 
 
-@app.get("/healthz")
-def healthz():
+@app.get("/health")
+def health():
     return {"ok": store.db is not None, "database": store.source}
 
 

@@ -2,14 +2,15 @@
 
 Status as of **Nov 9, 2026**. Team: Anamika Mishra (akm2259), Ketaki (kvd2112). Path: **Text2SQL**.
 
-**In one line:** the project is built, tested on the real data (26/26) and pushed to GitHub, and the database is in GCS. The one big step left is creating the Cloud Run service. After that come a few README items only we can write.
+**In one line:** the project is built, tested on the real data (26/26), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Left: link Cloud Run to GitHub for automatic redeploys (2 min in the console), plus a few README items only we can write.
 
 | Thing | Where |
 | --- | --- |
 | Code | https://github.com/ketakiii3/h1b-pay-explorer (private, branch `main`) |
 | GCP project | `ieor-project-1-kvd2112` (billing on, Vertex AI on) |
 | Database in GCS | `gs://ieor-project-1-kvd2112-h1b-data/v1/h1b.duckdb` (114 MB, region `us-east1`) |
-| Live app | **not deployed yet**: see "How to see it on the web" |
+| **Live app** | **https://h1b-pay-explorer-314308831335.us-east1.run.app** (Cloud Run, `us-east1`, public) |
+| Cloud Run console | https://console.cloud.google.com/run/detail/us-east1/h1b-pay-explorer/metrics?project=ieor-project-1-kvd2112 |
 | Deploy guide | [DEPLOY.md](DEPLOY.md) |
 | Local folder | `~/h1b_pay_explorer/h1b-pay-explorer` (raw DOL files in `raw/`, not in git) |
 
@@ -31,8 +32,8 @@ Status as of **Nov 9, 2026**. Team: Anamika Mishra (akm2259), Ketaki (kvd2112). 
 | Section | Item | Status |
 | --- | --- | --- |
 | Basics (1) | README.md | ✅ written; 3 TODOs left (see below) |
-| | Valid `submission.json` | ⚠️ `deploy_url` is a placeholder until Cloud Run is up |
-| Functionality (9) | Deployed and reachable | ❌ **not yet: create the Cloud Run service** |
+| | Valid `submission.json` | ✅ has the live URL, both UNIs, `"path": "text2sql"` |
+| Functionality (9) | Deployed and reachable | ✅ live and tested (chat, chart, offer calculator) · ⚠️ continuous deploy from GitHub still to link (task 1) |
 | | Clear purpose | ✅ the first screen says what it does, who it's for and how to use it |
 | | Answers correctly | ✅ self-check **26/26** locally on the full data, about 12 s per answer |
 | Data (4) | Unique dataset or problem | ✅ the H-1B LCA plus wage-weighted lottery angle (confirm no one else on the sign-up sheet has it) |
@@ -49,8 +50,8 @@ Status as of **Nov 9, 2026**. Team: Anamika Mishra (akm2259), Ketaki (kvd2112). 
 
 | # | Task | Who | Time |
 | --- | --- | --- | --- |
-| 1 | Create the Cloud Run service (below) | Ketaki | 15 min |
-| 2 | Put the live URL in `submission.json` and at the top of `README.md`, then push | Ketaki | 2 min |
+| 1 | Link GitHub for continuous deploy (the spec requires it): see "Continuous deploy" below | Ketaki | 2 min |
+| 2 | ~~Put the live URL in `submission.json` and the README~~ ✅ done | – | – |
 | 3 | Add collaborators `codeboi07`, `bhuvighosh3`, `nniishhh`, `x`, and Anamika, on GitHub → Settings → Collaborators | Ketaki | 2 min |
 | 4 | Write README **"Why we built this"** (2-3 sentences, your own voice: this is the Originality & Voice score) | Ketaki / Anamika | 10 min |
 | 5 | Fill in the `correct (y/n)` column in `evals/role_spotcheck.csv` (100 rows), then put "X/100 correct" in the README's **Role classifier accuracy** line | either | 15 min |
@@ -64,35 +65,36 @@ Status as of **Nov 9, 2026**. Team: Anamika Mishra (akm2259), Ketaki (kvd2112). 
 
 ## How to see it on the web (GCP)
 
-**Right now, on your laptop:** `cd ~/h1b_pay_explorer/h1b-pay-explorer && uv run app.py`, then open http://localhost:8000. Everything works, including chat.
+**The app:** https://h1b-pay-explorer-314308831335.us-east1.run.app
 
-**On the web:** create the Cloud Run service once. After that, every push to `main` redeploys automatically.
+**The service in the GCP console:** https://console.cloud.google.com/run?project=ieor-project-1-kvd2112 → click **h1b-pay-explorer**. The URL is at the top. Tabs: **Metrics** (requests, latency), **Logs** (errors), **Revisions** (each deploy), **Edit & deploy new revision** (settings, env vars).
 
-1. Turn on the remaining APIs and create the runtime account (copy-paste in a terminal):
+**The data:** https://console.cloud.google.com/storage/browser/ieor-project-1-kvd2112-h1b-data?project=ieor-project-1-kvd2112
 
-   ```bash
-   gcloud config set project ieor-project-1-kvd2112
-   gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
-   gcloud iam service-accounts create h1b-runner --display-name="H-1B Pay Explorer runtime"
-   gcloud projects add-iam-policy-binding ieor-project-1-kvd2112 \
-     --member=serviceAccount:h1b-runner@ieor-project-1-kvd2112.iam.gserviceaccount.com --role=roles/aiplatform.user
-   gcloud storage buckets add-iam-policy-binding gs://ieor-project-1-kvd2112-h1b-data \
-     --member=serviceAccount:h1b-runner@ieor-project-1-kvd2112.iam.gserviceaccount.com --role=roles/storage.objectViewer
-   ```
+The first question after the app has been idle takes about 50 s while it starts up and downloads the database from GCS; later answers take about 12 s. Health check: `https://h1b-pay-explorer-314308831335.us-east1.run.app/health`.
 
-2. Go to https://console.cloud.google.com/run?project=ieor-project-1-kvd2112 → **Deploy container** → **Service** → **Continuously deploy from a repository** → **Set up with Cloud Build**:
-   - GitHub → connect `ketakiii3`'s account if asked → repo `h1b-pay-explorer` → branch `^main$`
-   - Build type: **Google Cloud's buildpacks** (leave the entrypoint empty; the `Procfile` sets it)
-3. On the same page:
-   - Service name `h1b-pay-explorer`, region **us-east1**, **Allow public access**
-   - Containers → Settings: memory **2 GiB**, CPU **1**, **Startup CPU boost** on, request timeout **600**
-   - Containers → Variables: `GCS_BUCKET=ieor-project-1-kvd2112-h1b-data`, `GCS_OBJECT=v1/h1b.duckdb`, `MODEL=vertex_ai/gemini-3.5-flash`, `VERTEX_LOCATION=global`, `VERTEXAI_PROJECT=ieor-project-1-kvd2112`
-   - Security → Service account: **h1b-runner**
-   - Scaling: min 0, max 3
-4. **Create** and wait 3-6 minutes for the first build. **The URL at the top of the service page (`https://h1b-pay-explorer-….us-east1.run.app`) is the website.**
-5. Check it: open `<URL>/healthz`. It must say `"database":"h1b.duckdb"` (not `h1b_sample`).
+### Current settings
 
-Troubleshooting is in DEPLOY.md step 8.
+Region `us-east1`, public, 2 GiB memory, 1 CPU, startup boost, 600 s request timeout, 0-3 instances, service account `h1b-runner` (can only call Gemini and read the bucket). Env vars: `GCS_BUCKET=ieor-project-1-kvd2112-h1b-data`, `GCS_OBJECT=v1/h1b.duckdb`, `MODEL=vertex_ai/gemini-3.5-flash`, `VERTEX_LOCATION=global`, `VERTEXAI_PROJECT=ieor-project-1-kvd2112`.
+
+### Continuous deploy (task 1: needs your GitHub login, 2 minutes)
+
+The spec asks for continuous deploy from GitHub. Right now the service was deployed from the laptop (`gcloud run deploy --source .`). To link it:
+
+1. Open https://console.cloud.google.com/run/detail/us-east1/h1b-pay-explorer?project=ieor-project-1-kvd2112
+2. Click **Set up continuous deployment** (top bar).
+3. Provider **GitHub** → **Authenticate** (sign in as `ketakiii3`, install the Google Cloud Build app on `h1b-pay-explorer`) → pick repo `ketakiii3/h1b-pay-explorer`.
+4. Branch `^main$` → Build type **Go, Node.js, Python, Java, .NET Core, Ruby or PHP via Google Cloud's buildpacks** → leave the entrypoint empty → **Save**.
+5. Check: push any small change (for example a README edit) and watch a new revision appear under **Revisions** in about 5 minutes.
+
+The settings and env vars above are kept; continuous deploy only changes where the code comes from.
+
+### Redeploying by hand (if ever needed)
+
+```bash
+cd ~/h1b_pay_explorer/h1b-pay-explorer
+gcloud run deploy h1b-pay-explorer --source . --region us-east1 --project ieor-project-1-kvd2112
+```
 
 ## Key results (for slides, peers, the README)
 
