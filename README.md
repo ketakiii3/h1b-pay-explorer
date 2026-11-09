@@ -10,7 +10,7 @@ Who sponsors your role, what they actually offer, and what your offer is worth i
 
 ## Why we built this
 
-> TODO (Ketaki, in your own words, 2-3 sentences): why this matters to you as an international student. For example: what you didn't know when you were applying, and what changed when the lottery became wage-weighted in 2026.
+We're both international students graduating this December. Through our internship search last year and the full-time search we're in right now, one question keeps coming up with every application and every offer: will this employer sponsor an H-1B, and does the salary give us a real shot in the lottery? When the lottery became wage-weighted in 2026, that question got sharper. The same job can now mean 1 entry or 4, depending on the pay and how the employer files the role. We built H-1B Pay Explorer to answer it from the actual government filings instead of Reddit threads and secondhand advice, because every international student going through this deserves the same.
 
 Since February 27, 2026, the H-1B lottery is no longer one ticket per person. A registration is entered once per wage level of the offered salary: Level I gets 1 entry and Level IV gets 4. So two offers for the same job can have very different odds, and the level depends on where the salary sits in an official table for that occupation and metro. Students hear numbers like "Google pays new grads X" or "staffing firms file everyone at Level I", but almost nobody checks the filings. Every employer has to file a public Labor Condition Application (LCA) before an H-1B petition, with the job, worksite, offered wage and wage level. That data exists, but it is millions of messy rows in government Excel files, and a general-purpose model doesn't know it.
 
