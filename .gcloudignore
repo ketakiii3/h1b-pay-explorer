@@ -7,3 +7,4 @@ data/baseline.duckdb
 evals/results/
 traces/
 __pycache__/
+.pytest_cache/

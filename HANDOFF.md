@@ -2,7 +2,7 @@
 
 Status as of **Nov 9, 2026**. Team: Anamika Mishra (akm2259), Ketaki (kvd2112). Path: **Text2SQL**.
 
-**In one line:** the project is built, tested on the real data (26/26), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Left: link Cloud Run to GitHub for automatic redeploys (2 min in the console), plus a few README items only we can write.
+**In one line:** the project is built, tested on the real data (26/26), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Continuous deploy from GitHub is on: every push to `main` redeploys automatically. Left: a few README items only we can write, collaborators, and submitting.
 
 | Thing | Where |
 | --- | --- |
@@ -33,7 +33,7 @@ Status as of **Nov 9, 2026**. Team: Anamika Mishra (akm2259), Ketaki (kvd2112). 
 | --- | --- | --- |
 | Basics (1) | README.md | ✅ written; 3 TODOs left (see below) |
 | | Valid `submission.json` | ✅ has the live URL, both UNIs, `"path": "text2sql"` |
-| Functionality (9) | Deployed and reachable | ✅ live and tested (chat, chart, offer calculator) · ⚠️ continuous deploy from GitHub still to link (task 1) |
+| Functionality (9) | Deployed and reachable | ✅ live and tested (chat, chart, offer calculator), continuous deploy from GitHub `main` via a Cloud Build trigger |
 | | Clear purpose | ✅ the first screen says what it does, who it's for and how to use it |
 | | Answers correctly | ✅ self-check **26/26** locally on the full data, about 12 s per answer |
 | Data (4) | Unique dataset or problem | ✅ the H-1B LCA plus wage-weighted lottery angle (confirm no one else on the sign-up sheet has it) |
@@ -50,7 +50,7 @@ Status as of **Nov 9, 2026**. Team: Anamika Mishra (akm2259), Ketaki (kvd2112). 
 
 | # | Task | Who | Time |
 | --- | --- | --- | --- |
-| 1 | Link GitHub for continuous deploy (the spec requires it): see "Continuous deploy" below | Ketaki | 2 min |
+| 1 | ~~Link GitHub for continuous deploy~~ ✅ done (Cloud Build trigger on `main`) | – | – |
 | 2 | ~~Put the live URL in `submission.json` and the README~~ ✅ done | – | – |
 | 3 | Add collaborators `codeboi07`, `bhuvighosh3`, `nniishhh`, `x`, and Anamika, on GitHub → Settings → Collaborators | Ketaki | 2 min |
 | 4 | Write README **"Why we built this"** (2-3 sentences, your own voice: this is the Originality & Voice score) | Ketaki / Anamika | 10 min |
@@ -77,12 +77,12 @@ The first question after the app has been idle takes about 50 s while it starts 
 
 Region `us-east1`, public, 2 GiB memory, 1 CPU, startup boost, 600 s request timeout, 0-3 instances, service account `h1b-runner` (can only call Gemini and read the bucket). Env vars: `GCS_BUCKET=ieor-project-1-kvd2112-h1b-data`, `GCS_OBJECT=v1/h1b.duckdb`, `MODEL=vertex_ai/gemini-3.5-flash`, `VERTEX_LOCATION=global`, `VERTEXAI_PROJECT=ieor-project-1-kvd2112`.
 
-### Continuous deploy (task 1: needs your GitHub login, 2 minutes)
+### Continuous deploy ✅ set up
 
-The spec asks for continuous deploy from GitHub. Right now the service was deployed from the laptop (`gcloud run deploy --source .`). To link it:
+Every push to `main` on GitHub builds and deploys a new revision (watch it under **Revision History** or Cloud Build → History). It was set up like this, in case it ever needs redoing:
 
-1. Open https://console.cloud.google.com/run/detail/us-east1/h1b-pay-explorer?project=ieor-project-1-kvd2112
-2. Click **Set up continuous deployment** (top bar).
+1. Open https://console.cloud.google.com/run/detail/us-east1/h1b-pay-explorer?project=ieor-project-1-kvd2112 (signed in as kvd2112@columbia.edu: switch accounts with the profile picture, top right)
+2. **Source** tab (scroll the tab bar right) → **Connect to repo**.
 3. Provider **GitHub** → **Authenticate** (sign in as `ketakiii3`, install the Google Cloud Build app on `h1b-pay-explorer`) → pick repo `ketakiii3/h1b-pay-explorer`.
 4. Branch `^main$` → Build type **Go, Node.js, Python, Java, .NET Core, Ruby or PHP via Google Cloud's buildpacks** → leave the entrypoint empty → **Save**.
 5. Check: push any small change (for example a README edit) and watch a new revision appear under **Revisions** in about 5 minutes.
