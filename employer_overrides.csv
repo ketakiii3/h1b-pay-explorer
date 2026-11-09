@@ -1,0 +1,67 @@
+pattern,canonical_name,employer_type
+^GOOGLE\b|^ALPHABET\b|^X DEVELOPMENT\b|^GOOGLE PUBLIC SECTOR\b,Google,big_tech
+^AMAZON\b|^AMAZON COM\b|^AMAZON WEB SERVICES\b|^AWS\b|^A2Z DEVELOPMENT\b|^ANNAPURNA LABS\b|^AMAZON DEVELOPMENT CENTER\b|^AMAZON DATA SERVICES\b|^AMAZON TECHNOLOGIES\b|^AUDIBLE\b|^TWITCH INTERACTIVE\b,Amazon,big_tech
+^META PLATFORMS\b|^FACEBOOK\b|^INSTAGRAM\b|^WHATSAPP\b,Meta,big_tech
+^MICROSOFT\b,Microsoft,big_tech
+^LINKEDIN\b,LinkedIn,big_tech
+^APPLE\b,Apple,big_tech
+^NETFLIX\b,Netflix,big_tech
+^NVIDIA\b,NVIDIA,big_tech
+^INTEL\b,Intel,big_tech
+^QUALCOMM\b,Qualcomm,big_tech
+^SALESFORCE\b,Salesforce,big_tech
+^ORACLE\b,Oracle,big_tech
+^CISCO\b,Cisco,big_tech
+^ADOBE\b,Adobe,big_tech
+^IBM\b|^INTERNATIONAL BUSINESS MACHINES\b,IBM,big_tech
+^UBER\b,Uber,big_tech
+^LYFT\b,Lyft,big_tech
+^AIRBNB\b,Airbnb,big_tech
+^STRIPE\b,Stripe,big_tech
+^DATABRICKS\b,Databricks,big_tech
+^SNOWFLAKE\b,Snowflake,big_tech
+^TIKTOK\b|^BYTEDANCE\b,TikTok / ByteDance,big_tech
+^OPENAI\b,OpenAI,big_tech
+^ANTHROPIC\b,Anthropic,big_tech
+^BLOOMBERG\b,Bloomberg,finance
+^JPMORGAN\b|^J P MORGAN\b|^JP MORGAN\b|^JPMORGAN CHASE\b,JPMorgan Chase,finance
+^GOLDMAN SACHS\b,Goldman Sachs,finance
+^MORGAN STANLEY\b,Morgan Stanley,finance
+^BANK OF AMERICA\b|^BOFA SECURITIES\b|^MERRILL LYNCH\b,Bank of America,finance
+^CITIGROUP\b|^CITIBANK\b|^CITICORP\b|^CITI\b,Citi,finance
+^CAPITAL ONE\b,Capital One,finance
+^AMERICAN EXPRESS\b,American Express,finance
+^CITADEL\b,Citadel,finance
+^JANE STREET\b,Jane Street,finance
+^TWO SIGMA\b,Two Sigma,finance
+^HUDSON RIVER TRADING\b,Hudson River Trading,finance
+^D E SHAW\b|^DE SHAW\b,D. E. Shaw,finance
+^WALMART\b|^WAL MART\b,Walmart,other
+^DELOITTE\b,Deloitte,consulting
+^ERNST AND YOUNG\b|^EY\b,EY,consulting
+^PRICEWATERHOUSECOOPERS\b|^PWC\b,PwC,consulting
+^KPMG\b,KPMG,consulting
+^MCKINSEY\b,McKinsey,consulting
+^BOSTON CONSULTING GROUP\b,Boston Consulting Group,consulting
+^ACCENTURE\b,Accenture,staffing_it_services
+^COGNIZANT\b,Cognizant,staffing_it_services
+^INFOSYS\b,Infosys,staffing_it_services
+^TATA CONSULTANCY\b,Tata Consultancy Services,staffing_it_services
+^WIPRO\b,Wipro,staffing_it_services
+^HCL\b,HCLTech,staffing_it_services
+^TECH MAHINDRA\b,Tech Mahindra,staffing_it_services
+^CAPGEMINI\b,Capgemini,staffing_it_services
+^LTIMINDTREE\b|^LARSEN AND TOUBRO INFOTECH\b|^MINDTREE\b,LTIMindtree,staffing_it_services
+^LTTS\b|^L AND T TECHNOLOGY\b,L&T Technology Services,staffing_it_services
+^MPHASIS\b,Mphasis,staffing_it_services
+^HEXAWARE\b,Hexaware,staffing_it_services
+^PERSISTENT SYSTEMS\b,Persistent Systems,staffing_it_services
+^VIRTUSA\b,Virtusa,staffing_it_services
+^IGATE\b,iGate,staffing_it_services
+^NTT DATA\b,NTT DATA,staffing_it_services
+^COLUMBIA UNIVERSITY\b|^TRUSTEES OF COLUMBIA\b|^THE TRUSTEES OF COLUMBIA\b,Columbia University,university
+^NEW YORK UNIVERSITY\b|^NYU\b,New York University,university
+^MASSACHUSETTS INSTITUTE OF TECHNOLOGY\b,MIT,university
+^PRESIDENT AND FELLOWS OF HARVARD\b|^HARVARD\b,Harvard University,university
+^STANFORD\b|^THE BOARD OF TRUSTEES OF THE LELAND STANFORD\b|^BOARD OF TRUSTEES OF THE LELAND STANFORD\b|^LELAND STANFORD\b,Stanford University,university
+^CARNEGIE MELLON\b,Carnegie Mellon University,university

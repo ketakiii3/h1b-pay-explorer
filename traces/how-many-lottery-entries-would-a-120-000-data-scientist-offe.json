@@ -1,0 +1,714 @@
+{
+ "question": "How many lottery entries would a $120,000 data scientist offer in NYC get?",
+ "gold": 2,
+ "gold_sql": "SELECT CASE WHEN 120000 >= level_4 THEN 4 WHEN 120000 >= level_3 THEN 3 WHEN 120000 >= level_2 THEN 2 WHEN 120000 >= level_1 THEN 1 ELSE 0 END FROM wage_levels WHERE area_code = '35620' AND soc_code = '15-2051'",
+ "no_tools": "In New York City, the term \"lottery\" almost always refers to the **NYC Housing Connect** affordable housing lottery. \n\nWith a **$120,000 salary** as a single applicant, you fall into the **\"Middle Income\"** bracket, which is one of the most active and abundant brackets in the NYC housing lottery system.\n\nHere is a breakdown of how many lotteries you can apply for, what your options look like, and your realistic chances of winning.\n\n---\n\n### 1. How many lotteries can you apply to?\n**There is no limit.** You can apply to **every single building** that has units matching your income bracket and household size. \n\nAt any given time, there are usually between **30 to 60 active lotteries** on the NYC Housing Connect website. \n* With a $120,000 income, you will typically qualify for **15 to 30 of those active lotteries** at any one time.\n* Over the course of a year, you could easily submit **100+ entries (applications)**.\n\n### 2. What AMI bracket do you fall into?\nEligibility is based on **Area Median Income (AMI)**. For 2024, a $120,000 salary puts you in the following brackets depending on your household size:\n\n* **1-Person Household:** You qualify for the **110% to 130% AMI** brackets. (The maximum income limit for the 130% AMI bracket for a single person is **$141,310**).\n* **2-Person Household (combined income of $120k):** You qualify for the **80% to 100% AMI** brackets.\n\n### 3. The Reality of the \"130% AMI\" Bracket\nBecause of NYC tax incentive programs (like the now-expired but still-filtering-through 421-a program), developers were heavily incentivized to build \"affordable\" units at the **130% AMI** level. \n\nThis is great news and bad news for you:\n* **The Good News:** There are *tons* of units available at this income level. Because the rent is higher, far fewer people apply for these units compared to the low-income units. **Your odds of winning a 130% AMI lottery are significantly higher** than someone making $45,000.\n* **The Bad News:** \"Affordable\" at 130% AMI is often close to market rate. \n    * For a $120,000 income, you would likely qualify for **studios and 1-bedrooms** ranging from **$2,300 to $3,100 a month**. \n    * While this isn't a massive discount, these apartments are usually in brand-new, luxury amenity buildings (with gyms, doormen, and rooftops) in hot neighborhoods like Williamsburg, Long Island City, Downtown Brooklyn, and Astoria. Furthermore, they are **rent-stabilized**, meaning your rent can only increase by small percentages set by the city each year.\n\n### 4. Your Odds of Winning\nFor low-income brackets (under 80% AMI), the odds of winning can be 1 in 500 or worse. \nFor the **130% AMI bracket** (where you sit):\n* The applicant pool is much smaller because many people making $120,000 choose to rent on the open market rather than deal with city paperwork.\n* If you apply to 30\u201340 buildings over the course of 6 months, **your chances of being contacted for an interview/document submission are very high (often 1 in 10 or 1 in 15).**\n\n### Summary of Your Strategy\n1. **Create an account** on [NYC Housing Connect](https://housingconnect.nyc.gov/).\n2. **Input your exact income.** As a Data Scientist, make sure to calculate your base salary. If you get bonuses or stock options (RSUs), the city will count these as income if they appear on your tax returns/paystubs, which might push you over the $141,310 limit for a 1-person household.\n3. **Apply to everything** that you qualify for. It takes one click per building once your profile is set up.",
+ "runs": [
+  {
+   "plain": {
+    "response": "Under current H-1B selection rules, a candidate with a $120,000 Data Scientist offer in New York City would get **exactly 1 entry** in the H-1B lottery. \n\nHere is a breakdown of why this is the case, how your salary compares to real LCA (Labor Condition Application) wage levels in NYC, and how previous policy proposals might have affected this.\n\n---\n\n### 1. Current Rules: The Beneficiary-Centric Lottery\nUnder the modern **beneficiary-centric selection system** (implemented by USCIS starting in March 2024 for the FY 2025 cap), the H-1B lottery is based on **unique passport/travel document numbers**, not the number of job offers or the salary of those offers. \n\n* **One Entry per Person:** Each unique candidate gets exactly **one entry** in the lottery pool, regardless of whether they have a $120,000 offer, a $300,000 offer, or multiple offers from different employers.\n* **Employer Registration:** The employer offering $120,000 will submit **one registration** for you. If you are selected, that employer (and any other employer who registered you) is notified and allowed to file an H-1B petition on your behalf.\n\n---\n\n### 2. How a $120,000 Offer Compares to NYC Data Scientist Wage Levels\nIf we look at the actual LCA data for **Data Scientists** (SOC Code: `15-2051.00`) in **New York City, NY**, we can see how a $120,000 salary ranks compared to prevailing wages set by the Department of Labor:\n\n| Wage Level | Prevailing Wage Category | Average NYC Prevailing Wage |\n| :--- | :--- | :--- |\n| **Level I** | Entry-Level | **~$80,036** |\n| **Level II** | Qualified / Mid-Level | **~$108,963** |\n| **Level III** | Experienced | **~$138,645** |\n| **Level IV** | Fully Competent / Senior | **~$167,966** |\n\nWith a **$120,000** offer, your salary falls above the Level II average (~$108,963) but below the Level III average (~$138,645). Therefore, your LCA would be filed as a **Level II** wage offer.\n\n---\n\n### 3. Historical Context: The Defunct \"Wage-Level Selection\" Proposal\nIf your question is referring to the proposed Trump-era rule that attempted to replace the random lottery with a **wage-level-based prioritization system**:\n\n* **How it would have worked:** Under that proposed rule, USCIS would have distributed the 85,000 H-1B visas by starting with Level IV applicants first, then Level III, then Level II, and finally Level I.\n* **Your Likelihood of Selection:** Because $120,000 is a **Level II** wage for Data Scientists in NYC, your petition would have been grouped in the Level II tier. Simulations showed that under this system, Level IV and Level III applicants would take up the majority of the cap, leaving Level II applicants with a very low chance of selection (and Level I with zero chance).\n* **Current Status:** **This rule was vacated by a federal court and never went into effect.** Today, the selection process remains a randomized lottery where your wage level has no impact on your chance of being selected.",
+    "tool_calls": [
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "DESCRIBE lca;"
+      },
+      "result": "{\"columns\": [\"column_name\", \"column_type\", \"null\", \"key\", \"default\", \"extra\"], \"rows\": [[\"case_number\", \"VARCHAR\", \"YES\", null, null, null], [\"case_status\", \"VARCHAR\", \"YES\", null, null, null], [\"received_date\", \"VARCHAR\", \"YES\", null, null, null], [\"decision_date\", \"VARCHAR\", \"YES\", null, null, null], [\"visa_class\", \"VARCHAR\", \"YES\", null, null, null], [\"job_title\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_code\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_title\", \"VARCHAR\", \"YES\", null, null, null], [\"full_time\", \"VARCHAR\", \"YES\", null, null, null], [\"begin_date\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worker_positions\", \"VARCHAR\", \"YES\", null, null, null], [\"new_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"continued_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_previous_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"new_concurrent_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_employer\", \"VARCHAR\", \"YES\", null, null, null], [\"amended_petition\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_name\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_city\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_state\", \"VARCHAR\", \"YES\", null, null, null], [\"naics_code\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_city\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_county\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_state\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_zip\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_from\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_to\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_wage_level\", \"VARCHAR\", \"YES\", null, null, null], [\"h1b_dependent\", \"VARCHAR\", \"YES\", null, null, null], [\"willful_violator\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worksite_locations\", \"VARCHAR\", \"YES\", null, null, null], [\"source_file\", \"VARCHAR\", \"YES\", null, null, null]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT pw, pw_wage_level, count(*) \nFROM lca \nWHERE (job_title ILIKE '%data scientist%' OR soc_title ILIKE '%data scientist%') \n  AND worksite_city ILIKE '%new york%' \nGROUP BY 1, 2 \nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"pw\", \"pw_wage_level\", \"count_star()\"], \"rows\": [[\"111966\", \"II\", 552], [\"39.79\", \"I\", 24], [\"101400\", \"III\", 1], [\"126281\", null, 1], [\"124659\", null, 2], [\"90522\", \"I\", 1], [\"151306\", null, 3], [\"87418\", null, 2], [\"50378\", \"I\", 1], [\"153525\", \"IV\", 9]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT pw_wage_level, MIN(CAST(pw AS DOUBLE)) as min_pw, MAX(CAST(pw AS DOUBLE)) as max_pw, AVG(CAST(pw AS DOUBLE)) as avg_pw, COUNT(*) as cnt\nFROM lca\nWHERE (job_title ILIKE '%data scientist%' OR soc_title ILIKE '%data scientist%')\n  AND worksite_city ILIKE '%new york%'\n  AND pw_unit = 'Year'\n  AND pw ~ '^[0-9.]+$'\nGROUP BY pw_wage_level\nORDER BY pw_wage_level;"
+      },
+      "result": "{\"columns\": [\"pw_wage_level\", \"min_pw\", \"max_pw\", \"avg_pw\", \"cnt\"], \"rows\": [[\"I\", 44179.0, 100235.0, 79883.40981240981, 693], [\"II\", 77272.0, 182957.0, 108838.30379008746, 1715], [\"III\", 90272.0, 223642.0, 138427.41084558822, 1088], [\"IV\", 103293.0, 261248.0, 167031.5538312318, 1031], [null, 55546.11, 198550.0, 120613.75161904762, 210]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT soc_code, soc_title, COUNT(*) \nFROM lca \nWHERE job_title ILIKE '%data scientist%' AND worksite_city ILIKE '%new york%' \nGROUP BY 1, 2 \nORDER BY 3 DESC \nLIMIT 5;"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\", \"count_star()\"], \"rows\": [[\"15-2051.00\", \"Data Scientists\", 1483], [\"15-2041.00\", \"Statisticians\", 186], [\"15-2031.00\", \"Operations Research Analysts\", 53], [\"15-2051.01\", \"Business Intelligence Analysts\", 52], [\"15-1221.00\", \"Computer and Information Research Scientists\", 35]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT pw_wage_level, MIN(CAST(pw AS DOUBLE)) as min_pw, MAX(CAST(pw AS DOUBLE)) as max_pw, AVG(CAST(pw AS DOUBLE)) as avg_pw, COUNT(*) as cnt\nFROM lca\nWHERE soc_code = '15-2051.00'\n  AND worksite_city ILIKE '%new york%'\n  AND pw_unit = 'Year'\n  AND pw ~ '^[0-9.]+$'\nGROUP BY pw_wage_level\nORDER BY pw_wage_level;"
+      },
+      "result": "{\"columns\": [\"pw_wage_level\", \"min_pw\", \"max_pw\", \"avg_pw\", \"cnt\"], \"rows\": [[\"I\", 50378.0, 82763.0, 80035.69018404908, 652], [\"II\", 77272.0, 111996.0, 108962.82503192849, 1566], [\"III\", 90272.0, 164403.0, 138645.11029411765, 952], [\"IV\", 103293.0, 179088.0, 167966.49273743018, 895], [null, 55546.11, 198550.0, 120495.36554455446, 202]], \"truncated\": false}"
+     }
+    ]
+   },
+   "agent": {
+    "response": "A $120,000 data scientist offer in the New York City metro area would receive **2 entries** in the wage-weighted H-1B lottery.\n\n* **Wage Level II:** This salary ($120k) passes the Level II threshold of $115,835 but falls $24k short of Level III ($144k) for Data Scientists (SOC 15-2051) under the 2026\u201327 OFLC wage tables.\n* **Peer Comparison:** A $120k offer sits in the 29th percentile. The median offered pay across 8,293 certified Data Scientist filings in NYC from FY2024 to FY2026 Q3 was $145k. \n* **Overall NYC Distribution:** Among those 8,293 certified NYC filings, 23.2% (1,924 filings) qualified for exactly 2 entries, whereas 48.7% (4,043 filings) secured 3 or 4 entries by meeting higher wage levels.",
+    "session_id": "686a321d-c02f-45af-867c-32f5eed2c781",
+    "tool_calls": [
+     {
+      "agent": "H-1B Analyst",
+      "name": "read_mappings",
+      "args": {},
+      "result": "{\"as_of\": \"FY2026 Q3\", \"tables\": {\"lca\": {\"description\": \"One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.\", \"columns\": [{\"name\": \"case_number\", \"type\": \"VARCHAR\", \"description\": \"DOL case number, unique per row.\"}, {\"name\": \"case_status\", \"type\": \"VARCHAR\", \"description\": \"DOL decision. Use 'CERTIFIED' for filings employers could actually use.\", \"is_enum\": true}, {\"name\": \"fiscal_year\", \"type\": \"INTEGER\", \"description\": \"US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.\", \"is_enum\": true}, {\"name\": \"quarter\", \"type\": \"INTEGER\", \"description\": \"Fiscal quarter 1-4 (Q1 = Oct-Dec).\", \"is_enum\": true}, {\"name\": \"received_date\", \"type\": \"DATE\", \"description\": \"Date DOL received the LCA.\"}, {\"name\": \"decision_date\", \"type\": \"DATE\", \"description\": \"Date DOL decided the LCA.\"}, {\"name\": \"job_title\", \"type\": \"VARCHAR\", \"description\": \"Job title as typed by the employer (free text, messy). Do not filter on it: use role_family.\"}, {\"name\": \"title_norm\", \"type\": \"VARCHAR\", \"description\": \"Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning).\"}, {\"name\": \"role_family\", \"type\": \"VARCHAR\", \"description\": \"Clean role category built offline from the title and SOC code. Get the value from find_role.\", \"is_enum\": true}, {\"name\": \"seniority\", \"type\": \"VARCHAR\", \"description\": \"Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.\", \"is_enum\": true}, {\"name\": \"soc_code\", \"type\": \"VARCHAR\", \"description\": \"Standard Occupational Classification code, e.g. 15-1252 = Software Developers.\"}, {\"name\": \"soc_title\", \"type\": \"VARCHAR\", \"description\": \"Name of the SOC occupation.\"}, {\"name\": \"full_time\", \"type\": \"VARCHAR\", \"description\": \"'Y' if full-time.\", \"is_enum\": true}, {\"name\": \"total_worker_positions\", \"type\": \"INTEGER\", \"description\": \"Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings.\"}, {\"name\": \"filing_type\", \"type\": \"VARCHAR\", \"description\": \"Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.\", \"is_enum\": true}, {\"name\": \"new_employment\", \"type\": \"INTEGER\", \"description\": \"Workers in this filing who are new employment.\", \"is_enum\": true}, {\"name\": \"continued_employment\", \"type\": \"INTEGER\", \"description\": \"Workers who are continuing employment (extensions).\", \"is_enum\": true}, {\"name\": \"change_employer\", \"type\": \"INTEGER\", \"description\": \"Workers transferring from another employer.\", \"is_enum\": true}, {\"name\": \"employer_id\", \"type\": \"INTEGER\", \"description\": \"Resolved employer key: all legal-name variants of one company share it. Get it from find_employer.\"}, {\"name\": \"employer\", \"type\": \"VARCHAR\", \"description\": \"Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer.\"}, {\"name\": \"employer_type\", \"type\": \"VARCHAR\", \"description\": \"big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).\", \"is_enum\": true}, {\"name\": \"employer_name_raw\", \"type\": \"VARCHAR\", \"description\": \"Employer name exactly as filed. Do not filter on it: use employer_id.\"}, {\"name\": \"naics_code\", \"type\": \"VARCHAR\", \"description\": \"Employer's industry code (NAICS).\"}, {\"name\": \"worksite_city\", \"type\": \"VARCHAR\", \"description\": \"Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...).\"}, {\"name\": \"worksite_city_raw\", \"type\": \"VARCHAR\", \"description\": \"Worksite city as typed by the employer.\"}, {\"name\": \"worksite_county\", \"type\": \"VARCHAR\", \"description\": \"Worksite county as filed.\"}, {\"name\": \"worksite_state\", \"type\": \"VARCHAR\", \"description\": \"Two-letter worksite state.\", \"is_enum\": true}, {\"name\": \"worksite_zip\", \"type\": \"VARCHAR\", \"description\": \"Five-digit worksite ZIP code.\"}, {\"name\": \"area_code\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area (metro) code for the worksite. Get it from find_location.\"}, {\"name\": \"metro_name\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'.\"}, {\"name\": \"wage_from_raw\", \"type\": \"DOUBLE\", \"description\": \"Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it.\"}, {\"name\": \"wage_to_raw\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered wage range as filed, in wage_unit, often blank.\"}, {\"name\": \"wage_unit\", \"type\": \"VARCHAR\", \"description\": \"Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.\", \"is_enum\": true}, {\"name\": \"wage_annual_from\", \"type\": \"DOUBLE\", \"description\": \"Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay.\"}, {\"name\": \"wage_annual_to\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered range, yearly (equals wage_annual_from when no range).\"}, {\"name\": \"wage_flag\", \"type\": \"VARCHAR\", \"description\": \"'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.\", \"is_enum\": true}, {\"name\": \"pw_annual\", \"type\": \"DOUBLE\", \"description\": \"Prevailing wage the employer cited, yearly.\"}, {\"name\": \"pw_wage_level\", \"type\": \"VARCHAR\", \"description\": \"Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.\", \"is_enum\": true}, {\"name\": \"pw_level_num\", \"type\": \"INTEGER\", \"description\": \"pw_wage_level as a number 1-4.\", \"is_enum\": true}, {\"name\": \"offer_wage_level\", \"type\": \"INTEGER\", \"description\": \"Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.\", \"is_enum\": true}, {\"name\": \"h1b_dependent\", \"type\": \"VARCHAR\", \"description\": \"'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B)"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_location",
+      "args": {
+       "place": "NYC"
+      },
+      "result": "{\"area_code\": \"35620\", \"metro_name\": \"New York-Newark-Jersey City, NY-NJ\", \"matched_by\": \"alias\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_role",
+      "args": {
+       "text": "data scientist"
+      },
+      "result": "{\"role_family\": \"Data Scientist\", \"matched_by\": \"rules\", \"main_soc_codes\": [{\"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"filings\": 38958}, {\"soc_code\": \"15-2041\", \"soc_title\": \"Statisticians\", \"filings\": 6341}, {\"soc_code\": \"15-2031\", \"soc_title\": \"Operations Research Analysts\", \"filings\": 969}], \"example_titles\": [\"data scientist\", \"senior data scientist\", \"data scientist ii\", \"data scientist iii\", \"data science\", \"machine learning\"]}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "wage_level",
+      "args": {
+       "role": "data scientist",
+       "soc_code": "15-2051",
+       "salary": 120000,
+       "location": "NYC"
+      },
+      "result": "{\"salary\": 120000.0, \"role_family\": \"Data Scientist\", \"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"area_code\": \"35620\", \"metro_name\": \"New York-Newark-Jersey City, NY-NJ\", \"wage_level\": 2, \"lottery_entries\": 2, \"thresholds\": {\"level_1\": 87256.0, \"level_2\": 115835.0, \"level_3\": 144414.0, \"level_4\": 172994.0}, \"raise_needed_for_next_level\": 24414, \"peer_filings_fy2025_on\": 5700, \"salary_percentile_among_peer_filings\": 29.4, \"peer_median_offer\": 145140.5, \"wage_year\": \"OFLC 2026-27 (Jul 2026 - Jun 2027)\", \"approximate\": false, \"note\": \"Level 2 = 2 lottery entries under the wage-weighted lottery.\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT offer_lottery_entries, count(*) as filings, round(100.0 * count(*) / sum(count(*)) over (), 1) as pct FROM lca WHERE area_code = '35620' AND role_family = 'Data Scientist' AND case_status = 'CERTIFIED' GROUP BY 1 ORDER BY 1"
+      },
+      "result": "{\"columns\": [\"offer_lottery_entries\", \"filings\", \"pct\"], \"rows\": [[0, 678, 8.2], [1, 1640, 19.8], [2, 1924, 23.2], [3, 2026, 24.4], [4, 2017, 24.3], [null, 8, 0.1]], \"row_count\": 6, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "title": "Distribution of H-1B Lottery Entries, NYC Data Scientists (FY24-FY26)",
+       "y": "filings",
+       "color": null,
+       "x": "offer_lottery_entries",
+       "mark": "bar"
+      },
+      "result": "{\"ok\": true, \"note\": \"Chart shown to the user. Do not describe the chart's styling.\"}"
+     }
+    ],
+    "chart": {
+     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+     "title": "Distribution of H-1B Lottery Entries, NYC Data Scientists (FY24-FY26)",
+     "data": {
+      "values": [
+       {
+        "offer_lottery_entries": 0,
+        "filings": 678,
+        "pct": 8.2
+       },
+       {
+        "offer_lottery_entries": 1,
+        "filings": 1640,
+        "pct": 19.8
+       },
+       {
+        "offer_lottery_entries": 2,
+        "filings": 1924,
+        "pct": 23.2
+       },
+       {
+        "offer_lottery_entries": 3,
+        "filings": 2026,
+        "pct": 24.4
+       },
+       {
+        "offer_lottery_entries": 4,
+        "filings": 2017,
+        "pct": 24.3
+       },
+       {
+        "offer_lottery_entries": null,
+        "filings": 8,
+        "pct": 0.1
+       }
+      ]
+     },
+     "mark": {
+      "type": "bar",
+      "point": false
+     },
+     "encoding": {
+      "x": {
+       "field": "offer_lottery_entries",
+       "type": "quantitative"
+      },
+      "y": {
+       "field": "filings",
+       "type": "quantitative"
+      },
+      "tooltip": [
+       {
+        "field": "offer_lottery_entries",
+        "type": "quantitative"
+       },
+       {
+        "field": "filings",
+        "type": "quantitative"
+       },
+       {
+        "field": "pct",
+        "type": "quantitative"
+       }
+      ]
+     },
+     "width": "container"
+    },
+    "table": {
+     "columns": [
+      "offer_lottery_entries",
+      "filings",
+      "pct"
+     ],
+     "rows": [
+      [
+       0,
+       678,
+       8.2
+      ],
+      [
+       1,
+       1640,
+       19.8
+      ],
+      [
+       2,
+       1924,
+       23.2
+      ],
+      [
+       3,
+       2026,
+       24.4
+      ],
+      [
+       4,
+       2017,
+       24.3
+      ],
+      [
+       null,
+       8,
+       0.1
+      ]
+     ],
+     "row_count": 6,
+     "truncated": false
+    }
+   },
+   "plain_ok": false,
+   "agent_ok": true
+  },
+  {
+   "plain": {
+    "response": "Depending on how you interpret \"lottery entries,\" here is the answer from the perspective of **H-1B visa rules**, the **LCA dataset**, and **wage level classifications**:\n\n---\n\n### 1. The H-1B Lottery Rules (Current System)\nUnder the current beneficiary-centric H-1B selection system (introduced for the FY 2025 cap), every applicant gets exactly **1 lottery entry**. \n* **Wage, job title, and location do not grant extra lottery tickets.** Whether you have a $120,000 Data Scientist offer in NYC or a $60,000 offer elsewhere, you only get **one entry** under your passport/beneficiary ID. This ensures fairness and prevents multiple registrations for the same individual from increasing their chances.\n\n---\n\n### 2. Wage Level Classification (Under LCA Data)\nIf you are wondering which **Prevailing Wage Level** a $120,000 Data Scientist offer in NYC falls under (which was relevant for proposed wage-based selection rules), we can check the prevailing wage limits in the `lca` table for Data Scientists (`SOC 15-2051`) in New York City:\n\n| Wage Level | Minimum Prevailing Wage (NYC) | Average Prevailing Wage (NYC) |\n| :--- | :--- | :--- |\n| **Level I (Entry)** | ~$79,456 | ~$80,446 |\n| **Level II (Qualified)** | ~$108,306 | ~$109,264 |\n| **Level III (Experienced)** | ~$135,782 | ~$138,683 |\n| **Level IV (Fully Competent)** | ~$153,525 | ~$167,845 |\n\n* **Classification:** Since **$120,000** is above the Level II threshold (~$109,000\u2013$111,000) but below the Level III threshold (~$135,000+), your position would be classified as a **Prevailing Wage Level II** position. \n* *Note: Under previous proposed rules that prioritized H-1B visas by wage levels (prioritizing Level IV first, then Level III, Level II, and Level I), Level II applicants would only get selected if visas remained after selecting all Level III and IV candidates.*\n\n---\n\n### 3. Number of Matching Records in the Dataset\nIf you are asking about the number of matching H-1B LCA database applications (entries) for a $120,000 Data Scientist offer in NYC:\n* There are **95 records** in the database where a Data Scientist in NYC has a wage rate (either starting or ending) of exactly **$120,000** (with **74 records** having a base `wage_from` of exactly $120,000).",
+    "tool_calls": [
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "DESCRIBE lca;"
+      },
+      "result": "{\"columns\": [\"column_name\", \"column_type\", \"null\", \"key\", \"default\", \"extra\"], \"rows\": [[\"case_number\", \"VARCHAR\", \"YES\", null, null, null], [\"case_status\", \"VARCHAR\", \"YES\", null, null, null], [\"received_date\", \"VARCHAR\", \"YES\", null, null, null], [\"decision_date\", \"VARCHAR\", \"YES\", null, null, null], [\"visa_class\", \"VARCHAR\", \"YES\", null, null, null], [\"job_title\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_code\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_title\", \"VARCHAR\", \"YES\", null, null, null], [\"full_time\", \"VARCHAR\", \"YES\", null, null, null], [\"begin_date\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worker_positions\", \"VARCHAR\", \"YES\", null, null, null], [\"new_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"continued_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_previous_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"new_concurrent_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_employer\", \"VARCHAR\", \"YES\", null, null, null], [\"amended_petition\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_name\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_city\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_state\", \"VARCHAR\", \"YES\", null, null, null], [\"naics_code\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_city\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_county\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_state\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_zip\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_from\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_to\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_wage_level\", \"VARCHAR\", \"YES\", null, null, null], [\"h1b_dependent\", \"VARCHAR\", \"YES\", null, null, null], [\"willful_violator\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worksite_locations\", \"VARCHAR\", \"YES\", null, null, null], [\"source_file\", \"VARCHAR\", \"YES\", null, null, null]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT soc_code, soc_title FROM lca WHERE job_title ILIKE '%data scientist%' LIMIT 20;"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\"], \"rows\": [[\"15-2051.00\", \"Data Scientists\"], [\"15-2051.01\", \"Business Intelligence Analysts\"], [\"15-2041.00\", \"Statisticians\"], [\"15-1242.00\", \"Database Administrators\"], [\"15-1221.00\", \"Computer and Information Research Scientists\"], [\"15-2051.02\", \"Clinical Data Managers\"], [\"15-1299.00\", \"Computer Occupations, All Other\"], [\"15-1243.01\", \"Data Warehousing Specialists\"], [\"15-2031.00\", \"Operations Research Analysts\"], [\"19-2042.00\", \"Geoscientists, Except Hydrologists and Geographers\"], [\"15-1211.00\", \"Computer Systems Analysts\"], [\"15-2051.00\", \"Data Scientist\"], [\"15-2051\", \"Data Scientists\"], [\"19-3099.01\", \"Transportation Planners\"], [\"19-3011.00\", \"Economists\"], [\"13-2099.01\", \"Financial Quantitative Analysts\"], [\"15-1252.00\", \"Software Developers\"], [\"15-1243.00\", \"Database Architects\"], [\"15-2041.01\", \"Biostatisticians\"], [\"19-1029.01\", \"Bioinformatics Scientists\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT pw_wage_level, count(*), min(CAST(pw AS DOUBLE)) as min_pw, max(CAST(pw AS DOUBLE)) as max_pw, avg(CAST(pw AS DOUBLE)) as avg_pw FROM lca WHERE (soc_code LIKE '15-2051%' OR soc_title ILIKE '%Data Scientist%') AND worksite_city ILIKE '%New York%' AND pw IS NOT NULL AND pw_wage_level IS NOT NULL GROUP BY pw_wage_level ORDER BY pw_wage_level;"
+      },
+      "result": "{\"columns\": [\"pw_wage_level\", \"count_star()\", \"min_pw\", \"max_pw\", \"avg_pw\"], \"rows\": [[\"I\", 1173, 30.89, 87838.0, 72837.29036658142], [\"II\", 2660, 38.55, 111996.0, 105035.58139473684], [\"III\", 1565, 65.28, 164403.0, 137354.71251118212], [\"IV\", 1329, 81.51, 179088.0, 167472.18746425884]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT pw_wage_level, count(*), min(CAST(pw AS DOUBLE)) as min_pw, max(CAST(pw AS DOUBLE)) as max_pw, avg(CAST(pw AS DOUBLE)) as avg_pw FROM lca WHERE (soc_code LIKE '15-2051%' OR soc_title ILIKE '%Data Scientist%') AND worksite_city ILIKE '%New York%' AND pw_unit = 'Year' AND pw IS NOT NULL AND pw_wage_level IS NOT NULL GROUP BY pw_wage_level ORDER BY pw_wage_level;"
+      },
+      "result": "{\"columns\": [\"pw_wage_level\", \"count_star()\", \"min_pw\", \"max_pw\", \"avg_pw\"], \"rows\": [[\"I\", 1062, 50378.0, 87838.0, 80446.14218455744], [\"II\", 2557, 77272.0, 111996.0, 109264.45404771216], [\"III\", 1550, 90272.0, 164403.0, 138683.30451612902], [\"IV\", 1326, 103293.0, 179088.0, 167845.0105580694]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SHOW TABLES;"
+      },
+      "result": "{\"columns\": [\"name\"], \"rows\": [[\"lca\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT pw_wage_level, pw, COUNT(*) FROM lca WHERE soc_code = '15-2051.00' AND worksite_city = 'NEW YORK' AND pw_unit = 'Year' GROUP BY pw_wage_level, pw ORDER BY pw_wage_level, CAST(pw AS DOUBLE);"
+      },
+      "result": "{\"columns\": [\"pw_wage_level\", \"pw\", \"count_star()\"], \"rows\": [[\"I\", \"64251\", 2], [\"I\", \"79456\", 9], [\"I\", \"80850\", 6], [\"I\", \"82763\", 8], [\"II\", \"77272\", 2], [\"II\", \"78062\", 1], [\"II\", \"108306\", 13], [\"II\", \"109491\", 28], [\"II\", \"111966\", 39], [\"III\", \"135782\", 8], [\"III\", \"139506\", 15], [\"III\", \"141170\", 15], [\"IV\", \"153525\", 1], [\"IV\", \"163238\", 9], [\"IV\", \"169541\", 5], [\"IV\", \"170373\", 4], [null, \"94935\", 1], [null, \"96786\", 3], [null, \"143506\", 1], [null, \"150433\", 1], [null, \"161955\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT count(*) FROM lca WHERE (job_title ILIKE '%Data Scientist%' OR soc_title ILIKE '%Data Scientist%') AND worksite_city ILIKE '%New York%' AND (CAST(wage_from AS DOUBLE) = 120000 OR CAST(wage_to AS DOUBLE) = 120000);"
+      },
+      "result": "{\"columns\": [\"count_star()\"], \"rows\": [[95]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT count(*) FROM lca WHERE (job_title ILIKE '%Data Scientist%' OR soc_title ILIKE '%Data Scientist%') AND worksite_city ILIKE '%New York%' AND CAST(wage_from AS DOUBLE) = 120000;"
+      },
+      "result": "{\"columns\": [\"count_star()\"], \"rows\": [[74]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT count(*) FROM lca WHERE (job_title ILIKE '%Data Scientist%' OR soc_title ILIKE '%Data Scientist%') AND (worksite_city ILIKE '%New York%' OR worksite_city = 'NYC') AND (CAST(wage_from AS DOUBLE) = 120000 OR CAST(wage_to AS DOUBLE) = 120000);"
+      },
+      "result": "{\"columns\": [\"count_star()\"], \"rows\": [[95]], \"truncated\": false}"
+     }
+    ]
+   },
+   "agent": {
+    "response": "A $120,000 data scientist offer in NYC would receive **2 lottery entries** under the wage-weighted H-1B lottery.\n\n*   **Wage Thresholds:** Based on the OFLC 2026\u201327 prevailing wage tables for the NYC metro, this offer clears the Level II threshold ($116k) but is $24k short of Level III ($144k). Level I starts at $87k, while Level IV is $173k.\n*   **Peer Comparison:** This salary is below the local median offer of $143k, placing it in the 29th percentile of 5,700 peer data scientist filings since FY2025.\n*   **NYC Distribution:** Of 8,285 certified data scientist filings in the NYC metro (FY2024 to FY2026 Q3), 23% (1,924 filings) qualified for 2 entries, while 49% (4,043 filings) achieved Level III or IV (3 or 4 entries).",
+    "session_id": "f9a76b4c-cb59-4dfa-94b4-9e7efbb70583",
+    "tool_calls": [
+     {
+      "agent": "H-1B Analyst",
+      "name": "read_mappings",
+      "args": {},
+      "result": "{\"as_of\": \"FY2026 Q3\", \"tables\": {\"lca\": {\"description\": \"One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.\", \"columns\": [{\"name\": \"case_number\", \"type\": \"VARCHAR\", \"description\": \"DOL case number, unique per row.\"}, {\"name\": \"case_status\", \"type\": \"VARCHAR\", \"description\": \"DOL decision. Use 'CERTIFIED' for filings employers could actually use.\", \"is_enum\": true}, {\"name\": \"fiscal_year\", \"type\": \"INTEGER\", \"description\": \"US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.\", \"is_enum\": true}, {\"name\": \"quarter\", \"type\": \"INTEGER\", \"description\": \"Fiscal quarter 1-4 (Q1 = Oct-Dec).\", \"is_enum\": true}, {\"name\": \"received_date\", \"type\": \"DATE\", \"description\": \"Date DOL received the LCA.\"}, {\"name\": \"decision_date\", \"type\": \"DATE\", \"description\": \"Date DOL decided the LCA.\"}, {\"name\": \"job_title\", \"type\": \"VARCHAR\", \"description\": \"Job title as typed by the employer (free text, messy). Do not filter on it: use role_family.\"}, {\"name\": \"title_norm\", \"type\": \"VARCHAR\", \"description\": \"Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning).\"}, {\"name\": \"role_family\", \"type\": \"VARCHAR\", \"description\": \"Clean role category built offline from the title and SOC code. Get the value from find_role.\", \"is_enum\": true}, {\"name\": \"seniority\", \"type\": \"VARCHAR\", \"description\": \"Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.\", \"is_enum\": true}, {\"name\": \"soc_code\", \"type\": \"VARCHAR\", \"description\": \"Standard Occupational Classification code, e.g. 15-1252 = Software Developers.\"}, {\"name\": \"soc_title\", \"type\": \"VARCHAR\", \"description\": \"Name of the SOC occupation.\"}, {\"name\": \"full_time\", \"type\": \"VARCHAR\", \"description\": \"'Y' if full-time.\", \"is_enum\": true}, {\"name\": \"total_worker_positions\", \"type\": \"INTEGER\", \"description\": \"Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings.\"}, {\"name\": \"filing_type\", \"type\": \"VARCHAR\", \"description\": \"Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.\", \"is_enum\": true}, {\"name\": \"new_employment\", \"type\": \"INTEGER\", \"description\": \"Workers in this filing who are new employment.\", \"is_enum\": true}, {\"name\": \"continued_employment\", \"type\": \"INTEGER\", \"description\": \"Workers who are continuing employment (extensions).\", \"is_enum\": true}, {\"name\": \"change_employer\", \"type\": \"INTEGER\", \"description\": \"Workers transferring from another employer.\", \"is_enum\": true}, {\"name\": \"employer_id\", \"type\": \"INTEGER\", \"description\": \"Resolved employer key: all legal-name variants of one company share it. Get it from find_employer.\"}, {\"name\": \"employer\", \"type\": \"VARCHAR\", \"description\": \"Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer.\"}, {\"name\": \"employer_type\", \"type\": \"VARCHAR\", \"description\": \"big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).\", \"is_enum\": true}, {\"name\": \"employer_name_raw\", \"type\": \"VARCHAR\", \"description\": \"Employer name exactly as filed. Do not filter on it: use employer_id.\"}, {\"name\": \"naics_code\", \"type\": \"VARCHAR\", \"description\": \"Employer's industry code (NAICS).\"}, {\"name\": \"worksite_city\", \"type\": \"VARCHAR\", \"description\": \"Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...).\"}, {\"name\": \"worksite_city_raw\", \"type\": \"VARCHAR\", \"description\": \"Worksite city as typed by the employer.\"}, {\"name\": \"worksite_county\", \"type\": \"VARCHAR\", \"description\": \"Worksite county as filed.\"}, {\"name\": \"worksite_state\", \"type\": \"VARCHAR\", \"description\": \"Two-letter worksite state.\", \"is_enum\": true}, {\"name\": \"worksite_zip\", \"type\": \"VARCHAR\", \"description\": \"Five-digit worksite ZIP code.\"}, {\"name\": \"area_code\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area (metro) code for the worksite. Get it from find_location.\"}, {\"name\": \"metro_name\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'.\"}, {\"name\": \"wage_from_raw\", \"type\": \"DOUBLE\", \"description\": \"Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it.\"}, {\"name\": \"wage_to_raw\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered wage range as filed, in wage_unit, often blank.\"}, {\"name\": \"wage_unit\", \"type\": \"VARCHAR\", \"description\": \"Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.\", \"is_enum\": true}, {\"name\": \"wage_annual_from\", \"type\": \"DOUBLE\", \"description\": \"Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay.\"}, {\"name\": \"wage_annual_to\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered range, yearly (equals wage_annual_from when no range).\"}, {\"name\": \"wage_flag\", \"type\": \"VARCHAR\", \"description\": \"'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.\", \"is_enum\": true}, {\"name\": \"pw_annual\", \"type\": \"DOUBLE\", \"description\": \"Prevailing wage the employer cited, yearly.\"}, {\"name\": \"pw_wage_level\", \"type\": \"VARCHAR\", \"description\": \"Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.\", \"is_enum\": true}, {\"name\": \"pw_level_num\", \"type\": \"INTEGER\", \"description\": \"pw_wage_level as a number 1-4.\", \"is_enum\": true}, {\"name\": \"offer_wage_level\", \"type\": \"INTEGER\", \"description\": \"Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.\", \"is_enum\": true}, {\"name\": \"h1b_dependent\", \"type\": \"VARCHAR\", \"description\": \"'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B)"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_location",
+      "args": {
+       "place": "NYC"
+      },
+      "result": "{\"area_code\": \"35620\", \"metro_name\": \"New York-Newark-Jersey City, NY-NJ\", \"matched_by\": \"alias\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_role",
+      "args": {
+       "text": "data scientist"
+      },
+      "result": "{\"role_family\": \"Data Scientist\", \"matched_by\": \"rules\", \"main_soc_codes\": [{\"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"filings\": 38958}, {\"soc_code\": \"15-2041\", \"soc_title\": \"Statisticians\", \"filings\": 6341}, {\"soc_code\": \"15-2031\", \"soc_title\": \"Operations Research Analysts\", \"filings\": 969}], \"example_titles\": [\"data scientist\", \"senior data scientist\", \"data scientist ii\", \"data scientist iii\", \"data science\", \"machine learning\"]}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "wage_level",
+      "args": {
+       "location": "NYC",
+       "salary": 120000,
+       "soc_code": "15-2051",
+       "role": "data scientist"
+      },
+      "result": "{\"salary\": 120000.0, \"role_family\": \"Data Scientist\", \"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"area_code\": \"35620\", \"metro_name\": \"New York-Newark-Jersey City, NY-NJ\", \"wage_level\": 2, \"lottery_entries\": 2, \"thresholds\": {\"level_1\": 87256.0, \"level_2\": 115835.0, \"level_3\": 144414.0, \"level_4\": 172994.0}, \"raise_needed_for_next_level\": 24414, \"peer_filings_fy2025_on\": 5700, \"salary_percentile_among_peer_filings\": 29.4, \"peer_median_offer\": 145140.5, \"wage_year\": \"OFLC 2026-27 (Jul 2026 - Jun 2027)\", \"approximate\": false, \"note\": \"Level 2 = 2 lottery entries under the wage-weighted lottery.\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT offer_lottery_entries, count(*) AS filings, round(100.0 * count(*) / sum(count(*)) OVER (), 1) AS pct FROM lca WHERE role_family = 'Data Scientist' AND area_code = '35620' AND case_status = 'CERTIFIED' GROUP BY 1 ORDER BY 1"
+      },
+      "result": "{\"columns\": [\"offer_lottery_entries\", \"filings\", \"pct\"], \"rows\": [[0, 678, 8.2], [1, 1640, 19.8], [2, 1924, 23.2], [3, 2026, 24.4], [4, 2017, 24.3], [null, 8, 0.1]], \"row_count\": 6, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT median(wage_annual_from) FROM lca WHERE role_family = 'Data Scientist' AND area_code = '35620' AND case_status = 'CERTIFIED' AND wage_flag = 'ok'"
+      },
+      "result": "{\"columns\": [\"median(wage_annual_from)\"], \"rows\": [[143101.0]], \"row_count\": 1, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT COALESCE(offer_lottery_entries::VARCHAR, 'Below I') AS entries_label, count(*) AS filings FROM lca WHERE role_family = 'Data Scientist' AND area_code = '35620' AND case_status = 'CERTIFIED' AND offer_lottery_entries IS NOT NULL GROUP BY offer_lottery_entries ORDER BY offer_lottery_entries"
+      },
+      "result": "{\"columns\": [\"entries_label\", \"filings\"], \"rows\": [[\"0\", 678], [\"1\", 1640], [\"2\", 1924], [\"3\", 2026], [\"4\", 2017]], \"row_count\": 5, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "color": null,
+       "title": "NYC Data Scientist LCA Filings by Wage-Weighted Lottery Entries",
+       "y": "filings",
+       "mark": "bar",
+       "x": "entries_label"
+      },
+      "result": "{\"ok\": true, \"note\": \"Chart shown to the user. Do not describe the chart's styling.\"}"
+     }
+    ],
+    "chart": {
+     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+     "title": "NYC Data Scientist LCA Filings by Wage-Weighted Lottery Entries",
+     "data": {
+      "values": [
+       {
+        "entries_label": "0",
+        "filings": 678
+       },
+       {
+        "entries_label": "1",
+        "filings": 1640
+       },
+       {
+        "entries_label": "2",
+        "filings": 1924
+       },
+       {
+        "entries_label": "3",
+        "filings": 2026
+       },
+       {
+        "entries_label": "4",
+        "filings": 2017
+       }
+      ]
+     },
+     "mark": {
+      "type": "bar",
+      "point": false
+     },
+     "encoding": {
+      "y": {
+       "field": "entries_label",
+       "type": "nominal",
+       "sort": "-x",
+       "title": null
+      },
+      "x": {
+       "field": "filings",
+       "type": "quantitative"
+      },
+      "tooltip": [
+       {
+        "field": "entries_label",
+        "type": "nominal"
+       },
+       {
+        "field": "filings",
+        "type": "quantitative"
+       }
+      ]
+     },
+     "width": "container"
+    },
+    "table": {
+     "columns": [
+      "entries_label",
+      "filings"
+     ],
+     "rows": [
+      [
+       "0",
+       678
+      ],
+      [
+       "1",
+       1640
+      ],
+      [
+       "2",
+       1924
+      ],
+      [
+       "3",
+       2026
+      ],
+      [
+       "4",
+       2017
+      ]
+     ],
+     "row_count": 5,
+     "truncated": false
+    }
+   },
+   "plain_ok": false,
+   "agent_ok": true
+  },
+  {
+   "plain": {
+    "response": "Under the current H-1B regulations and proposed selection frameworks, here is how a **$120,000 Data Scientist offer in New York City** is treated:\n\n### 1. In the Actual H-1B Lottery (Current \"Beneficiary-Centric\" System)\nUnder the current beneficiary-centric selection process implemented in 2024 (for the FY 2025 cap and onward), every applicant receives **exactly one entry** in the lottery, regardless of:\n* Offered salary ($120,000)\n* Job title (Data Scientist)\n* Geographic location (New York City)\n\nMultiple registrations submitted by different employers for the same person are consolidated into a single entry based on passport/identification information to ensure a fair 1-candidate-to-1-entry ratio.\n\n---\n\n### 2. What Prevailing Wage Level Does a $120,000 Offer Map To?\nIf we analyze the LCA data for **Data Scientists** (`SOC 15-2051.00`) in **New York, NY**, the standard prevailing wage thresholds are:\n\n| Wage Level | Prevailing Wage (FY 2024) | Prevailing Wage (FY 2025/2026) |\n| :--- | :--- | :--- |\n| **Level I (Entry)** | ~$80,850 | **$79,456 - $82,763** |\n| **Level II (Qualified)** | ~$108,306 | **$109,491 - $111,966** |\n| **Level III (Experienced)** | ~$135,782 | **$139,506 - $141,170** |\n| **Level IV (Fully Competent)** | ~$163,238 | **$169,541 - $170,373** |\n\n* **Your Offer:** $120,000\n* **Classification:** Since $120,000 is higher than the Level II requirement (~$109,491) but lower than the Level III requirement (~$139,506), this offer would be officially categorized under a **Level II prevailing wage level**.\n\n---\n\n### 3. Under the Proposed \"Wage-Level Based\" Selection System\nThe Trump administration previously proposed (but courts subsequently vacated) a wage-level-prioritized selection process. If a similar wage-based selection framework were ever enacted:\n* **Level IV & Level III** offers would get first priority (typically historical simulations show a 100% selection rate).\n* **Level II** offers (like this $120,000 one) would only be selected if there are leftover cap spaces after Levels IV and III are fully exhausted. In highly competitive years, simulations show Level II selection rates range from **0% to 20%**, and Level I selection rates are **0%**.",
+    "tool_calls": [
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "DESCRIBE lca;"
+      },
+      "result": "{\"columns\": [\"column_name\", \"column_type\", \"null\", \"key\", \"default\", \"extra\"], \"rows\": [[\"case_number\", \"VARCHAR\", \"YES\", null, null, null], [\"case_status\", \"VARCHAR\", \"YES\", null, null, null], [\"received_date\", \"VARCHAR\", \"YES\", null, null, null], [\"decision_date\", \"VARCHAR\", \"YES\", null, null, null], [\"visa_class\", \"VARCHAR\", \"YES\", null, null, null], [\"job_title\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_code\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_title\", \"VARCHAR\", \"YES\", null, null, null], [\"full_time\", \"VARCHAR\", \"YES\", null, null, null], [\"begin_date\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worker_positions\", \"VARCHAR\", \"YES\", null, null, null], [\"new_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"continued_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_previous_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"new_concurrent_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_employer\", \"VARCHAR\", \"YES\", null, null, null], [\"amended_petition\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_name\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_city\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_state\", \"VARCHAR\", \"YES\", null, null, null], [\"naics_code\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_city\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_county\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_state\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_zip\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_from\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_to\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_wage_level\", \"VARCHAR\", \"YES\", null, null, null], [\"h1b_dependent\", \"VARCHAR\", \"YES\", null, null, null], [\"willful_violator\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worksite_locations\", \"VARCHAR\", \"YES\", null, null, null], [\"source_file\", \"VARCHAR\", \"YES\", null, null, null]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT * FROM lca WHERE LOWER(job_title) LIKE '%data scientist%' AND LOWER(worksite_city) LIKE '%new york%' LIMIT 10;"
+      },
+      "result": "{\"columns\": [\"case_number\", \"case_status\", \"received_date\", \"decision_date\", \"visa_class\", \"job_title\", \"soc_code\", \"soc_title\", \"full_time\", \"begin_date\", \"total_worker_positions\", \"new_employment\", \"continued_employment\", \"change_previous_employment\", \"new_concurrent_employment\", \"change_employer\", \"amended_petition\", \"employer_name\", \"employer_city\", \"employer_state\", \"naics_code\", \"worksite_city\", \"worksite_county\", \"worksite_state\", \"worksite_zip\", \"wage_from\", \"wage_to\", \"wage_unit\", \"pw\", \"pw_unit\", \"pw_wage_level\", \"h1b_dependent\", \"willful_violator\", \"total_worksite_locations\", \"source_file\"], \"rows\": [[\"I-200-24110-905949\", \"Certified\", \"45401\", \"45408\", \"H-1B\", \"Senior Data Scientist\", \"15-2051.00\", \"Data Scientists\", \"Y\", \"45566\", \"1\", \"0\", \"0\", \"1\", \"0\", \"0\", \"0\", \"THE BOSTON CONSULTING GROUP, INC. \", \"BOSTON\", \"MA\", \"541611\", \" New York\", \"NEW YORK\", \"NY\", \"10001\", \"161500\", \"200900\", \"Year\", \"108306\", \"Year\", \"II\", \"No\", \"No\", \"2\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I-200-24109-899973\", \"Certified\", \"45400\", \"45407\", \"H-1B\", \"SENIOR DATA SCIENTIST\", \"15-1221.00\", \"Computer and Information Research Scientists\", \"Y\", \"45583\", \"1\", \"0\", \"1\", \"0\", \"0\", \"0\", \"0\", \"SPOTIFY USA, INC.\", \"New York\", \"NY\", \"513210\", \"NEW YORK\", \"NEW YORK\", \"NY\", \"10007\", \"206700\", null, \"Year\", \"155958\", \"Year\", \"IV\", \"No\", \"No\", \"2\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I-200-24109-903539\", \"Certified\", \"45400\", \"45407\", \"H-1B\", \"Data Scientist\", \"15-2051.00\", \"Data Scientists\", \"Y\", \"45566\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"Point72, L.P.\", \"Stamford\", \"CT\", \"52392\", \"New York\", \"NEW YORK\", \"NY\", \"10001\", \"165000\", null, \"Year\", \"163238\", \"Year\", \"IV\", \"No\", \"No\", \"1\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I-200-24109-899794\", \"Certified\", \"45400\", \"45407\", \"H-1B\", \"Data Scientist\", \"15-2051.00\", \"Data Scientists\", \"Y\", \"45566\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"Meta Platforms, Inc\", \"Menlo Park\", \"CA\", \"519290\", \"New York\", \"NEW YORK\", \"NY\", \"10001\", \"170000\", null, \"Year\", \"135782\", \"Year\", \"III\", \"Yes\", \"No\", \"2\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I-200-24109-900020\", \"Certified\", \"45400\", \"45407\", \"H-1B\", \"Data Scientist II\", \"15-2051.00\", \"Data Scientists\", \"Y\", \"45566\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"Amazon.com Services LLC\", \"Seattle\", \"WA\", \"45411\", \"New York\", \"NEW YORK\", \"NY\", \"10001\", \"136800\", null, \"Year\", \"108306\", \"Year\", \"II\", \"No\", \"No\", \"1\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I-200-24109-899784\", \"Certified\", \"45400\", \"45407\", \"H-1B\", \"Data Scientist, Analytics\", \"15-2051.00\", \"Data Scientists\", \"Y\", \"45566\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"Meta Platforms, Inc\", \"Menlo Park\", \"CA\", \"519290\", \"New York\", \"NEW YORK\", \"NY\", \"10001\", \"133523.51999999999\", null, \"Year\", \"108306\", \"Year\", \"II\", \"Yes\", \"No\", \"2\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I-200-24109-902834\", \"Certified\", \"45400\", \"45407\", \"H-1B\", \"Data Scientist\", \"15-2051.00\", \"Data Scientists\", \"Y\", \"45566\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"Certified Kernel Tech LLC \", \"New York\", \"NY\", \"541512\", \"New York\", \"NEW YORK\", \"NY\", \"10018\", \"132946\", null, \"Year\", \"108306\", \"Year\", \"II\", \"Yes\", \"No\", \"2\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I-200-24109-903478\", \"Certified\", \"45400\", \"45407\", \"H-1B\", \"Data Scientist\", \"15-2051.00\", \"Data Scientists\", \"Y\", \"45566\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"Point72, L.P.\", \"Stamford\", \"CT\", \"52392\", \"New York\", \"NEW YORK\", \"NY\", \"10001\", \"180000\", null, \"Year\", \"163238\", \"Year\", \"IV\", \"No\", \"No\", \"1\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I-200-24108-895910\", \"Certified\", \"45399\", \"45406\", \"H-1B\", \"Senior Data Scientist\", \"15-2051.00\", \"Data Scientist\", \"Y\", \"45566\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"Bluecore, Inc.\", \"New York\", \"NY\", \"541511\", \"New York\", \"NEW YORK\", \"NY\", \"10038\", \"160000\", \"210000\", \"Year\", \"108306\", \"Year\", \"II\", \"No\", \"No\", \"2\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I-200-24108-894750\", \"Certified\", \"45399\", \"45406\", \"H-1B\", \"Data Scientist\", \"15-2051.00\", \"Data Scientists\", \"Y\", \"45566\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"Meta Platforms, Inc\", \"Menlo Park\", \"CA\", \"519290\", \"New York\", \"NEW YORK\", \"NY\", \"10001\", \"170000\", null, \"Year\", \"135782\", \"Year\", \"III\", \"Yes\", \"No\", \"2\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT pw_wage_level, MIN(CAST(pw AS DOUBLE)) as min_pw, MAX(CAST(pw AS DOUBLE)) as max_pw, COUNT(*) as count \nFROM lca \nWHERE soc_code = '15-2051.00' AND TRIM(UPPER(worksite_city)) = 'NEW YORK' AND worksite_state = 'NY' AND pw_unit = 'Year'\nGROUP BY pw_wage_level;"
+      },
+      "result": "{\"columns\": [\"pw_wage_level\", \"min_pw\", \"max_pw\", \"count\"], \"rows\": [[\"IV\", 103293.0, 179088.0, 871], [null, 55546.11, 198550.0, 200], [\"III\", 90272.0, 141170.0, 943], [\"I\", 50378.0, 82763.0, 647], [\"II\", 77272.0, 111996.0, 1541]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT pw_wage_level, CAST(pw AS DOUBLE) as pw_val, COUNT(*) as cnt\nFROM lca \nWHERE soc_code = '15-2051.00' AND TRIM(UPPER(worksite_city)) = 'NEW YORK' AND worksite_state = 'NY' AND pw_unit = 'Year'\nGROUP BY pw_wage_level, pw_val\nORDER BY cnt DESC\nLIMIT 30;"
+      },
+      "result": "{\"columns\": [\"pw_wage_level\", \"pw_val\", \"cnt\"], \"rows\": [[\"II\", 109491.0, 569], [\"II\", 111966.0, 537], [\"IV\", 169541.0, 413], [\"III\", 139506.0, 411], [\"II\", 108306.0, 370], [\"III\", 141170.0, 311], [\"I\", 79456.0, 273], [\"IV\", 170373.0, 268], [\"III\", 135782.0, 202], [\"I\", 82763.0, 180], [\"IV\", 163238.0, 175], [\"I\", 80850.0, 158], [\"II\", 77272.0, 24], [\"II\", 78062.0, 16], [null, 150433.0, 14], [null, 97443.0, 12], [\"II\", 81224.0, 12], [\"I\", 64251.0, 11], [\"II\", 102482.0, 11], [null, 92825.0, 9], [null, 163524.0, 9], [\"IV\", 153525.0, 8], [\"I\", 76960.0, 8], [\"III\", 128003.0, 8], [null, 96786.0, 7], [\"I\", 67787.0, 7], [null, 113243.0, 6], [null, 123033.0, 6], [null, 95595.0, 6], [\"I\", 63710.0, 6]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SHOW TABLES;"
+      },
+      "result": "{\"columns\": [\"name\"], \"rows\": [[\"lca\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT pw_wage_level, pw, source_file\nFROM lca \nWHERE soc_code = '15-2051.00' AND TRIM(UPPER(worksite_city)) = 'NEW YORK' AND worksite_state = 'NY' AND pw_unit = 'Year'\nORDER BY pw_wage_level, CAST(pw AS DOUBLE);"
+      },
+      "result": "{\"columns\": [\"pw_wage_level\", \"pw\", \"source_file\"], \"rows\": [[\"I\", \"50378\", \"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"I\", \"54974\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"I\", \"63710\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"I\", \"63710\", \"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"I\", \"63710\", \"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"I\", \"63710\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I\", \"64251\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"I\", \"64251\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"I\", \"65146\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"I\", \"65146\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"I\", \"67787\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"I\", \"67787\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"I\", \"67787\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"I\", \"67787\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"I\", \"67787\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"I\", \"76960\", \"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"I\", \"76960\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I\", \"76960\", \"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"I\", \"76960\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"I\", \"76960\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"I\", \"79456\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"I\", \"79456\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"I\", \"80850\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"I\", \"80850\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"I\", \"80850\", \"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"I\", \"80850\", \"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"I\", \"80850\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"I\", \"80850\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"I\", \"80850\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"I\", \"80850\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"I\", \"82763\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"I\", \"82763\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"I\", \"82763\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"I\", \"82763\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"I\", \"82763\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"I\", \"82763\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"II\", \"77272\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"II\", \"77272\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"II\", \"78062\", \"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"II\", \"78062\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"II\", \"78062\", \"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"II\", \"81224\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"II\", \"81224\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"II\", \"81224\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"II\", \"81224\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"II\", \"81224\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"II\", \"94910\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"II\", \"102482\", \"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"II\", \"102482\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"II\", \"102482\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"II\", \"102482\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"II\", \"102482\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"II\", \"102482\", \"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"II\", \"102482\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"II\", \"102482\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"II\", \"108306\", \"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"II\", \"108306\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"II\", \"108306\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"II\", \"108306\", \"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"II\", \"108306\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"II\", \"108306\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"II\", \"108306\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"II\", \"108306\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"II\", \"108306\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"II\", \"109491\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"II\", \"109491\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"II\", \"111966\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"II\", \"111966\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"II\", \"111966\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"II\", \"111966\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"II\", \"111966\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"II\", \"111966\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"II\", \"111996\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"III\", \"90272\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"III\", \"92414\", \"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"III\", \"92414\", \"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"III\", \"94682\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"III\", \"94682\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"III\", \"94682\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"III\", \"128003\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"III\", \"128003\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"III\", \"128003\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"III\", \"128003\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"III\", \"128003\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"III\", \"135782\", \"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"III\", \"135782\", \"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"III\", \"135782\", \"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"III\", \"135782\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"III\", \"135782\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"III\", \"135782\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"III\", \"135782\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"III\", \"135782\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"III\", \"135782\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"III\", \"139506\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"III\", \"139506\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"III\", \"141170\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"III\", \"141170\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"III\", \"141170\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"III\", \"141170\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"III\", \"141170\", \"LCA_Disclosure_Data_FY2026_Q3.xlsx\"]], \"truncated\": true}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT source_file, pw_wage_level, CAST(pw AS DOUBLE) as pw_val, COUNT(*) as cnt\nFROM lca \nWHERE soc_code = '15-2051.00' AND TRIM(UPPER(worksite_city)) = 'NEW YORK' AND worksite_state = 'NY' AND pw_unit = 'Year'\nGROUP BY source_file, pw_wage_level, pw_val\nORDER BY source_file DESC, pw_wage_level, pw_val;"
+      },
+      "result": "{\"columns\": [\"source_file\", \"pw_wage_level\", \"pw_val\", \"cnt\"], \"rows\": [[\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"I\", 64251.0, 9], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"I\", 76960.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"I\", 79456.0, 262], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"I\", 80850.0, 3], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"I\", 82763.0, 5], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"II\", 77272.0, 18], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"II\", 94910.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"II\", 102482.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"II\", 108306.0, 6], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"II\", 109491.0, 495], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"II\", 111966.0, 10], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"III\", 90272.0, 4], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"III\", 128003.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"III\", 135782.0, 4], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"III\", 139506.0, 343], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"III\", 141170.0, 5], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"IV\", 103293.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"IV\", 153525.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"IV\", 163238.0, 3], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"IV\", 169541.0, 349], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"IV\", 170373.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", \"IV\", 179088.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 73921.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 74123.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 75530.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 76734.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 91162.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 91861.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 91882.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 92825.0, 9], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 93310.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 95595.0, 6], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 97433.0, 3], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 97443.0, 12], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 104844.0, 5], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 109550.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 113243.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 122104.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 123033.0, 6], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 124938.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 127447.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 127452.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 127658.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 127793.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 127818.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 129969.0, 3], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 133289.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 139681.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 141891.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 143504.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 149059.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 150145.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 150433.0, 14], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 151800.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 153852.0, 3], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 154109.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 154177.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 155853.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 158972.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 159941.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 160029.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 161955.0, 1], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 163524.0, 9], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 165706.0, 2], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 174701.0, 4], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", null, 198550.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"I\", 63710.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"I\", 64251.0, 2], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"I\", 67787.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"I\", 79456.0, 11], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"I\", 80850.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"I\", 82763.0, 4], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"II\", 77272.0, 6], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"II\", 81224.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"II\", 102482.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"II\", 108306.0, 6], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"II\", 109491.0, 74], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"II\", 111966.0, 12], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"III\", 128003.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"III\", 135782.0, 3], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"III\", 139506.0, 68], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"III\", 141170.0, 11], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"IV\", 103293.0, 2], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"IV\", 153525.0, 3], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"IV\", 163238.0, 3], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"IV\", 169541.0, 64], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", \"IV\", 170373.0, 18], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", null, 87418.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", null, 93003.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", null, 96786.0, 2], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", null, 124659.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", null, 141643.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", null, 142353.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", null, 152024.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", null, 160294.0, 1], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", null, 162194.0, 1], [\"LCA_Disclosure_Data_FY2025_Q3.xlsx\", \"I\", 54974.0, 1], [\"LCA_Disclosure_Data_FY2025_Q3.xlsx\", \"I\", 65146.0, 1], [\"LCA_Disclosure_Data_FY2025_Q3.xlsx\", \"I\", 67787.0, 2], [\"LCA_Disclosure_Data_FY2025_Q3.xlsx\", \"I\", 82763.0, 118]], \"truncated\": true}"
+     }
+    ]
+   },
+   "agent": {
+    "response": "A $120,000 data scientist offer in the New York metro area would get **2 lottery entries** in the wage-weighted H-1B lottery.\n\n* **Wage Tier:** This $120k salary falls into Level II, which requires a minimum of $116k for Data Scientists in NYC (SOC 15-2051) under the 2026\u201327 wage guidelines. A raise of $24k is needed to reach Level III (3 entries) at $144k.\n* **Local Distribution:** Out of 8,286 certified Data Scientist filings in the NYC metro from FY2024 to FY2026 Q3, 23.2% (1,924 filings) qualified for 2 entries, with a median offered pay of $135k.\n* **Peer Comparison:** This offer sits at the 29th percentile of peer offers. The overall median pay for these NYC filings is $145k, and 19.8% of filings (1,640) qualified for just 1 entry (Level I, median $109k).",
+    "session_id": "8a3c28f1-2d6d-40ba-b298-c715f4fc4c24",
+    "tool_calls": [
+     {
+      "agent": "H-1B Analyst",
+      "name": "read_mappings",
+      "args": {},
+      "result": "{\"as_of\": \"FY2026 Q3\", \"tables\": {\"lca\": {\"description\": \"One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.\", \"columns\": [{\"name\": \"case_number\", \"type\": \"VARCHAR\", \"description\": \"DOL case number, unique per row.\"}, {\"name\": \"case_status\", \"type\": \"VARCHAR\", \"description\": \"DOL decision. Use 'CERTIFIED' for filings employers could actually use.\", \"is_enum\": true}, {\"name\": \"fiscal_year\", \"type\": \"INTEGER\", \"description\": \"US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.\", \"is_enum\": true}, {\"name\": \"quarter\", \"type\": \"INTEGER\", \"description\": \"Fiscal quarter 1-4 (Q1 = Oct-Dec).\", \"is_enum\": true}, {\"name\": \"received_date\", \"type\": \"DATE\", \"description\": \"Date DOL received the LCA.\"}, {\"name\": \"decision_date\", \"type\": \"DATE\", \"description\": \"Date DOL decided the LCA.\"}, {\"name\": \"job_title\", \"type\": \"VARCHAR\", \"description\": \"Job title as typed by the employer (free text, messy). Do not filter on it: use role_family.\"}, {\"name\": \"title_norm\", \"type\": \"VARCHAR\", \"description\": \"Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning).\"}, {\"name\": \"role_family\", \"type\": \"VARCHAR\", \"description\": \"Clean role category built offline from the title and SOC code. Get the value from find_role.\", \"is_enum\": true}, {\"name\": \"seniority\", \"type\": \"VARCHAR\", \"description\": \"Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.\", \"is_enum\": true}, {\"name\": \"soc_code\", \"type\": \"VARCHAR\", \"description\": \"Standard Occupational Classification code, e.g. 15-1252 = Software Developers.\"}, {\"name\": \"soc_title\", \"type\": \"VARCHAR\", \"description\": \"Name of the SOC occupation.\"}, {\"name\": \"full_time\", \"type\": \"VARCHAR\", \"description\": \"'Y' if full-time.\", \"is_enum\": true}, {\"name\": \"total_worker_positions\", \"type\": \"INTEGER\", \"description\": \"Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings.\"}, {\"name\": \"filing_type\", \"type\": \"VARCHAR\", \"description\": \"Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.\", \"is_enum\": true}, {\"name\": \"new_employment\", \"type\": \"INTEGER\", \"description\": \"Workers in this filing who are new employment.\", \"is_enum\": true}, {\"name\": \"continued_employment\", \"type\": \"INTEGER\", \"description\": \"Workers who are continuing employment (extensions).\", \"is_enum\": true}, {\"name\": \"change_employer\", \"type\": \"INTEGER\", \"description\": \"Workers transferring from another employer.\", \"is_enum\": true}, {\"name\": \"employer_id\", \"type\": \"INTEGER\", \"description\": \"Resolved employer key: all legal-name variants of one company share it. Get it from find_employer.\"}, {\"name\": \"employer\", \"type\": \"VARCHAR\", \"description\": \"Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer.\"}, {\"name\": \"employer_type\", \"type\": \"VARCHAR\", \"description\": \"big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).\", \"is_enum\": true}, {\"name\": \"employer_name_raw\", \"type\": \"VARCHAR\", \"description\": \"Employer name exactly as filed. Do not filter on it: use employer_id.\"}, {\"name\": \"naics_code\", \"type\": \"VARCHAR\", \"description\": \"Employer's industry code (NAICS).\"}, {\"name\": \"worksite_city\", \"type\": \"VARCHAR\", \"description\": \"Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...).\"}, {\"name\": \"worksite_city_raw\", \"type\": \"VARCHAR\", \"description\": \"Worksite city as typed by the employer.\"}, {\"name\": \"worksite_county\", \"type\": \"VARCHAR\", \"description\": \"Worksite county as filed.\"}, {\"name\": \"worksite_state\", \"type\": \"VARCHAR\", \"description\": \"Two-letter worksite state.\", \"is_enum\": true}, {\"name\": \"worksite_zip\", \"type\": \"VARCHAR\", \"description\": \"Five-digit worksite ZIP code.\"}, {\"name\": \"area_code\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area (metro) code for the worksite. Get it from find_location.\"}, {\"name\": \"metro_name\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'.\"}, {\"name\": \"wage_from_raw\", \"type\": \"DOUBLE\", \"description\": \"Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it.\"}, {\"name\": \"wage_to_raw\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered wage range as filed, in wage_unit, often blank.\"}, {\"name\": \"wage_unit\", \"type\": \"VARCHAR\", \"description\": \"Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.\", \"is_enum\": true}, {\"name\": \"wage_annual_from\", \"type\": \"DOUBLE\", \"description\": \"Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay.\"}, {\"name\": \"wage_annual_to\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered range, yearly (equals wage_annual_from when no range).\"}, {\"name\": \"wage_flag\", \"type\": \"VARCHAR\", \"description\": \"'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.\", \"is_enum\": true}, {\"name\": \"pw_annual\", \"type\": \"DOUBLE\", \"description\": \"Prevailing wage the employer cited, yearly.\"}, {\"name\": \"pw_wage_level\", \"type\": \"VARCHAR\", \"description\": \"Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.\", \"is_enum\": true}, {\"name\": \"pw_level_num\", \"type\": \"INTEGER\", \"description\": \"pw_wage_level as a number 1-4.\", \"is_enum\": true}, {\"name\": \"offer_wage_level\", \"type\": \"INTEGER\", \"description\": \"Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.\", \"is_enum\": true}, {\"name\": \"h1b_dependent\", \"type\": \"VARCHAR\", \"description\": \"'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B)"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_location",
+      "args": {
+       "place": "NYC"
+      },
+      "result": "{\"area_code\": \"35620\", \"metro_name\": \"New York-Newark-Jersey City, NY-NJ\", \"matched_by\": \"alias\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_role",
+      "args": {
+       "text": "data scientist"
+      },
+      "result": "{\"role_family\": \"Data Scientist\", \"matched_by\": \"rules\", \"main_soc_codes\": [{\"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"filings\": 38958}, {\"soc_code\": \"15-2041\", \"soc_title\": \"Statisticians\", \"filings\": 6341}, {\"soc_code\": \"15-2031\", \"soc_title\": \"Operations Research Analysts\", \"filings\": 969}], \"example_titles\": [\"data scientist\", \"senior data scientist\", \"data scientist ii\", \"data scientist iii\", \"data science\", \"machine learning\"]}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "wage_level",
+      "args": {
+       "location": "NYC",
+       "soc_code": "15-2051",
+       "role": "data scientist",
+       "salary": 120000
+      },
+      "result": "{\"salary\": 120000.0, \"role_family\": \"Data Scientist\", \"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"area_code\": \"35620\", \"metro_name\": \"New York-Newark-Jersey City, NY-NJ\", \"wage_level\": 2, \"lottery_entries\": 2, \"thresholds\": {\"level_1\": 87256.0, \"level_2\": 115835.0, \"level_3\": 144414.0, \"level_4\": 172994.0}, \"raise_needed_for_next_level\": 24414, \"peer_filings_fy2025_on\": 5700, \"salary_percentile_among_peer_filings\": 29.4, \"peer_median_offer\": 145140.5, \"wage_year\": \"OFLC 2026-27 (Jul 2026 - Jun 2027)\", \"approximate\": false, \"note\": \"Level 2 = 2 lottery entries under the wage-weighted lottery.\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT \n    offer_lottery_entries, \n    count(*) AS filings, \n    median(wage_annual_from) AS median_pay,\n    round(100.0 * count(*) / sum(count(*)) OVER (), 1) AS pct\nFROM lca \nWHERE area_code = '35620' \n  AND role_family = 'Data Scientist' \n  AND case_status = 'CERTIFIED' \n  AND wage_flag = 'ok'\nGROUP BY 1 \nORDER BY 1\n"
+      },
+      "result": "{\"columns\": [\"offer_lottery_entries\", \"filings\", \"median_pay\", \"pct\"], \"rows\": [[0, 678, 81172.0, 8.2], [1, 1640, 109491.0, 19.8], [2, 1924, 135000.0, 23.2], [3, 2026, 160000.0, 24.5], [4, 2017, 195000.0, 24.3], [null, 1, 139626.0, 0.0]], \"row_count\": 6, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "mark": "bar",
+       "y": "filings",
+       "color": null,
+       "title": "NYC Data Scientist Filings by Lottery Entries (FY2024-FY2026 Q3)",
+       "x": "offer_lottery_entries"
+      },
+      "result": "{\"ok\": true, \"note\": \"Chart shown to the user. Do not describe the chart's styling.\"}"
+     }
+    ],
+    "chart": {
+     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+     "title": "NYC Data Scientist Filings by Lottery Entries (FY2024-FY2026 Q3)",
+     "data": {
+      "values": [
+       {
+        "offer_lottery_entries": 0,
+        "filings": 678,
+        "median_pay": 81172.0,
+        "pct": 8.2
+       },
+       {
+        "offer_lottery_entries": 1,
+        "filings": 1640,
+        "median_pay": 109491.0,
+        "pct": 19.8
+       },
+       {
+        "offer_lottery_entries": 2,
+        "filings": 1924,
+        "median_pay": 135000.0,
+        "pct": 23.2
+       },
+       {
+        "offer_lottery_entries": 3,
+        "filings": 2026,
+        "median_pay": 160000.0,
+        "pct": 24.5
+       },
+       {
+        "offer_lottery_entries": 4,
+        "filings": 2017,
+        "median_pay": 195000.0,
+        "pct": 24.3
+       },
+       {
+        "offer_lottery_entries": null,
+        "filings": 1,
+        "median_pay": 139626.0,
+        "pct": 0.0
+       }
+      ]
+     },
+     "mark": {
+      "type": "bar",
+      "point": false
+     },
+     "encoding": {
+      "x": {
+       "field": "offer_lottery_entries",
+       "type": "quantitative"
+      },
+      "y": {
+       "field": "filings",
+       "type": "quantitative"
+      },
+      "tooltip": [
+       {
+        "field": "offer_lottery_entries",
+        "type": "quantitative"
+       },
+       {
+        "field": "filings",
+        "type": "quantitative"
+       },
+       {
+        "field": "median_pay",
+        "type": "quantitative"
+       },
+       {
+        "field": "pct",
+        "type": "quantitative"
+       }
+      ]
+     },
+     "width": "container"
+    },
+    "table": {
+     "columns": [
+      "offer_lottery_entries",
+      "filings",
+      "median_pay",
+      "pct"
+     ],
+     "rows": [
+      [
+       0,
+       678,
+       81172.0,
+       8.2
+      ],
+      [
+       1,
+       1640,
+       109491.0,
+       19.8
+      ],
+      [
+       2,
+       1924,
+       135000.0,
+       23.2
+      ],
+      [
+       3,
+       2026,
+       160000.0,
+       24.5
+      ],
+      [
+       4,
+       2017,
+       195000.0,
+       24.3
+      ],
+      [
+       null,
+       1,
+       139626.0,
+       0.0
+      ]
+     ],
+     "row_count": 6,
+     "truncated": false
+    }
+   },
+   "plain_ok": false,
+   "agent_ok": true
+  }
+ ]
+}

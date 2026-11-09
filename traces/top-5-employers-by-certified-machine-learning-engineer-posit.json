@@ -1,0 +1,860 @@
+{
+ "question": "Top 5 employers by certified machine learning engineer positions in the New York City area in FY2025.",
+ "gold": [
+  "Bloomberg",
+  "Yahoo Holdings",
+  "Meta",
+  "JPMorgan Chase",
+  "Pinterest"
+ ],
+ "gold_sql": "SELECT employer FROM lca WHERE role_family = 'Machine Learning Engineer' AND area_code = '35620' AND fiscal_year = 2025 AND case_status = 'CERTIFIED' GROUP BY 1 ORDER BY sum(total_worker_positions) DESC LIMIT 5",
+ "no_tools": "Because Fiscal Year 2025 (which runs from October 1, 2024, to September 30, 2025) is currently ongoing, complete and finalized data for the entire fiscal year is not yet available. Additionally, my knowledge cutoff is January 2025, meaning I cannot provide real-time updates or post-January 2025 statistics.\n\nHowever, in the context of fiscal year data, **\"certified positions\"** typically refers to **H-1B Labor Condition Applications (LCAs)** approved by the U.S. Department of Labor (DOL) for foreign workers, which is the most reliable metric for tracking specific engineering roles by employer and metro area. \n\nBased on historical data leading into FY2025 (from FY2023 and FY2024) and hiring trends in the New York-Newark-Jersey City metropolitan area, the top 5 employers consistently certifying the highest number of Machine Learning Engineer (and closely related AI/Data Science Specialist) positions are:\n\n### 1. Meta Platforms, Inc.\n* **NYC Presence:** Massive offices in Hudson Yards and Astor Place.\n* **Context:** Meta is consistently one of the top sponsors for ML engineers in NYC. The city serves as a primary hub for many of Meta\u2019s core AI research (FAIR) and product engineering teams, particularly focusing on recommendation algorithms, generative AI, and ad-tech.\n\n### 2. Google LLC\n* **NYC Presence:** Extensive campus in Chelsea and Hudson Square.\n* **Context:** Google is a dominant force in the NYC tech landscape. They certify a high volume of H-1B visas annually for ML Engineers working on Google Search, YouTube recommendation engines, Google Cloud AI, and local ad platforms.\n\n### 3. Bloomberg LP\n* **NYC Presence:** Global Headquarters in Midtown Manhattan.\n* **Context:** As a financial data giant, Bloomberg employs a massive cohort of ML and Natural Language Processing (NLP) engineers. They are highly active in certifying roles dedicated to financial ML models, sentiment analysis, and proprietary AI projects (such as BloombergGPT).\n\n### 4. JPMorgan Chase & Co.\n* **NYC Presence:** Global Headquarters in Midtown Manhattan and major tech hubs in Metro NY.\n* **Context:** JPMorgan Chase leads the financial services sector in AI investment. They certify a significant number of ML engineers annually to work on quantitative research, fraud detection, algorithmic trading, and personalized consumer banking AI.\n\n### 5. Amazon (including AWS)\n* **NYC Presence:** Major offices in Manhattan West and surrounding areas.\n* **Context:** Amazon utilizes a vast number of ML engineers in NYC to support Amazon Web Services (AWS) machine learning products, advertising optimization, and retail logistics algorithms. \n\n---\n\n### Other Notable Contenders in the NYC Area:\n* **ByteDance (TikTok):** Has rapidly expanded its ML engineering footprint in Times Square, focusing heavily on recommendation algorithms.\n* **Apple:** Continues to grow its NYC-based AI/ML teams, particularly in computer vision and Siri technologies.\n* **Capital One:** A major financial employer with a heavy focus on cloud-native ML engineering in the NYC/NJ area.\n\n### How to Find Finalized FY2025 Data:\nOnce FY2025 concludes and the data is fully processed, you can access the official, raw disclosure files directly from the **U.S. Department of Labor\u2019s Office of Foreign Labor Certification (OFLC) Performance Data** website. Alternatively, third-party aggregation sites like **MyVisaJobs** or **H1BGrader** allow you to filter certified LCAs by the \"Machine Learning Engineer\" job title, fiscal year, and the \"New York-Newark-Jersey City\" metro area.",
+ "runs": [
+  {
+   "plain": {
+    "response": "FAILED: MaxTurnsExceeded: Max turns (15) exceeded",
+    "tool_calls": [
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "DESCRIBE lca;"
+      },
+      "result": "{\"columns\": [\"column_name\", \"column_type\", \"null\", \"key\", \"default\", \"extra\"], \"rows\": [[\"case_number\", \"VARCHAR\", \"YES\", null, null, null], [\"case_status\", \"VARCHAR\", \"YES\", null, null, null], [\"received_date\", \"VARCHAR\", \"YES\", null, null, null], [\"decision_date\", \"VARCHAR\", \"YES\", null, null, null], [\"visa_class\", \"VARCHAR\", \"YES\", null, null, null], [\"job_title\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_code\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_title\", \"VARCHAR\", \"YES\", null, null, null], [\"full_time\", \"VARCHAR\", \"YES\", null, null, null], [\"begin_date\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worker_positions\", \"VARCHAR\", \"YES\", null, null, null], [\"new_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"continued_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_previous_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"new_concurrent_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_employer\", \"VARCHAR\", \"YES\", null, null, null], [\"amended_petition\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_name\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_city\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_state\", \"VARCHAR\", \"YES\", null, null, null], [\"naics_code\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_city\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_county\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_state\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_zip\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_from\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_to\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_wage_level\", \"VARCHAR\", \"YES\", null, null, null], [\"h1b_dependent\", \"VARCHAR\", \"YES\", null, null, null], [\"willful_violator\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worksite_locations\", \"VARCHAR\", \"YES\", null, null, null], [\"source_file\", \"VARCHAR\", \"YES\", null, null, null]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT source_file, COUNT(*) FROM lca GROUP BY source_file;"
+      },
+      "result": "{\"columns\": [\"source_file\", \"count_star()\"], \"rows\": [[\"LCA_Disclosure_Data_FY2025_Q2.xlsx\", 128673], [\"LCA_Disclosure_Data_FY2024_Q4.xlsx\", 117339], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", 114826], [\"LCA_Disclosure_Data_FY2025_Q1.xlsx\", 104046], [\"LCA_Disclosure_Data_FY2024_Q3.xlsx\", 212766], [\"LCA_Disclosure_Data_FY2024_Q1.xlsx\", 96294], [\"LCA_Disclosure_Data_FY2025_Q3.xlsx\", 234726], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", 426952], [\"LCA_Disclosure_Data_FY2024_Q2.xlsx\", 120408]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT case_status, COUNT(*) FROM lca GROUP BY case_status;"
+      },
+      "result": "{\"columns\": [\"case_status\", \"count_star()\"], \"rows\": [[\"Denied\", 9674], [\"Withdrawn\", 25043], [\"Certified - Withdrawn\", 87320], [\"Certified\", 1433993]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT total_worker_positions, COUNT(*) FROM lca GROUP BY total_worker_positions ORDER BY COUNT(*) DESC LIMIT 10;"
+      },
+      "result": "{\"columns\": [\"total_worker_positions\", \"count_star()\"], \"rows\": [[\"1\", 1487212], [\"10\", 23340], [\"5\", 9555], [\"3\", 9154], [\"25\", 4131], [\"40\", 4086], [\"20\", 3901], [\"2\", 3416], [\"50\", 2716], [\"100\", 2053]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT LOWER(job_title), COUNT(*) FROM lca WHERE LOWER(job_title) LIKE '%machine learning engineer%' GROUP BY LOWER(job_title) ORDER BY COUNT(*) DESC LIMIT 20;"
+      },
+      "result": "{\"columns\": [\"lower(job_title)\", \"count_star()\"], \"rows\": [[\"machine learning engineer\", 2632], [\"senior machine learning engineer\", 876], [\"machine learning engineer ii\", 288], [\"staff machine learning engineer\", 284], [\"sr. machine learning engineer\", 202], [\"principal machine learning engineer\", 89], [\"machine learning engineer (4)\", 87], [\"sr machine learning engineer\", 73], [\"machine learning engineer (5)\", 70], [\"lead machine learning engineer\", 61], [\"machine learning engineer i\", 60], [\"machine learning engineer \", 49], [\"senior staff machine learning engineer\", 45], [\"machine learning engineer iii\", 32], [\"autopilot machine learning engineer\", 29], [\"applied machine learning engineer\", 27], [\"machine learning engineer 3\", 27], [\"machine learning engineer (3)\", 22], [\"machine learning engineer 2\", 21], [\"senior machine learning engineer ii\", 21]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT worksite_city, COUNT(*) FROM lca WHERE worksite_state = 'NY' AND UPPER(worksite_city) LIKE 'NEW YORK%' GROUP BY worksite_city ORDER BY COUNT(*) DESC LIMIT 10;"
+      },
+      "result": "{\"columns\": [\"worksite_city\", \"count_star()\"], \"rows\": [[\"New York\", 81352], [\"NEW YORK\", 4903], [\"New York City\", 831], [\"New York \", 564], [\"NEW YORK CITY\", 77], [\"NEW YORK \", 68], [\"New York,\", 40], [\"New york\", 37], [\"new york\", 17], [\"New York, NY\", 7]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT worksite_city, COUNT(*) FROM lca WHERE worksite_state = 'NY' AND UPPER(worksite_city) IN ('BROOKLYN', 'QUEENS', 'BRONX', 'STATEN ISLAND', 'LONG ISLAND CITY', 'ASTORIA', 'FLUSHING') GROUP BY worksite_city ORDER BY COUNT(*) DESC;"
+      },
+      "result": "{\"columns\": [\"worksite_city\", \"count_star()\"], \"rows\": [[\"Brooklyn\", 4535], [\"Bronx\", 1965], [\"Long Island City\", 1500], [\"Flushing\", 716], [\"BROOKLYN\", 422], [\"Astoria\", 209], [\"Staten Island\", 190], [\"Queens\", 168], [\"BRONX\", 146], [\"LONG ISLAND CITY\", 92], [\"FLUSHING\", 72], [\"STATEN ISLAND\", 40], [\"QUEENS\", 25], [\"ASTORIA\", 21], [\"brooklyn\", 11], [\"Long Island CIty\", 5], [\"Long island city\", 4], [\"Long Island city\", 4], [\"Long island City\", 2], [\"long island city\", 2], [\"BRonx\", 2], [\"bronx\", 1], [\"Staten island\", 1], [\"flushing\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT worksite_city, COUNT(*) as cnt\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND LOWER(job_title) LIKE '%machine learning engineer%'\n  AND worksite_state = 'NY'\nGROUP BY worksite_city\nORDER BY cnt DESC;"
+      },
+      "result": "{\"columns\": [\"worksite_city\", \"cnt\"], \"rows\": [[\"New York\", 160], [\"Brooklyn\", 13], [\"New York City\", 4], [\"Long Island City\", 4], [\"Queens\", 2], [\"Rochester\", 2], [\"NEW YORK\", 2], [\"Buffalo\", 1], [\"Uniondale\", 1], [\"Yonkers\", 1], [\"Fairport\", 1], [\"Amherst\", 1], [\"New YorK\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, COUNT(*) as cases, SUM(CAST(total_worker_positions AS INTEGER)) as positions\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND LOWER(job_title) LIKE '%machine learning engineer%'\n  AND worksite_state = 'NY'\n  AND UPPER(TRIM(worksite_city)) IN ('NEW YORK', 'NEW YORK CITY', 'BROOKLYN', 'QUEENS', 'BRONX', 'STATEN ISLAND', 'LONG ISLAND CITY')\nGROUP BY employer_name\nORDER BY positions DESC, cases DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"cases\", \"positions\"], \"rows\": [[\"Bloomberg L.P.\", 19, 173], [\"Yahoo Holdings Inc.\", 2, 31], [\"Pinterest, Inc.\", 14, 14], [\"SNAP INC.\", 11, 11], [\"SPOTIFY USA, INC.\", 11, 11], [\"Meta Platforms, Inc\", 10, 10], [\"Reddit, Inc. \", 5, 5], [\"Kensho Technologies LLC\", 4, 4], [\"Etsy, Inc.\", 4, 4], [\"Aetna Resources LLC\", 4, 4], [\"CSC Holdings, LLC\", 3, 3], [\"PATREON, INC.\", 3, 3], [\"Stripe, Inc.\", 3, 3], [\"Populus Group LLC\", 3, 3], [\"Peloton Interactive, Inc.\", 3, 3]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT job_title, COUNT(*) as cnt\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND worksite_state = 'NY'\n  AND UPPER(TRIM(worksite_city)) IN ('NEW YORK', 'NEW YORK CITY', 'BROOKLYN', 'QUEENS', 'BRONX', 'STATEN ISLAND', 'LONG ISLAND CITY')\n  AND LOWER(job_title) LIKE '%machine learning%'\n  AND LOWER(job_title) NOT LIKE '%machine learning engineer%'\nGROUP BY job_title\nORDER BY cnt DESC;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"cnt\"], \"rows\": [[\"Software Engineer, Machine Learning\", 16], [\"Machine Learning Research\", 7], [\"Machine Learning Team Leader\", 5], [\"Machine Learning\", 5], [\"Machine Learning Software Engineer\", 4], [\"Sr. Software Engineer, Machine Learning\", 3], [\"Machine Learning Researcher\", 2], [\"Senior Software Engineer, Machine Learning\", 2], [\"Machine Learning Data Scientist\", 2], [\"Machine Learning Infrastructure Engineer\", 2], [\"Senior Software Engineer I, Machine Learning\", 1], [\"Staff Machine Learning Scientist\", 1], [\"Machine Learning Project Manager\", 1], [\"Staff Applied Machine Learning Scientist\", 1], [\"Applied Machine Learning Analyst\", 1], [\"IAC Researcher (aka Quant. Res., Appl'd Machine Learning)\", 1], [\"Software Engineer 1 - Machine Learning\", 1], [\"Machine Learning Scientist\", 1], [\"Head of Machine Learning and Society\", 1], [\"Associate Director, Machine Learning Product Developer 1993\", 1], [\"Engineer Machine Learning Operations\", 1], [\"Associate Director, Machine Learning Product Developer 1536\", 1], [\"Sr Director, AI & Machine Learning\", 1], [\"Data Scientist Machine Learning III\", 1], [\"Associate Machine Learning Support Engineer\", 1], [\"Staff Software Engineer, Machine Learning\", 1], [\"Senior Machine Learning Platform Engineer\", 1], [\"SENIOR MACHINE LEARNING OPERATIONS ENGINEER\", 1], [\"Machine Learning Platform Engineer\", 1], [\"Senior Director, Machine Learning & AI\", 1], [\"Head of Artificial Intelligence and Machine Learning\", 1], [\"Machine Learning Manager\", 1], [\"Senior Machine Learning Research Engineer\", 1], [\"Sr. Staff Software Engineer, Machine Learning\", 1], [\"Sr Software Engineer, Machine Learning\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT job_title, COUNT(*) as cnt\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND worksite_state = 'NY'\n  AND UPPER(TRIM(worksite_city)) IN ('NEW YORK', 'NEW YORK CITY', 'BROOKLYN', 'QUEENS', 'BRONX', 'STATEN ISLAND', 'LONG ISLAND CITY')\n  AND (\n    LOWER(job_title) LIKE '%machine learning engineer%'\n    OR LOWER(job_title) LIKE '%machine learning%engineer%'\n    OR LOWER(job_title) LIKE '%engineer%machine learning%'\n  )\nGROUP BY job_title\nORDER BY cnt DESC;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"cnt\"], \"rows\": [[\"Machine Learning Engineer\", 92], [\"Senior Machine Learning Engineer\", 19], [\"Software Engineer, Machine Learning\", 16], [\"Machine Learning Engineer II\", 11], [\"Staff Machine Learning Engineer\", 7], [\"Sr. Machine Learning Engineer\", 6], [\"Machine Learning Engineer (4)\", 5], [\"Senior Applied Machine Learning Engineer\", 4], [\"Machine Learning Software Engineer\", 4], [\"Sr. Software Engineer, Machine Learning\", 3], [\"Sr Machine Learning Engineer\", 3], [\"Machine Learning Engineer (3)\", 3], [\"Machine Learning Engineer II, Ads Recommendation\", 2], [\"MACHINE LEARNING ENGINEER\", 2], [\"Senior Software Engineer, Machine Learning\", 2], [\"Assistant Vice President & Machine Learning Engineer\", 2], [\"Machine Learning Engineer (5)\", 2], [\"Machine Learning Infrastructure Engineer\", 2], [\"Junior Machine Learning Engineer\", 1], [\"Senior Machine Learning Engineer, Trust & Safety\", 1], [\"Machine Learning Engineer (Data Science)\", 1], [\"Sr. Machine Learning Engineer I\", 1], [\"Machine Learning Engineer USDS\", 1], [\"Sr Software Engineer, Machine Learning\", 1], [\"Lead Machine Learning Engineer\", 1], [\"Senior Machine Learning Engineer I, Search Relevance\", 1], [\"Senior Software Engineer I, Machine Learning\", 1], [\"Associate Machine Learning Support Engineer\", 1], [\"Sr. Staff Software Engineer, Machine Learning\", 1], [\"Machine Learning Engineering Manager\", 1], [\"Senior Machine Learning Engineer, Growth\", 1], [\"AI/Machine Learning Engineer\", 1], [\"Senior Machine Learning Platform Engineer\", 1], [\"Machine Learning Engineer - Ads Signal\", 1], [\"Staff Software Engineer, Machine Learning\", 1], [\"Senior Manager, Machine Learning Engineering (7)\", 1], [\"Machine Learning Engineer 3\", 1], [\"SENIOR MACHINE LEARNING OPERATIONS ENGINEER\", 1], [\"Software Engineer 1 - Machine Learning\", 1], [\"Sr. Machine Learning Engineer, Core Engineering\", 1], [\"Engineer Machine Learning Operations\", 1], [\"Machine Learning Engineer II / CEO\", 1], [\"Machine Learning Engineer, NLP & NLU\", 1], [\"Open-Source Machine Learning Engineer\", 1], [\"Senior Machine Learning Engineer, PrePlan\", 1], [\"SENIOR MACHINE LEARNING ENGINEER\", 1], [\"Senior Machine Learning Research Engineer\", 1], [\"Machine Learning Engineering Manager II\", 1], [\"LEAD MACHINE LEARNING ENGINEER\", 1], [\"Senior Machine Learning Engineer II\", 1], [\"Senior Machine Learning Engineer I\", 1], [\"Machine Learning Platform Engineer\", 1], [\"Machine Learning Engineer, CV\", 1], [\"Machine Learning Engineer I\", 1], [\"Machine Learning Engineer- User Fraud\", 1], [\"Senior Machine Learning Engineer, Client Insights\", 1], [\"Machine Learning Engineer II, Inventory\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, COUNT(*) as cases, SUM(CAST(total_worker_positions AS INTEGER)) as positions\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND worksite_state = 'NY'\n  AND UPPER(TRIM(worksite_city)) IN ('NEW YORK', 'NEW YORK CITY', 'BROOKLYN', 'QUEENS', 'BRONX', 'STATEN ISLAND', 'LONG ISLAND CITY')\n  AND (\n    LOWER(job_title) LIKE '%machine learning engineer%'\n    OR LOWER(job_title) LIKE '%machine learning%engineer%'\n    OR LOWER(job_title) LIKE '%engineer%machine learning%'\n  )\nGROUP BY employer_name\nORDER BY positions DESC, cases DESC;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"cases\", \"positions\"], \"rows\": [[\"Bloomberg L.P.\", 19, 173], [\"Yahoo Holdings Inc.\", 2, 31], [\"Meta Platforms, Inc\", 27, 27], [\"Pinterest, Inc.\", 14, 14], [\"SNAP INC.\", 11, 11], [\"SPOTIFY USA, INC.\", 11, 11], [\"Etsy, Inc.\", 5, 5], [\"LinkedIn Corporation\", 5, 5], [\"Reddit, Inc. \", 5, 5], [\"Aetna Resources LLC\", 4, 4], [\"Kensho Technologies LLC\", 4, 4], [\"Hinge, Inc.\", 4, 4], [\"Populus Group LLC\", 4, 4], [\"PATREON, INC.\", 3, 3], [\"Apple Inc.\", 3, 3], [\"Stripe, Inc.\", 3, 3], [\"Coinbase, Inc.\", 3, 3], [\"CSC Holdings, LLC\", 3, 3], [\"Peloton Interactive, Inc.\", 3, 3], [\"LINKEDIN CORPORATION\", 3, 3], [\"VIAI LLC\", 1, 3], [\"ServiceNow, Inc.\", 2, 2], [\"EvolutionIQ LLC\", 2, 2], [\"Transatlantic Reinsurance Company\", 2, 2], [\"PayPal, Inc.\", 2, 2], [\"Shopify (USA) Inc.\", 2, 2], [\"Science Suite Corp.\", 2, 2], [\"Uber Technologies, Inc.\", 2, 2], [\"Harbor AI Inc.\", 2, 2], [\"WarnerMedia Services, LLC\", 2, 2], [\"Eoch Software, LLC\", 2, 2], [\"Adobe Inc.\", 2, 2], [\"Shaped.AI Inc.\", 1, 1], [\"Hyper Labs, Inc.\", 1, 1], [\"Fitch Group Services, Inc.\", 1, 1], [\"Qualcomm Technologies, Inc.\", 1, 1], [\"AI Optics, Inc.\", 1, 1], [\"Project Applecart LLC\", 1, 1], [\"BYTEDANCE INC.\", 1, 1], [\"Cruise LLC\", 1, 1], [\"Viant Technology LLC\", 1, 1], [\"Mount Sinai Hospital\", 1, 1], [\"HULU, LLC\", 1, 1], [\"Kargo Global LLC\", 1, 1], [\"Technova Systems Inc\", 1, 1], [\"Humans, Inc.\", 1, 1], [\"First Mile Group, Inc.\", 1, 1], [\"Veris Technologies Inc.\", 1, 1], [\"Merlyn Mind, Inc.\", 1, 1], [\"EvolutionIQ, LLC\", 1, 1], [\"Together Computer, Inc.\", 1, 1], [\"Noetica Inc.\", 1, 1], [\"FactSet Research Systems Inc.\", 1, 1], [\"Maplebear Inc.\", 1, 1], [\"ByteDance Inc.\", 1, 1], [\"Abacus.AI, Inc.\", 1, 1], [\"CITADEL AMERICAS SERVICES LLC\", 1, 1], [\"Newcortex LLC\", 1, 1], [\"Ever Careers Inc.\", 1, 1], [\"Usual Things, Inc.\", 1, 1], [\"ZestFinance, Inc.\", 1, 1], [\"Arthur AI, Inc.\", 1, 1], [\"Personio Corp.\", 1, 1], [\"NYSE Market (DE), Inc.\", 1, 1], [\"CVS Shared Services Resources LLC\", 1, 1], [\"Optiver Services US LLC\", 1, 1], [\"SIRIUS XM RADIO LLC\", 1, 1], [\"Fluent LLC\", 1, 1], [\"TikTok U.S. Data Security Inc.\", 1, 1], [\"Deel US LLC\", 1, 1], [\"Forty5Park, Inc.\", 1, 1], [\"Ataraxis AI, Inc.\", 1, 1], [\"Hugging Face, Inc.\", 1, 1], [\"Abnormal Security Corporation\", 1, 1], [\"Kargo Global, Inc.\", 1, 1], [\"Cedar Cares, Inc.\", 1, 1], [\"Buidl Labs, Inc.\", 1, 1], [\"Sapient Logistics Inc.\", 1, 1], [\"Flatiron Health, Inc.\", 1, 1], [\"HubSpot, Inc.\", 1, 1], [\"Waymo LLC\", 1, 1], [\"ADP Technology Services, Inc. \", 1, 1], [\"Bridge IT, Inc. \", 1, 1], [\"Pride Technologies LLC\", 1, 1], [\"Elide Interfaces, Inc.\", 1, 1], [\"BAKER HUGHES COMPANY\", 1, 1], [\"JetBlue Airways\", 1, 1], [\"Magnetar Capital, LLC\", 1, 1], [\"Faire Wholesale, Inc.\", 1, 1], [\"People Center, Inc. d/b/a Rippling\", 1, 1], [\"Zotec Partners, LLC\", 1, 1], [\"Curai, Inc.\", 1, 1], [\"Natural Language Labs Inc.\", 1, 1], [\"Reflection AI Inc.\", 1, 1], [\"Labelbox, Inc.\", 1, 1], [\"Jarvis Industries Inc.\", 1, 1], [\"Solstice Health, Inc.\", 1, 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, COUNT(*) as cases, SUM(CAST(total_worker_positions AS INTEGER)) as positions\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND worksite_state = 'NY'\n  AND UPPER(TRIM(worksite_city)) IN ('NEW YORK', 'NEW YORK CITY', 'BROOKLYN', 'QUEENS', 'BRONX', 'STATEN ISLAND', 'LONG ISLAND CITY')\n  AND LOWER(job_title) LIKE '%machine learning engineer%'\nGROUP BY employer_name\nORDER BY positions DESC, cases DESC;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"cases\", \"positions\"], \"rows\": [[\"Bloomberg L.P.\", 19, 173], [\"Yahoo Holdings Inc.\", 2, 31], [\"Pinterest, Inc.\", 14, 14], [\"SPOTIFY USA, INC.\", 11, 11], [\"SNAP INC.\", 11, 11], [\"Meta Platforms, Inc\", 10, 10], [\"Reddit, Inc. \", 5, 5], [\"Kensho Technologies LLC\", 4, 4], [\"Etsy, Inc.\", 4, 4], [\"Aetna Resources LLC\", 4, 4], [\"Peloton Interactive, Inc.\", 3, 3], [\"CSC Holdings, LLC\", 3, 3], [\"Populus Group LLC\", 3, 3], [\"PATREON, INC.\", 3, 3], [\"Apple Inc.\", 3, 3], [\"Coinbase, Inc.\", 3, 3], [\"Stripe, Inc.\", 3, 3], [\"VIAI LLC\", 1, 3], [\"Adobe Inc.\", 2, 2], [\"EvolutionIQ LLC\", 2, 2], [\"Transatlantic Reinsurance Company\", 2, 2], [\"WarnerMedia Services, LLC\", 2, 2], [\"Harbor AI Inc.\", 2, 2], [\"Hinge, Inc.\", 2, 2], [\"Uber Technologies, Inc.\", 2, 2], [\"Shopify (USA) Inc.\", 2, 2], [\"ServiceNow, Inc.\", 2, 2], [\"PayPal, Inc.\", 2, 2], [\"Science Suite Corp.\", 2, 2], [\"Cedar Cares, Inc.\", 1, 1], [\"Zotec Partners, LLC\", 1, 1], [\"Sapient Logistics Inc.\", 1, 1], [\"Fitch Group Services, Inc.\", 1, 1], [\"Qualcomm Technologies, Inc.\", 1, 1], [\"Project Applecart LLC\", 1, 1], [\"AI Optics, Inc.\", 1, 1], [\"First Mile Group, Inc.\", 1, 1], [\"Veris Technologies Inc.\", 1, 1], [\"Merlyn Mind, Inc.\", 1, 1], [\"EvolutionIQ, LLC\", 1, 1], [\"Together Computer, Inc.\", 1, 1], [\"Shaped.AI Inc.\", 1, 1], [\"Buidl Labs, Inc.\", 1, 1], [\"Hyper Labs, Inc.\", 1, 1], [\"Jarvis Industries Inc.\", 1, 1], [\"Personio Corp.\", 1, 1], [\"Optiver Services US LLC\", 1, 1], [\"Kargo Global LLC\", 1, 1], [\"Technova Systems Inc\", 1, 1], [\"CVS Shared Services Resources LLC\", 1, 1], [\"NYSE Market (DE), Inc.\", 1, 1], [\"Arthur AI, Inc.\", 1, 1], [\"Ever Careers Inc.\", 1, 1], [\"Mount Sinai Hospital\", 1, 1], [\"HULU, LLC\", 1, 1], [\"Newcortex LLC\", 1, 1], [\"TikTok U.S. Data Security Inc.\", 1, 1], [\"Deel US LLC\", 1, 1], [\"Fluent LLC\", 1, 1], [\"Abnormal Security Corporation\", 1, 1], [\"Forty5Park, Inc.\", 1, 1], [\"Ataraxis AI, Inc.\", 1, 1], [\"Hugging Face, Inc.\", 1, 1], [\"ByteDance Inc.\", 1, 1], [\"Waymo LLC\", 1, 1], [\"ADP Technology Services, Inc. \", 1, 1], [\"Maplebear Inc.\", 1, 1], [\"HubSpot, Inc.\", 1, 1], [\"ZestFinance, Inc.\", 1, 1], [\"Kargo Global, Inc.\", 1, 1], [\"FactSet Research Systems Inc.\", 1, 1], [\"Solstice Health, Inc.\", 1, 1], [\"Usual Things, Inc.\", 1, 1], [\"Pride Technologies LLC\", 1, 1], [\"Cruise LLC\", 1, 1], [\"Viant Technology LLC\", 1, 1], [\"BYTEDANCE INC.\", 1, 1], [\"Elide Interfaces, Inc.\", 1, 1], [\"Magnetar Capital, LLC\", 1, 1], [\"Reflection AI Inc.\", 1, 1], [\"BAKER HUGHES COMPANY\", 1, 1], [\"Noetica Inc.\", 1, 1], [\"Faire Wholesale, Inc.\", 1, 1], [\"Curai, Inc.\", 1, 1], [\"Natural Language Labs Inc.\", 1, 1], [\"People Center, Inc. d/b/a Rippling\", 1, 1], [\"Flatiron Health, Inc.\", 1, 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT worksite_city, COUNT(*) as cnt\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND worksite_state = 'NY'\n  AND (\n    LOWER(job_title) LIKE '%machine learning engineer%'\n    OR LOWER(job_title) LIKE '%machine learning%engineer%'\n    OR LOWER(job_title) LIKE '%engineer%machine learning%'\n  )\nGROUP BY worksite_city\nORDER BY cnt DESC;"
+      },
+      "result": "{\"columns\": [\"worksite_city\", \"cnt\"], \"rows\": [[\"New York\", 193], [\"Brooklyn\", 15], [\"Long Island City\", 6], [\"New York City\", 4], [\"NEW YORK\", 3], [\"Queens\", 2], [\"Rochester\", 2], [\"Buffalo\", 1], [\"Uniondale\", 1], [\"NISKAYUNA\", 1], [\"Yonkers\", 1], [\"New Paltz\", 1], [\"Fairport\", 1], [\"Amherst\", 1], [\"New YorK\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, COUNT(*) as cases, SUM(CAST(total_worker_positions AS INTEGER)) as positions\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND worksite_state = 'NY'\n  AND (\n    UPPER(TRIM(worksite_city)) LIKE 'NEW YORK%'\n    OR UPPER(TRIM(worksite_city)) IN ('BROOKLYN', 'QUEENS', 'BRONX', 'STATEN ISLAND', 'LONG ISLAND CITY')\n  )\n  AND (\n    LOWER(job_title) LIKE '%machine learning engineer%'\n  )\nGROUP BY employer_name\nORDER BY positions DESC, cases DESC;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"cases\", \"positions\"], \"rows\": [[\"Bloomberg L.P.\", 19, 173], [\"Yahoo Holdings Inc.\", 2, 31], [\"Pinterest, Inc.\", 14, 14], [\"SNAP INC.\", 11, 11], [\"SPOTIFY USA, INC.\", 11, 11], [\"Meta Platforms, Inc\", 10, 10], [\"Reddit, Inc. \", 5, 5], [\"Etsy, Inc.\", 4, 4], [\"Aetna Resources LLC\", 4, 4], [\"Kensho Technologies LLC\", 4, 4], [\"Populus Group LLC\", 3, 3], [\"Stripe, Inc.\", 3, 3], [\"Apple Inc.\", 3, 3], [\"Coinbase, Inc.\", 3, 3], [\"CSC Holdings, LLC\", 3, 3], [\"Peloton Interactive, Inc.\", 3, 3], [\"PATREON, INC.\", 3, 3], [\"VIAI LLC\", 1, 3], [\"Adobe Inc.\", 2, 2], [\"EvolutionIQ LLC\", 2, 2], [\"Hinge, Inc.\", 2, 2], [\"PayPal, Inc.\", 2, 2], [\"WarnerMedia Services, LLC\", 2, 2], [\"Harbor AI Inc.\", 2, 2], [\"Uber Technologies, Inc.\", 2, 2], [\"Shopify (USA) Inc.\", 2, 2], [\"ServiceNow, Inc.\", 2, 2], [\"Transatlantic Reinsurance Company\", 2, 2], [\"Science Suite Corp.\", 2, 2], [\"Cedar Cares, Inc.\", 1, 1], [\"Jarvis Industries Inc.\", 1, 1], [\"Kargo Global LLC\", 1, 1], [\"Technova Systems Inc\", 1, 1], [\"Fitch Group Services, Inc.\", 1, 1], [\"Qualcomm Technologies, Inc.\", 1, 1], [\"Project Applecart LLC\", 1, 1], [\"AI Optics, Inc.\", 1, 1], [\"TikTok U.S. Data Security Inc.\", 1, 1], [\"Deel US LLC\", 1, 1], [\"Fluent LLC\", 1, 1], [\"Abnormal Security Corporation\", 1, 1], [\"Forty5Park, Inc.\", 1, 1], [\"Ataraxis AI, Inc.\", 1, 1], [\"Hugging Face, Inc.\", 1, 1], [\"Shaped.AI Inc.\", 1, 1], [\"Newcortex LLC\", 1, 1], [\"Buidl Labs, Inc.\", 1, 1], [\"Flatiron Health, Inc.\", 1, 1], [\"Sapient Logistics Inc.\", 1, 1], [\"ByteDance Inc.\", 1, 1], [\"Maplebear Inc.\", 1, 1], [\"ADP Technology Services, Inc. \", 1, 1], [\"Waymo LLC\", 1, 1], [\"Mount Sinai Hospital\", 1, 1], [\"HULU, LLC\", 1, 1], [\"HubSpot, Inc.\", 1, 1], [\"Pride Technologies LLC\", 1, 1], [\"NYSE Market (DE), Inc.\", 1, 1], [\"Arthur AI, Inc.\", 1, 1], [\"Personio Corp.\", 1, 1], [\"CVS Shared Services Resources LLC\", 1, 1], [\"Optiver Services US LLC\", 1, 1], [\"Elide Interfaces, Inc.\", 1, 1], [\"Cruise LLC\", 1, 1], [\"BYTEDANCE INC.\", 1, 1], [\"Viant Technology LLC\", 1, 1], [\"BAKER HUGHES COMPANY\", 1, 1], [\"Magnetar Capital, LLC\", 1, 1], [\"Kargo Global, Inc.\", 1, 1], [\"ZestFinance, Inc.\", 1, 1], [\"FactSet Research Systems Inc.\", 1, 1], [\"Solstice Health, Inc.\", 1, 1], [\"Usual Things, Inc.\", 1, 1], [\"Reflection AI Inc.\", 1, 1], [\"Together Computer, Inc.\", 1, 1], [\"EvolutionIQ, LLC\", 1, 1], [\"Merlyn Mind, Inc.\", 1, 1], [\"Veris Technologies Inc.\", 1, 1], [\"Faire Wholesale, Inc.\", 1, 1], [\"Curai, Inc.\", 1, 1], [\"Natural Language Labs Inc.\", 1, 1], [\"People Center, Inc. d/b/a Rippling\", 1, 1], [\"Zotec Partners, LLC\", 1, 1], [\"First Mile Group, Inc.\", 1, 1], [\"Noetica Inc.\", 1, 1], [\"Hyper Labs, Inc.\", 1, 1], [\"Ever Careers Inc.\", 1, 1]], \"truncated\": false}"
+     }
+    ]
+   },
+   "agent": {
+    "response": "Bloomberg led all employers in the New York City area in FY2025, securing 173 certified machine learning engineer positions. \n\nKey details from the top sponsors in the New York-Newark-Jersey City metro area include:\n* **Bloomberg**: Sponsored 173 positions across 19 filings.\n* **Yahoo Holdings**: Sponsored 31 positions across a small sample of 2 filings.\n* **Meta**: Sponsored 27 positions across 27 filings.\n* **JPMorgan Chase**: Sponsored 24 positions across 24 filings.\n* **Pinterest**: Sponsored 14 positions across 14 filings.\n\nThese statistics are based on Labor Condition Applications (LCAs) certified by the Department of Labor during fiscal year 2025 (October 2024 to September 2025). LCAs represent intended filings and employer wage attestations, not approved petitions or final H-1B visas.",
+    "session_id": "d007755b-8417-492a-822b-9f8f0f6d54ef",
+    "tool_calls": [
+     {
+      "agent": "H-1B Analyst",
+      "name": "read_mappings",
+      "args": {},
+      "result": "{\"as_of\": \"FY2026 Q3\", \"tables\": {\"lca\": {\"description\": \"One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.\", \"columns\": [{\"name\": \"case_number\", \"type\": \"VARCHAR\", \"description\": \"DOL case number, unique per row.\"}, {\"name\": \"case_status\", \"type\": \"VARCHAR\", \"description\": \"DOL decision. Use 'CERTIFIED' for filings employers could actually use.\", \"is_enum\": true}, {\"name\": \"fiscal_year\", \"type\": \"INTEGER\", \"description\": \"US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.\", \"is_enum\": true}, {\"name\": \"quarter\", \"type\": \"INTEGER\", \"description\": \"Fiscal quarter 1-4 (Q1 = Oct-Dec).\", \"is_enum\": true}, {\"name\": \"received_date\", \"type\": \"DATE\", \"description\": \"Date DOL received the LCA.\"}, {\"name\": \"decision_date\", \"type\": \"DATE\", \"description\": \"Date DOL decided the LCA.\"}, {\"name\": \"job_title\", \"type\": \"VARCHAR\", \"description\": \"Job title as typed by the employer (free text, messy). Do not filter on it: use role_family.\"}, {\"name\": \"title_norm\", \"type\": \"VARCHAR\", \"description\": \"Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning).\"}, {\"name\": \"role_family\", \"type\": \"VARCHAR\", \"description\": \"Clean role category built offline from the title and SOC code. Get the value from find_role.\", \"is_enum\": true}, {\"name\": \"seniority\", \"type\": \"VARCHAR\", \"description\": \"Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.\", \"is_enum\": true}, {\"name\": \"soc_code\", \"type\": \"VARCHAR\", \"description\": \"Standard Occupational Classification code, e.g. 15-1252 = Software Developers.\"}, {\"name\": \"soc_title\", \"type\": \"VARCHAR\", \"description\": \"Name of the SOC occupation.\"}, {\"name\": \"full_time\", \"type\": \"VARCHAR\", \"description\": \"'Y' if full-time.\", \"is_enum\": true}, {\"name\": \"total_worker_positions\", \"type\": \"INTEGER\", \"description\": \"Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings.\"}, {\"name\": \"filing_type\", \"type\": \"VARCHAR\", \"description\": \"Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.\", \"is_enum\": true}, {\"name\": \"new_employment\", \"type\": \"INTEGER\", \"description\": \"Workers in this filing who are new employment.\", \"is_enum\": true}, {\"name\": \"continued_employment\", \"type\": \"INTEGER\", \"description\": \"Workers who are continuing employment (extensions).\", \"is_enum\": true}, {\"name\": \"change_employer\", \"type\": \"INTEGER\", \"description\": \"Workers transferring from another employer.\", \"is_enum\": true}, {\"name\": \"employer_id\", \"type\": \"INTEGER\", \"description\": \"Resolved employer key: all legal-name variants of one company share it. Get it from find_employer.\"}, {\"name\": \"employer\", \"type\": \"VARCHAR\", \"description\": \"Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer.\"}, {\"name\": \"employer_type\", \"type\": \"VARCHAR\", \"description\": \"big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).\", \"is_enum\": true}, {\"name\": \"employer_name_raw\", \"type\": \"VARCHAR\", \"description\": \"Employer name exactly as filed. Do not filter on it: use employer_id.\"}, {\"name\": \"naics_code\", \"type\": \"VARCHAR\", \"description\": \"Employer's industry code (NAICS).\"}, {\"name\": \"worksite_city\", \"type\": \"VARCHAR\", \"description\": \"Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...).\"}, {\"name\": \"worksite_city_raw\", \"type\": \"VARCHAR\", \"description\": \"Worksite city as typed by the employer.\"}, {\"name\": \"worksite_county\", \"type\": \"VARCHAR\", \"description\": \"Worksite county as filed.\"}, {\"name\": \"worksite_state\", \"type\": \"VARCHAR\", \"description\": \"Two-letter worksite state.\", \"is_enum\": true}, {\"name\": \"worksite_zip\", \"type\": \"VARCHAR\", \"description\": \"Five-digit worksite ZIP code.\"}, {\"name\": \"area_code\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area (metro) code for the worksite. Get it from find_location.\"}, {\"name\": \"metro_name\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'.\"}, {\"name\": \"wage_from_raw\", \"type\": \"DOUBLE\", \"description\": \"Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it.\"}, {\"name\": \"wage_to_raw\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered wage range as filed, in wage_unit, often blank.\"}, {\"name\": \"wage_unit\", \"type\": \"VARCHAR\", \"description\": \"Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.\", \"is_enum\": true}, {\"name\": \"wage_annual_from\", \"type\": \"DOUBLE\", \"description\": \"Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay.\"}, {\"name\": \"wage_annual_to\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered range, yearly (equals wage_annual_from when no range).\"}, {\"name\": \"wage_flag\", \"type\": \"VARCHAR\", \"description\": \"'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.\", \"is_enum\": true}, {\"name\": \"pw_annual\", \"type\": \"DOUBLE\", \"description\": \"Prevailing wage the employer cited, yearly.\"}, {\"name\": \"pw_wage_level\", \"type\": \"VARCHAR\", \"description\": \"Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.\", \"is_enum\": true}, {\"name\": \"pw_level_num\", \"type\": \"INTEGER\", \"description\": \"pw_wage_level as a number 1-4.\", \"is_enum\": true}, {\"name\": \"offer_wage_level\", \"type\": \"INTEGER\", \"description\": \"Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.\", \"is_enum\": true}, {\"name\": \"h1b_dependent\", \"type\": \"VARCHAR\", \"description\": \"'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B)"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_location",
+      "args": {
+       "place": "NYC"
+      },
+      "result": "{\"area_code\": \"35620\", \"metro_name\": \"New York-Newark-Jersey City, NY-NJ\", \"matched_by\": \"alias\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_role",
+      "args": {
+       "text": "machine learning engineer"
+      },
+      "result": "{\"role_family\": \"Machine Learning Engineer\", \"matched_by\": \"rules\", \"main_soc_codes\": [{\"soc_code\": \"15-1252\", \"soc_title\": \"Software Developers\", \"filings\": 5337}, {\"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"filings\": 3017}, {\"soc_code\": \"15-1221\", \"soc_title\": \"Computer and Information Research Scientists\", \"filings\": 607}], \"example_titles\": [\"machine learning engineer\", \"senior machine learning engineer\", \"artificial intelligence engineer\", \"software engineer machine learning\", \"staff machine learning engineer\", \"machine learning engineer ii\"]}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer, sum(total_worker_positions) AS positions, count(*) AS filings FROM lca WHERE area_code = '35620' AND role_family = 'Machine Learning Engineer' AND case_status = 'CERTIFIED' AND fiscal_year = 2025 GROUP BY employer ORDER BY positions DESC LIMIT 5"
+      },
+      "result": "{\"columns\": [\"employer\", \"positions\", \"filings\"], \"rows\": [[\"Bloomberg\", 173, 19], [\"Yahoo Holdings\", 31, 2], [\"Meta\", 27, 27], [\"JPMorgan Chase\", 24, 24], [\"Pinterest\", 14, 14]], \"row_count\": 5, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "x": "employer",
+       "color": null,
+       "y": "positions",
+       "mark": "bar",
+       "title": "Top 5 Employers by Certified ML Engineer Positions, NYC, FY2025"
+      },
+      "result": "{\"ok\": true, \"note\": \"Chart shown to the user. Do not describe the chart's styling.\"}"
+     }
+    ],
+    "chart": {
+     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+     "title": "Top 5 Employers by Certified ML Engineer Positions, NYC, FY2025",
+     "data": {
+      "values": [
+       {
+        "employer": "Bloomberg",
+        "positions": 173,
+        "filings": 19
+       },
+       {
+        "employer": "Yahoo Holdings",
+        "positions": 31,
+        "filings": 2
+       },
+       {
+        "employer": "Meta",
+        "positions": 27,
+        "filings": 27
+       },
+       {
+        "employer": "JPMorgan Chase",
+        "positions": 24,
+        "filings": 24
+       },
+       {
+        "employer": "Pinterest",
+        "positions": 14,
+        "filings": 14
+       }
+      ]
+     },
+     "mark": {
+      "type": "bar",
+      "point": false
+     },
+     "encoding": {
+      "y": {
+       "field": "employer",
+       "type": "nominal",
+       "sort": "-x",
+       "title": null
+      },
+      "x": {
+       "field": "positions",
+       "type": "quantitative"
+      },
+      "tooltip": [
+       {
+        "field": "employer",
+        "type": "nominal"
+       },
+       {
+        "field": "positions",
+        "type": "quantitative"
+       },
+       {
+        "field": "filings",
+        "type": "quantitative"
+       }
+      ]
+     },
+     "width": "container"
+    },
+    "table": {
+     "columns": [
+      "employer",
+      "positions",
+      "filings"
+     ],
+     "rows": [
+      [
+       "Bloomberg",
+       173,
+       19
+      ],
+      [
+       "Yahoo Holdings",
+       31,
+       2
+      ],
+      [
+       "Meta",
+       27,
+       27
+      ],
+      [
+       "JPMorgan Chase",
+       24,
+       24
+      ],
+      [
+       "Pinterest",
+       14,
+       14
+      ]
+     ],
+     "row_count": 5,
+     "truncated": false
+    }
+   },
+   "plain_ok": true,
+   "agent_ok": true
+  },
+  {
+   "plain": {
+    "response": "FAILED: MaxTurnsExceeded: Max turns (15) exceeded",
+    "tool_calls": [
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "DESCRIBE lca;"
+      },
+      "result": "{\"columns\": [\"column_name\", \"column_type\", \"null\", \"key\", \"default\", \"extra\"], \"rows\": [[\"case_number\", \"VARCHAR\", \"YES\", null, null, null], [\"case_status\", \"VARCHAR\", \"YES\", null, null, null], [\"received_date\", \"VARCHAR\", \"YES\", null, null, null], [\"decision_date\", \"VARCHAR\", \"YES\", null, null, null], [\"visa_class\", \"VARCHAR\", \"YES\", null, null, null], [\"job_title\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_code\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_title\", \"VARCHAR\", \"YES\", null, null, null], [\"full_time\", \"VARCHAR\", \"YES\", null, null, null], [\"begin_date\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worker_positions\", \"VARCHAR\", \"YES\", null, null, null], [\"new_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"continued_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_previous_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"new_concurrent_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_employer\", \"VARCHAR\", \"YES\", null, null, null], [\"amended_petition\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_name\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_city\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_state\", \"VARCHAR\", \"YES\", null, null, null], [\"naics_code\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_city\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_county\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_state\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_zip\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_from\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_to\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_wage_level\", \"VARCHAR\", \"YES\", null, null, null], [\"h1b_dependent\", \"VARCHAR\", \"YES\", null, null, null], [\"willful_violator\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worksite_locations\", \"VARCHAR\", \"YES\", null, null, null], [\"source_file\", \"VARCHAR\", \"YES\", null, null, null]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT case_status FROM lca;"
+      },
+      "result": "{\"columns\": [\"case_status\"], \"rows\": [[\"Denied\"], [\"Withdrawn\"], [\"Certified\"], [\"Certified - Withdrawn\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT total_worker_positions FROM lca LIMIT 5;"
+      },
+      "result": "{\"columns\": [\"total_worker_positions\"], \"rows\": [[\"1\"], [\"1\"], [\"1\"], [\"1\"], [\"1\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT MIN(received_date), MAX(received_date), MIN(decision_date), MAX(decision_date) FROM lca;"
+      },
+      "result": "{\"columns\": [\"min(received_date)\", \"max(received_date)\", \"min(decision_date)\", \"max(decision_date)\"], \"rows\": [[\"43752\", \"46203\", \"45201\", \"46203\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT received_date, decision_date FROM lca LIMIT 10;"
+      },
+      "result": "{\"columns\": [\"received_date\", \"decision_date\"], \"rows\": [[\"45401\", \"45408\"], [\"45401\", \"45408\"], [\"45401\", \"45408\"], [\"45401\", \"45408\"], [\"45401\", \"45408\"], [\"45401\", \"45408\"], [\"45402\", \"45408\"], [\"45401\", \"45408\"], [\"45402\", \"45408\"], [\"45402\", \"45408\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DATE '1899-12-30' + CAST(45401 AS INTEGER);"
+      },
+      "result": "{\"columns\": [\"(CAST('1899-12-30' AS DATE) + CAST(45401 AS INTEGER))\"], \"rows\": [[\"2024-04-19\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DATE '1899-12-30' + CAST(46203 AS INTEGER);"
+      },
+      "result": "{\"columns\": [\"(CAST('1899-12-30' AS DATE) + CAST(46203 AS INTEGER))\"], \"rows\": [[\"2026-06-30\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT source_file FROM lca;"
+      },
+      "result": "{\"columns\": [\"source_file\"], \"rows\": [[\"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q2.xlsx\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT MIN(DATE '1899-12-30' + CAST(decision_date AS INTEGER)) as min_dec, MAX(DATE '1899-12-30' + CAST(decision_date AS INTEGER)) as max_dec FROM lca WHERE source_file LIKE '%FY2025%';"
+      },
+      "result": "{\"columns\": [\"min_dec\", \"max_dec\"], \"rows\": [[\"2024-10-01\", \"2025-09-30\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, COUNT(*) FROM lca WHERE LOWER(job_title) LIKE '%machine learning%' GROUP BY 1 ORDER BY 2 DESC LIMIT 20;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"count_star()\"], \"rows\": [[\"Machine Learning Engineer\", 2549], [\"Senior Machine Learning Engineer\", 855], [\"Machine Learning\", 624], [\"Software Engineer, Machine Learning\", 392], [\"Machine Learning Engineer II\", 286], [\"Staff Machine Learning Engineer\", 277], [\"Sr. Machine Learning Engineer\", 202], [\"Machine Learning Scientist\", 202], [\"Sr. Software Engineer, Machine Learning\", 172], [\"Machine Learning Research\", 108], [\"Principal Machine Learning Engineer\", 88], [\"Machine Learning Engineer (4)\", 86], [\"MACHINE LEARNING ENGINEER\", 80], [\"Machine Learning Research Engineer\", 73], [\"Staff Software Engineer, Machine Learning\", 73], [\"Sr Machine Learning Engineer\", 71], [\"Machine Learning Engineer (5)\", 68], [\"Machine Learning Manager\", 61], [\"Machine Learning Engineer I\", 60], [\"Lead Machine Learning Engineer\", 57]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT LOWER(job_title) as jt, COUNT(*), SUM(CAST(total_worker_positions AS INTEGER)) FROM lca WHERE source_file LIKE '%FY2025%' AND LOWER(job_title) LIKE '%machine learning engineer%' GROUP BY 1 ORDER BY 3 DESC LIMIT 15;"
+      },
+      "result": "{\"columns\": [\"jt\", \"count_star()\", \"sum(CAST(total_worker_positions AS INTEGER))\"], \"rows\": [[\"machine learning engineer\", 1026, 1662], [\"senior machine learning engineer\", 355, 378], [\"staff machine learning engineer\", 119, 207], [\"principal machine learning engineer\", 37, 109], [\"machine learning engineer ii\", 94, 94], [\"sr. machine learning engineer\", 89, 89], [\"senior staff machine learning engineer\", 12, 87], [\"machine learning engineering technical leader\", 5, 55], [\"machine learning engineer (5)\", 34, 34], [\"sr. machine learning engineer i\", 2, 31], [\"sr. staff machine learning engineer\", 6, 30], [\"machine learning engineer (4)\", 26, 26], [\"machine learning engineer - usds\", 6, 22], [\"senior manager, machine learning engineering management\", 1, 20], [\"lead machine learning engineer\", 19, 19]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT worksite_city, COUNT(*) FROM lca WHERE worksite_state = 'NY' GROUP BY 1 ORDER BY 2 DESC LIMIT 15;"
+      },
+      "result": "{\"columns\": [\"worksite_city\", \"count_star()\"], \"rows\": [[\"New York\", 81352], [\"NEW YORK\", 4903], [\"Brooklyn\", 4535], [\"Bronx\", 1965], [\"Albany\", 1704], [\"Rochester\", 1665], [\"Buffalo\", 1639], [\"Long Island City\", 1500], [\"New York City\", 831], [\"Syracuse\", 768], [\"Flushing\", 716], [\"Ithaca\", 677], [\"New York \", 564], [\"Upton\", 533], [\"Tarrytown\", 513]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT LOWER(worksite_city) as city, COUNT(*) FROM lca WHERE worksite_state = 'NY' AND LOWER(worksite_city) LIKE '%new york%' GROUP BY 1 ORDER BY 2 DESC;"
+      },
+      "result": "{\"columns\": [\"city\", \"count_star()\"], \"rows\": [[\"new york\", 86320], [\"new york city\", 914], [\"new york \", 634], [\" new york\", 123], [\"new york,\", 43], [\" new york \", 9], [\"new york, ny\", 7], [\"new york city \", 5], [\"new york`\", 2], [\"new york (bronx)\", 2], [\"new york county\", 2], [\"new york  \", 2], [\"new york (duolingo location)\", 2], [\", new york\", 1], [\"new york manhattan\", 1], [\"new york.\", 1], [\"west new york\", 1], [\"new york, ny 10019\", 1], [\"new yorkl\", 1], [\"`new york\", 1], [\"new york new york\", 1], [\"new york, \", 1], [\"bronx, new york\", 1], [\" new york city \", 1], [\" new york,\", 1], [\"new york, ny \", 1], [\"woodside, queens, new york\", 1], [\"brooklyn new york\", 1], [\"brooklyn, new york\", 1], [\"tnew york\", 1], [\"new york   \", 1], [\"city new york\", 1], [\"new york 10018\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, worksite_city, job_title, total_worker_positions, case_status, source_file\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND worksite_state = 'NY'\n  AND LOWER(job_title) LIKE '%machine learning engineer%'\nORDER BY CAST(total_worker_positions AS INTEGER) DESC\nLIMIT 50;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"worksite_city\", \"job_title\", \"total_worker_positions\", \"case_status\", \"source_file\"], \"rows\": [[\"Yahoo Holdings Inc.\", \"New York\", \"Sr. Machine Learning Engineer I\", \"30\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"Bloomberg L.P.\", \"New York\", \"Machine Learning Engineer\", \"15\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"VIAI LLC\", \"Brooklyn\", \"Machine Learning Engineer\", \"3\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"Meta Platforms, Inc\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"SPOTIFY USA, INC.\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Faire Wholesale, Inc.\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Pinterest, Inc.\", \"New York\", \"Sr. Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Fitch Group Services, Inc.\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Meta Platforms, Inc\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"SPOTIFY USA, INC.\", \"New York\", \"SENIOR MACHINE LEARNING ENGINEER\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Bluesky Hospitality Solutions LLC\", \"Uniondale\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Kargo Global LLC\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"BYTEDANCE INC.\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Meta Platforms, Inc\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Fluent LLC\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Stripe, Inc.\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Reflection AI Inc.\", \"Brooklyn\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Reddit, Inc. \", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Stripe, Inc.\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Pinterest, Inc.\", \"New York\", \"Machine Learning Engineer II\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Magnetar Capital, LLC\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Science Suite Corp.\", \"New York\", \"Staff Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Meta Platforms, Inc\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Personio Corp.\", \"New York\", \"Senior Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"Reddit, Inc. \", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"SNAP INC.\", \"New York\", \"Machine Learning Engineer (3)\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Kensho Technologies LLC\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Pinterest, Inc.\", \"New York\", \"Machine Learning Engineer II\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"EvolutionIQ LLC\", \"New York\", \"Senior Applied Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Veris Technologies Inc.\", \"New York\", \"Senior Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Transatlantic Reinsurance Company\", \"New York\", \"Assistant Vice President & Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Pinterest, Inc.\", \"New York\", \"Machine Learning Engineer II\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Meta Platforms, Inc\", \"New York\", \"Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Transatlantic Reinsurance Company\", \"New York\", \"Assistant Vice President & Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Pinterest, Inc.\", \"New York\", \"Machine Learning Engineer II\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"PayPal, Inc.\", \"New York\", \"Staff Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"Maplebear Inc.\", \"New York\", \"Senior Machine Learning Engineer\", \"1\", \"Certified\", \"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"TikTok U.S. Data Security Inc.\", \"New York\", \"Machine Learning Engineer USDS\", \"1\", \"Certified"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT worksite_city, COUNT(*), SUM(CAST(total_worker_positions AS INTEGER))\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND worksite_state = 'NY'\n  AND LOWER(job_title) LIKE '%machine learning engineer%'\nGROUP BY 1 ORDER BY 3 DESC;"
+      },
+      "result": "{\"columns\": [\"worksite_city\", \"count_star()\", \"sum(CAST(total_worker_positions AS INTEGER))\"], \"rows\": [[\"New York\", 160, 343], [\"Brooklyn\", 13, 15], [\"New York City\", 4, 4], [\"Long Island City\", 4, 4], [\"Rochester\", 2, 2], [\"Queens\", 2, 2], [\"NEW YORK\", 2, 2], [\"Uniondale\", 1, 1], [\"Buffalo\", 1, 1], [\"Yonkers\", 1, 1], [\"New YorK\", 1, 1], [\"Fairport\", 1, 1], [\"Amherst\", 1, 1]], \"truncated\": false}"
+     }
+    ]
+   },
+   "agent": {
+    "response": "In FY2025, Bloomberg led all employers in the New York City metro area with 173 certified machine learning engineer positions. \n\nThe top five employers by certified positions are:\n* **Bloomberg**: 173 positions across 19 certified filings (a small sample).\n* **Yahoo Holdings**: 31 positions across 2 filings (a small sample).\n* **Meta**: 27 positions across 27 filings.\n* **JPMorgan Chase**: 24 positions across 24 filings.\n* **Pinterest**: 14 positions across 14 filings (a small sample).\n\nThese figures reflect Labor Condition Applications (LCAs) decided during the 2025 fiscal year for the New York-Newark-Jersey City area. LCAs represent employer job offers and wage attestations at the start of the process, not approved visas or finalized hires.",
+    "session_id": "de98697e-663e-4c99-ada6-23b8940683fd",
+    "tool_calls": [
+     {
+      "agent": "H-1B Analyst",
+      "name": "read_mappings",
+      "args": {},
+      "result": "{\"as_of\": \"FY2026 Q3\", \"tables\": {\"lca\": {\"description\": \"One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.\", \"columns\": [{\"name\": \"case_number\", \"type\": \"VARCHAR\", \"description\": \"DOL case number, unique per row.\"}, {\"name\": \"case_status\", \"type\": \"VARCHAR\", \"description\": \"DOL decision. Use 'CERTIFIED' for filings employers could actually use.\", \"is_enum\": true}, {\"name\": \"fiscal_year\", \"type\": \"INTEGER\", \"description\": \"US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.\", \"is_enum\": true}, {\"name\": \"quarter\", \"type\": \"INTEGER\", \"description\": \"Fiscal quarter 1-4 (Q1 = Oct-Dec).\", \"is_enum\": true}, {\"name\": \"received_date\", \"type\": \"DATE\", \"description\": \"Date DOL received the LCA.\"}, {\"name\": \"decision_date\", \"type\": \"DATE\", \"description\": \"Date DOL decided the LCA.\"}, {\"name\": \"job_title\", \"type\": \"VARCHAR\", \"description\": \"Job title as typed by the employer (free text, messy). Do not filter on it: use role_family.\"}, {\"name\": \"title_norm\", \"type\": \"VARCHAR\", \"description\": \"Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning).\"}, {\"name\": \"role_family\", \"type\": \"VARCHAR\", \"description\": \"Clean role category built offline from the title and SOC code. Get the value from find_role.\", \"is_enum\": true}, {\"name\": \"seniority\", \"type\": \"VARCHAR\", \"description\": \"Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.\", \"is_enum\": true}, {\"name\": \"soc_code\", \"type\": \"VARCHAR\", \"description\": \"Standard Occupational Classification code, e.g. 15-1252 = Software Developers.\"}, {\"name\": \"soc_title\", \"type\": \"VARCHAR\", \"description\": \"Name of the SOC occupation.\"}, {\"name\": \"full_time\", \"type\": \"VARCHAR\", \"description\": \"'Y' if full-time.\", \"is_enum\": true}, {\"name\": \"total_worker_positions\", \"type\": \"INTEGER\", \"description\": \"Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings.\"}, {\"name\": \"filing_type\", \"type\": \"VARCHAR\", \"description\": \"Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.\", \"is_enum\": true}, {\"name\": \"new_employment\", \"type\": \"INTEGER\", \"description\": \"Workers in this filing who are new employment.\", \"is_enum\": true}, {\"name\": \"continued_employment\", \"type\": \"INTEGER\", \"description\": \"Workers who are continuing employment (extensions).\", \"is_enum\": true}, {\"name\": \"change_employer\", \"type\": \"INTEGER\", \"description\": \"Workers transferring from another employer.\", \"is_enum\": true}, {\"name\": \"employer_id\", \"type\": \"INTEGER\", \"description\": \"Resolved employer key: all legal-name variants of one company share it. Get it from find_employer.\"}, {\"name\": \"employer\", \"type\": \"VARCHAR\", \"description\": \"Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer.\"}, {\"name\": \"employer_type\", \"type\": \"VARCHAR\", \"description\": \"big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).\", \"is_enum\": true}, {\"name\": \"employer_name_raw\", \"type\": \"VARCHAR\", \"description\": \"Employer name exactly as filed. Do not filter on it: use employer_id.\"}, {\"name\": \"naics_code\", \"type\": \"VARCHAR\", \"description\": \"Employer's industry code (NAICS).\"}, {\"name\": \"worksite_city\", \"type\": \"VARCHAR\", \"description\": \"Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...).\"}, {\"name\": \"worksite_city_raw\", \"type\": \"VARCHAR\", \"description\": \"Worksite city as typed by the employer.\"}, {\"name\": \"worksite_county\", \"type\": \"VARCHAR\", \"description\": \"Worksite county as filed.\"}, {\"name\": \"worksite_state\", \"type\": \"VARCHAR\", \"description\": \"Two-letter worksite state.\", \"is_enum\": true}, {\"name\": \"worksite_zip\", \"type\": \"VARCHAR\", \"description\": \"Five-digit worksite ZIP code.\"}, {\"name\": \"area_code\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area (metro) code for the worksite. Get it from find_location.\"}, {\"name\": \"metro_name\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'.\"}, {\"name\": \"wage_from_raw\", \"type\": \"DOUBLE\", \"description\": \"Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it.\"}, {\"name\": \"wage_to_raw\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered wage range as filed, in wage_unit, often blank.\"}, {\"name\": \"wage_unit\", \"type\": \"VARCHAR\", \"description\": \"Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.\", \"is_enum\": true}, {\"name\": \"wage_annual_from\", \"type\": \"DOUBLE\", \"description\": \"Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay.\"}, {\"name\": \"wage_annual_to\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered range, yearly (equals wage_annual_from when no range).\"}, {\"name\": \"wage_flag\", \"type\": \"VARCHAR\", \"description\": \"'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.\", \"is_enum\": true}, {\"name\": \"pw_annual\", \"type\": \"DOUBLE\", \"description\": \"Prevailing wage the employer cited, yearly.\"}, {\"name\": \"pw_wage_level\", \"type\": \"VARCHAR\", \"description\": \"Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.\", \"is_enum\": true}, {\"name\": \"pw_level_num\", \"type\": \"INTEGER\", \"description\": \"pw_wage_level as a number 1-4.\", \"is_enum\": true}, {\"name\": \"offer_wage_level\", \"type\": \"INTEGER\", \"description\": \"Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.\", \"is_enum\": true}, {\"name\": \"h1b_dependent\", \"type\": \"VARCHAR\", \"description\": \"'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B)"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_location",
+      "args": {
+       "place": "NYC"
+      },
+      "result": "{\"area_code\": \"35620\", \"metro_name\": \"New York-Newark-Jersey City, NY-NJ\", \"matched_by\": \"alias\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_role",
+      "args": {
+       "text": "machine learning engineer"
+      },
+      "result": "{\"role_family\": \"Machine Learning Engineer\", \"matched_by\": \"rules\", \"main_soc_codes\": [{\"soc_code\": \"15-1252\", \"soc_title\": \"Software Developers\", \"filings\": 5337}, {\"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"filings\": 3017}, {\"soc_code\": \"15-1221\", \"soc_title\": \"Computer and Information Research Scientists\", \"filings\": 607}], \"example_titles\": [\"machine learning engineer\", \"senior machine learning engineer\", \"artificial intelligence engineer\", \"software engineer machine learning\", \"staff machine learning engineer\", \"machine learning engineer ii\"]}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer, sum(total_worker_positions) AS positions, count(*) AS filings FROM lca WHERE area_code = '35620' AND role_family = 'Machine Learning Engineer' AND case_status = 'CERTIFIED' AND fiscal_year = 2025 GROUP BY employer ORDER BY positions DESC LIMIT 5"
+      },
+      "result": "{\"columns\": [\"employer\", \"positions\", \"filings\"], \"rows\": [[\"Bloomberg\", 173, 19], [\"Yahoo Holdings\", 31, 2], [\"Meta\", 27, 27], [\"JPMorgan Chase\", 24, 24], [\"Pinterest\", 14, 14]], \"row_count\": 5, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "y": "positions",
+       "mark": "bar",
+       "title": "Top Employers of Certified ML Engineers, NYC, FY2025",
+       "color": null,
+       "x": "employer"
+      },
+      "result": "{\"ok\": true, \"note\": \"Chart shown to the user. Do not describe the chart's styling.\"}"
+     }
+    ],
+    "chart": {
+     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+     "title": "Top Employers of Certified ML Engineers, NYC, FY2025",
+     "data": {
+      "values": [
+       {
+        "employer": "Bloomberg",
+        "positions": 173,
+        "filings": 19
+       },
+       {
+        "employer": "Yahoo Holdings",
+        "positions": 31,
+        "filings": 2
+       },
+       {
+        "employer": "Meta",
+        "positions": 27,
+        "filings": 27
+       },
+       {
+        "employer": "JPMorgan Chase",
+        "positions": 24,
+        "filings": 24
+       },
+       {
+        "employer": "Pinterest",
+        "positions": 14,
+        "filings": 14
+       }
+      ]
+     },
+     "mark": {
+      "type": "bar",
+      "point": false
+     },
+     "encoding": {
+      "y": {
+       "field": "employer",
+       "type": "nominal",
+       "sort": "-x",
+       "title": null
+      },
+      "x": {
+       "field": "positions",
+       "type": "quantitative"
+      },
+      "tooltip": [
+       {
+        "field": "employer",
+        "type": "nominal"
+       },
+       {
+        "field": "positions",
+        "type": "quantitative"
+       },
+       {
+        "field": "filings",
+        "type": "quantitative"
+       }
+      ]
+     },
+     "width": "container"
+    },
+    "table": {
+     "columns": [
+      "employer",
+      "positions",
+      "filings"
+     ],
+     "rows": [
+      [
+       "Bloomberg",
+       173,
+       19
+      ],
+      [
+       "Yahoo Holdings",
+       31,
+       2
+      ],
+      [
+       "Meta",
+       27,
+       27
+      ],
+      [
+       "JPMorgan Chase",
+       24,
+       24
+      ],
+      [
+       "Pinterest",
+       14,
+       14
+      ]
+     ],
+     "row_count": 5,
+     "truncated": false
+    }
+   },
+   "plain_ok": false,
+   "agent_ok": true
+  },
+  {
+   "plain": {
+    "response": "FAILED: MaxTurnsExceeded: Max turns (15) exceeded",
+    "tool_calls": [
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "PRAGMA table_info(lca);"
+      },
+      "result": "{\"columns\": [\"cid\", \"name\", \"type\", \"notnull\", \"dflt_value\", \"pk\"], \"rows\": [[0, \"case_number\", \"VARCHAR\", false, null, false], [1, \"case_status\", \"VARCHAR\", false, null, false], [2, \"received_date\", \"VARCHAR\", false, null, false], [3, \"decision_date\", \"VARCHAR\", false, null, false], [4, \"visa_class\", \"VARCHAR\", false, null, false], [5, \"job_title\", \"VARCHAR\", false, null, false], [6, \"soc_code\", \"VARCHAR\", false, null, false], [7, \"soc_title\", \"VARCHAR\", false, null, false], [8, \"full_time\", \"VARCHAR\", false, null, false], [9, \"begin_date\", \"VARCHAR\", false, null, false], [10, \"total_worker_positions\", \"VARCHAR\", false, null, false], [11, \"new_employment\", \"VARCHAR\", false, null, false], [12, \"continued_employment\", \"VARCHAR\", false, null, false], [13, \"change_previous_employment\", \"VARCHAR\", false, null, false], [14, \"new_concurrent_employment\", \"VARCHAR\", false, null, false], [15, \"change_employer\", \"VARCHAR\", false, null, false], [16, \"amended_petition\", \"VARCHAR\", false, null, false], [17, \"employer_name\", \"VARCHAR\", false, null, false], [18, \"employer_city\", \"VARCHAR\", false, null, false], [19, \"employer_state\", \"VARCHAR\", false, null, false], [20, \"naics_code\", \"VARCHAR\", false, null, false], [21, \"worksite_city\", \"VARCHAR\", false, null, false], [22, \"worksite_county\", \"VARCHAR\", false, null, false], [23, \"worksite_state\", \"VARCHAR\", false, null, false], [24, \"worksite_zip\", \"VARCHAR\", false, null, false], [25, \"wage_from\", \"VARCHAR\", false, null, false], [26, \"wage_to\", \"VARCHAR\", false, null, false], [27, \"wage_unit\", \"VARCHAR\", false, null, false], [28, \"pw\", \"VARCHAR\", false, null, false], [29, \"pw_unit\", \"VARCHAR\", false, null, false], [30, \"pw_wage_level\", \"VARCHAR\", false, null, false], [31, \"h1b_dependent\", \"VARCHAR\", false, null, false], [32, \"willful_violator\", \"VARCHAR\", false, null, false], [33, \"total_worksite_locations\", \"VARCHAR\", false, null, false], [34, \"source_file\", \"VARCHAR\", false, null, false]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT distinct source_file FROM lca;"
+      },
+      "result": "{\"columns\": [\"source_file\"], \"rows\": [[\"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q2.xlsx\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT case_status, COUNT(*) FROM lca GROUP BY 1;"
+      },
+      "result": "{\"columns\": [\"case_status\", \"count_star()\"], \"rows\": [[\"Certified - Withdrawn\", 87320], [\"Withdrawn\", 25043], [\"Certified\", 1433993], [\"Denied\", 9674]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT count(*), sum(try_cast(total_worker_positions as integer)) FROM lca WHERE total_worker_positions IS NOT NULL;"
+      },
+      "result": "{\"columns\": [\"count_star()\", \"sum(TRY_CAST(total_worker_positions AS INTEGER))\"], \"rows\": [[1556030, 2604529]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, count(*) FROM lca WHERE job_title ILIKE '%machine learning engineer%' GROUP BY 1 ORDER BY 2 DESC LIMIT 15;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"count_star()\"], \"rows\": [[\"Machine Learning Engineer\", 2549], [\"Senior Machine Learning Engineer\", 855], [\"Machine Learning Engineer II\", 286], [\"Staff Machine Learning Engineer\", 277], [\"Sr. Machine Learning Engineer\", 202], [\"Principal Machine Learning Engineer\", 88], [\"Machine Learning Engineer (4)\", 86], [\"MACHINE LEARNING ENGINEER\", 80], [\"Sr Machine Learning Engineer\", 71], [\"Machine Learning Engineer (5)\", 68], [\"Machine Learning Engineer I\", 60], [\"Lead Machine Learning Engineer\", 57], [\"Machine Learning Engineer \", 48], [\"Senior Staff Machine Learning Engineer\", 45], [\"Machine Learning Engineer III\", 32]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT worksite_city, worksite_state, count(*)\nFROM lca\nWHERE worksite_state = 'NY'\nGROUP BY 1, 2\nORDER BY 3 DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"worksite_city\", \"worksite_state\", \"count_star()\"], \"rows\": [[\"New York\", \"NY\", 81352], [\"NEW YORK\", \"NY\", 4903], [\"Brooklyn\", \"NY\", 4535], [\"Bronx\", \"NY\", 1965], [\"Albany\", \"NY\", 1704], [\"Rochester\", \"NY\", 1665], [\"Buffalo\", \"NY\", 1639], [\"Long Island City\", \"NY\", 1500], [\"New York City\", \"NY\", 831], [\"Syracuse\", \"NY\", 768], [\"Flushing\", \"NY\", 716], [\"Ithaca\", \"NY\", 677], [\"New York \", \"NY\", 564], [\"Upton\", \"NY\", 533], [\"Tarrytown\", \"NY\", 513]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT worksite_city, count(*), sum(try_cast(total_worker_positions as integer))\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND job_title ILIKE '%machine learning engineer%'\n  AND worksite_state = 'NY'\nGROUP BY 1\nORDER BY 2 DESC;"
+      },
+      "result": "{\"columns\": [\"worksite_city\", \"count_star()\", \"sum(TRY_CAST(total_worker_positions AS INTEGER))\"], \"rows\": [[\"New York\", 160, 343], [\"Brooklyn\", 13, 15], [\"Long Island City\", 4, 4], [\"New York City\", 4, 4], [\"Queens\", 2, 2], [\"Rochester\", 2, 2], [\"NEW YORK\", 2, 2], [\"Buffalo\", 1, 1], [\"Uniondale\", 1, 1], [\"Yonkers\", 1, 1], [\"Fairport\", 1, 1], [\"Amherst\", 1, 1], [\"New YorK\", 1, 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, count(*), sum(try_cast(total_worker_positions as integer)) as positions\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND job_title ILIKE '%machine learning engineer%'\n  AND worksite_state = 'NY'\n  AND (worksite_city ILIKE 'New York%' OR worksite_city ILIKE 'New YorK%')\nGROUP BY 1\nORDER BY positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"count_star()\", \"positions\"], \"rows\": [[\"Bloomberg L.P.\", 19, 173], [\"Yahoo Holdings Inc.\", 2, 31], [\"Pinterest, Inc.\", 14, 14], [\"SNAP INC.\", 11, 11], [\"SPOTIFY USA, INC.\", 11, 11], [\"Meta Platforms, Inc\", 10, 10], [\"Reddit, Inc. \", 5, 5], [\"Aetna Resources LLC\", 4, 4], [\"Kensho Technologies LLC\", 4, 4], [\"Peloton Interactive, Inc.\", 3, 3], [\"Populus Group LLC\", 3, 3], [\"Stripe, Inc.\", 3, 3], [\"PATREON, INC.\", 3, 3], [\"Apple Inc.\", 3, 3], [\"Harbor AI Inc.\", 2, 2]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, count(*), sum(try_cast(total_worker_positions as integer)) as positions\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND job_title ILIKE '%machine learning engineer%'\n  AND worksite_state = 'NY'\n  AND (\n    worksite_city ILIKE 'New York%' \n    OR worksite_city ILIKE 'New YorK%'\n    OR worksite_city ILIKE 'Brooklyn%'\n    OR worksite_city ILIKE 'Bronx%'\n    OR worksite_city ILIKE 'Queens%'\n    OR worksite_city ILIKE 'Long Island City%'\n    OR worksite_city ILIKE 'Flushing%'\n    OR worksite_city ILIKE 'Staten Island%'\n  )\nGROUP BY 1\nORDER BY positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"count_star()\", \"positions\"], \"rows\": [[\"Bloomberg L.P.\", 19, 173], [\"Yahoo Holdings Inc.\", 2, 31], [\"Pinterest, Inc.\", 14, 14], [\"SNAP INC.\", 11, 11], [\"SPOTIFY USA, INC.\", 11, 11], [\"Meta Platforms, Inc\", 10, 10], [\"Reddit, Inc. \", 5, 5], [\"Kensho Technologies LLC\", 4, 4], [\"Aetna Resources LLC\", 4, 4], [\"Etsy, Inc.\", 4, 4], [\"Populus Group LLC\", 3, 3], [\"CSC Holdings, LLC\", 3, 3], [\"Coinbase, Inc.\", 3, 3], [\"Apple Inc.\", 3, 3], [\"Peloton Interactive, Inc.\", 3, 3]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT soc_code, soc_title, count(*)\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND job_title ILIKE '%machine learning engineer%'\n  AND worksite_state = 'NY'\nGROUP BY 1, 2\nORDER BY 3 DESC;"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\", \"count_star()\"], \"rows\": [[\"15-1252.00\", \"Software Developers\", 118], [\"15-2051.00\", \"Data Scientists\", 54], [\"15-1221.00\", \"Computer and Information Research Scientists\", 13], [\"15-2041.00\", \"Statisticians\", 2], [\"15-2031.00\", \"Operations Research Analysts\", 1], [\"11-9041.00\", \"Architectural and Engineering Managers\", 1], [\"11-3021.00\", \"Computer and Information Systems Managers\", 1], [\"15-2051.01\", \"Business Intelligence Analysts\", 1], [\"17-2031.00\", \"Bioengineers and Biomedical Engineers\", 1], [\"15-1299.08\", \"Computer Systems Engineers/Architects\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, count(*)\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND job_title ILIKE '%machine learning%'\n  AND worksite_state = 'NY'\nGROUP BY 1\nORDER BY 2 DESC\nLIMIT 20;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"count_star()\"], \"rows\": [[\"Machine Learning Engineer\", 95], [\"Senior Machine Learning Engineer\", 20], [\"Software Engineer, Machine Learning\", 16], [\"Machine Learning Engineer II\", 11], [\"Staff Machine Learning Engineer\", 7], [\"Machine Learning Research\", 7], [\"Sr. Machine Learning Engineer\", 6], [\"Machine Learning Engineer (4)\", 5], [\"Machine Learning Team Leader\", 5], [\"Machine Learning\", 5], [\"Senior Applied Machine Learning Engineer\", 4], [\"Machine Learning Software Engineer\", 4], [\"Machine Learning Engineer (3)\", 3], [\"Sr Machine Learning Engineer\", 3], [\"Sr. Software Engineer, Machine Learning\", 3], [\"Machine Learning Infrastructure Engineer\", 2], [\"Machine Learning Engineer II, Ads Recommendation\", 2], [\"Machine Learning Data Scientist\", 2], [\"Senior Software Engineer, Machine Learning\", 2], [\"Machine Learning Engineer I\", 2]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, count(*)\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND job_title ILIKE '%ML%'\n  AND worksite_state = 'NY'\nGROUP BY 1\nORDER BY 2 DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"count_star()\"], \"rows\": [[\"AI/ML Engineer\", 7], [\"Vice President, Applied AI ML Lead\", 5], [\"Associate, Applied AI ML Associate Sr\", 4], [\"Enterprise ML/AI Technical Sales\", 2], [\"ML Data Associate III\", 1], [\"Senior ML Engineer\", 1], [\"Sr. Scientist / Engineer I, RFML\", 1], [\"Data Scientist, ML/AI\", 1], [\"Senior AI/ML Data Engineer\", 1], [\"AI/ML Developer\", 1], [\"BSA/AML & Sanctions Systems Analyst Sr. (AML/OFAC Systems)\", 1], [\"Associate, Applied AI ML Lead\", 1], [\"Founding Robotics ML Engineer\", 1], [\"Executive Director, Applied AI ML Director\", 1], [\"STAFF ML ENGINEER\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, count(*), sum(try_cast(total_worker_positions as integer)) as positions\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND (\n    job_title ILIKE '%machine learning%engineer%'\n    OR job_title ILIKE '%ml%engineer%'\n  )\n  AND worksite_state = 'NY'\n  AND (\n    worksite_city ILIKE 'New York%' \n    OR worksite_city ILIKE 'New YorK%'\n    OR worksite_city ILIKE 'Brooklyn%'\n    OR worksite_city ILIKE 'Bronx%'\n    OR worksite_city ILIKE 'Queens%'\n    OR worksite_city ILIKE 'Long Island City%'\n    OR worksite_city ILIKE 'Flushing%'\n    OR worksite_city ILIKE 'Staten Island%'\n  )\nGROUP BY 1\nORDER BY positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"count_star()\", \"positions\"], \"rows\": [[\"Bloomberg L.P.\", 19, 173], [\"Yahoo Holdings Inc.\", 2, 31], [\"Pinterest, Inc.\", 14, 14], [\"Meta Platforms, Inc\", 13, 13], [\"SPOTIFY USA, INC.\", 11, 11], [\"SNAP INC.\", 11, 11], [\"Reddit, Inc. \", 5, 5], [\"Aetna Resources LLC\", 4, 4], [\"Etsy, Inc.\", 4, 4], [\"Kensho Technologies LLC\", 4, 4], [\"Hinge, Inc.\", 4, 4], [\"Populus Group LLC\", 4, 4], [\"Peloton Interactive, Inc.\", 3, 3], [\"VIAI LLC\", 1, 3], [\"CSC Holdings, LLC\", 3, 3]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, job_title, total_worker_positions, worksite_city\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND (\n    job_title ILIKE '%machine learning%engineer%'\n    OR job_title ILIKE '%ml%engineer%'\n  )\n  AND worksite_state = 'NY'\n  AND (\n    worksite_city ILIKE 'New York%' \n    OR worksite_city ILIKE 'New YorK%'\n  )\n  AND employer_name IN ('Bloomberg L.P.', 'Yahoo Holdings Inc.')\nORDER BY employer_name, total_worker_positions DESC;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"job_title\", \"total_worker_positions\", \"worksite_city\"], \"rows\": [[\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"15\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"1\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"1\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"1\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"1\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"1\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"1\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"1\", \"New York\"], [\"Bloomberg L.P.\", \"Machine Learning Engineer\", \"1\", \"New York\"], [\"Yahoo Holdings Inc.\", \"Sr. Machine Learning Engineer I\", \"30\", \"New York\"], [\"Yahoo Holdings Inc.\", \"Machine Learning Engineer I\", \"1\", \"New York\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT worksite_city, count(*), sum(try_cast(total_worker_positions as integer)) as positions\nFROM lca\nWHERE source_file LIKE '%FY2025%'\n  AND case_status = 'Certified'\n  AND job_title ILIKE '%machine learning engineer%'\n  AND worksite_state = 'NY'\nGROUP BY 1\nORDER BY positions DESC;"
+      },
+      "result": "{\"columns\": [\"worksite_city\", \"count_star()\", \"positions\"], \"rows\": [[\"New York\", 160, 343], [\"Brooklyn\", 13, 15], [\"Long Island City\", 4, 4], [\"New York City\", 4, 4], [\"Rochester\", 2, 2], [\"NEW YORK\", 2, 2], [\"Queens\", 2, 2], [\"Uniondale\", 1, 1], [\"Buffalo\", 1, 1], [\"New YorK\", 1, 1], [\"Yonkers\", 1, 1], [\"Fairport\", 1, 1], [\"Amherst\", 1, 1]], \"truncated\": false}"
+     }
+    ]
+   },
+   "agent": {
+    "response": "Bloomberg led the New York City area in FY2025 with 173 certified machine learning engineer positions.\n\n* **Bloomberg** ranked first with 173 positions across 19 certified filings (a small sample), offering a median annual salary of $152k.\n* **Yahoo Holdings** followed with 31 positions across just 2 filings (a small sample), offering a median salary of $119k.\n* **Meta** and **JPMorgan Chase** sponsored 27 and 24 positions, respectively, with Meta offering a median salary of $218k across 27 filings and JPMorgan Chase offering $178k across 24 filings.\n* **Pinterest** rounded out the top five with 14 positions across 14 filings (a small sample) and a median salary of $124k.",
+    "session_id": "115ebe75-8783-491e-b83c-3516054c2864",
+    "tool_calls": [
+     {
+      "agent": "H-1B Analyst",
+      "name": "read_mappings",
+      "args": {},
+      "result": "{\"as_of\": \"FY2026 Q3\", \"tables\": {\"lca\": {\"description\": \"One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.\", \"columns\": [{\"name\": \"case_number\", \"type\": \"VARCHAR\", \"description\": \"DOL case number, unique per row.\"}, {\"name\": \"case_status\", \"type\": \"VARCHAR\", \"description\": \"DOL decision. Use 'CERTIFIED' for filings employers could actually use.\", \"is_enum\": true}, {\"name\": \"fiscal_year\", \"type\": \"INTEGER\", \"description\": \"US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.\", \"is_enum\": true}, {\"name\": \"quarter\", \"type\": \"INTEGER\", \"description\": \"Fiscal quarter 1-4 (Q1 = Oct-Dec).\", \"is_enum\": true}, {\"name\": \"received_date\", \"type\": \"DATE\", \"description\": \"Date DOL received the LCA.\"}, {\"name\": \"decision_date\", \"type\": \"DATE\", \"description\": \"Date DOL decided the LCA.\"}, {\"name\": \"job_title\", \"type\": \"VARCHAR\", \"description\": \"Job title as typed by the employer (free text, messy). Do not filter on it: use role_family.\"}, {\"name\": \"title_norm\", \"type\": \"VARCHAR\", \"description\": \"Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning).\"}, {\"name\": \"role_family\", \"type\": \"VARCHAR\", \"description\": \"Clean role category built offline from the title and SOC code. Get the value from find_role.\", \"is_enum\": true}, {\"name\": \"seniority\", \"type\": \"VARCHAR\", \"description\": \"Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.\", \"is_enum\": true}, {\"name\": \"soc_code\", \"type\": \"VARCHAR\", \"description\": \"Standard Occupational Classification code, e.g. 15-1252 = Software Developers.\"}, {\"name\": \"soc_title\", \"type\": \"VARCHAR\", \"description\": \"Name of the SOC occupation.\"}, {\"name\": \"full_time\", \"type\": \"VARCHAR\", \"description\": \"'Y' if full-time.\", \"is_enum\": true}, {\"name\": \"total_worker_positions\", \"type\": \"INTEGER\", \"description\": \"Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings.\"}, {\"name\": \"filing_type\", \"type\": \"VARCHAR\", \"description\": \"Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.\", \"is_enum\": true}, {\"name\": \"new_employment\", \"type\": \"INTEGER\", \"description\": \"Workers in this filing who are new employment.\", \"is_enum\": true}, {\"name\": \"continued_employment\", \"type\": \"INTEGER\", \"description\": \"Workers who are continuing employment (extensions).\", \"is_enum\": true}, {\"name\": \"change_employer\", \"type\": \"INTEGER\", \"description\": \"Workers transferring from another employer.\", \"is_enum\": true}, {\"name\": \"employer_id\", \"type\": \"INTEGER\", \"description\": \"Resolved employer key: all legal-name variants of one company share it. Get it from find_employer.\"}, {\"name\": \"employer\", \"type\": \"VARCHAR\", \"description\": \"Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer.\"}, {\"name\": \"employer_type\", \"type\": \"VARCHAR\", \"description\": \"big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).\", \"is_enum\": true}, {\"name\": \"employer_name_raw\", \"type\": \"VARCHAR\", \"description\": \"Employer name exactly as filed. Do not filter on it: use employer_id.\"}, {\"name\": \"naics_code\", \"type\": \"VARCHAR\", \"description\": \"Employer's industry code (NAICS).\"}, {\"name\": \"worksite_city\", \"type\": \"VARCHAR\", \"description\": \"Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...).\"}, {\"name\": \"worksite_city_raw\", \"type\": \"VARCHAR\", \"description\": \"Worksite city as typed by the employer.\"}, {\"name\": \"worksite_county\", \"type\": \"VARCHAR\", \"description\": \"Worksite county as filed.\"}, {\"name\": \"worksite_state\", \"type\": \"VARCHAR\", \"description\": \"Two-letter worksite state.\", \"is_enum\": true}, {\"name\": \"worksite_zip\", \"type\": \"VARCHAR\", \"description\": \"Five-digit worksite ZIP code.\"}, {\"name\": \"area_code\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area (metro) code for the worksite. Get it from find_location.\"}, {\"name\": \"metro_name\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'.\"}, {\"name\": \"wage_from_raw\", \"type\": \"DOUBLE\", \"description\": \"Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it.\"}, {\"name\": \"wage_to_raw\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered wage range as filed, in wage_unit, often blank.\"}, {\"name\": \"wage_unit\", \"type\": \"VARCHAR\", \"description\": \"Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.\", \"is_enum\": true}, {\"name\": \"wage_annual_from\", \"type\": \"DOUBLE\", \"description\": \"Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay.\"}, {\"name\": \"wage_annual_to\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered range, yearly (equals wage_annual_from when no range).\"}, {\"name\": \"wage_flag\", \"type\": \"VARCHAR\", \"description\": \"'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.\", \"is_enum\": true}, {\"name\": \"pw_annual\", \"type\": \"DOUBLE\", \"description\": \"Prevailing wage the employer cited, yearly.\"}, {\"name\": \"pw_wage_level\", \"type\": \"VARCHAR\", \"description\": \"Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.\", \"is_enum\": true}, {\"name\": \"pw_level_num\", \"type\": \"INTEGER\", \"description\": \"pw_wage_level as a number 1-4.\", \"is_enum\": true}, {\"name\": \"offer_wage_level\", \"type\": \"INTEGER\", \"description\": \"Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.\", \"is_enum\": true}, {\"name\": \"h1b_dependent\", \"type\": \"VARCHAR\", \"description\": \"'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B)"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_location",
+      "args": {
+       "place": "New York City area"
+      },
+      "result": "{\"area_code\": \"35620\", \"metro_name\": \"New York-Newark-Jersey City, NY-NJ\", \"matched_by\": \"worksite city 'New York City, NY'\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_role",
+      "args": {
+       "text": "machine learning engineer"
+      },
+      "result": "{\"role_family\": \"Machine Learning Engineer\", \"matched_by\": \"rules\", \"main_soc_codes\": [{\"soc_code\": \"15-1252\", \"soc_title\": \"Software Developers\", \"filings\": 5337}, {\"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"filings\": 3017}, {\"soc_code\": \"15-1221\", \"soc_title\": \"Computer and Information Research Scientists\", \"filings\": 607}], \"example_titles\": [\"machine learning engineer\", \"senior machine learning engineer\", \"artificial intelligence engineer\", \"software engineer machine learning\", \"staff machine learning engineer\", \"machine learning engineer ii\"]}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer, sum(total_worker_positions) AS positions, count(*) AS filings, median(wage_annual_from) FILTER (WHERE wage_flag = 'ok') AS median_pay FROM lca WHERE area_code = '35620' AND role_family = 'Machine Learning Engineer' AND fiscal_year = 2025 AND case_status = 'CERTIFIED' GROUP BY employer ORDER BY positions DESC LIMIT 5"
+      },
+      "result": "{\"columns\": [\"employer\", \"positions\", \"filings\", \"median_pay\"], \"rows\": [[\"Bloomberg\", 173, 19, 151819.0], [\"Yahoo Holdings\", 31, 2, 118674.5], [\"Meta\", 27, 27, 218402.0], [\"JPMorgan Chase\", 24, 24, 177500.0], [\"Pinterest\", 14, 14, 123656.0]], \"row_count\": 5, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "y": "positions",
+       "mark": "bar",
+       "color": null,
+       "x": "employer",
+       "title": "Top Employers by ML Engineer Positions, NYC Area, FY2025"
+      },
+      "result": "{\"ok\": true, \"note\": \"Chart shown to the user. Do not describe the chart's styling.\"}"
+     }
+    ],
+    "chart": {
+     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+     "title": "Top Employers by ML Engineer Positions, NYC Area, FY2025",
+     "data": {
+      "values": [
+       {
+        "employer": "Bloomberg",
+        "positions": 173,
+        "filings": 19,
+        "median_pay": 151819.0
+       },
+       {
+        "employer": "Yahoo Holdings",
+        "positions": 31,
+        "filings": 2,
+        "median_pay": 118674.5
+       },
+       {
+        "employer": "Meta",
+        "positions": 27,
+        "filings": 27,
+        "median_pay": 218402.0
+       },
+       {
+        "employer": "JPMorgan Chase",
+        "positions": 24,
+        "filings": 24,
+        "median_pay": 177500.0
+       },
+       {
+        "employer": "Pinterest",
+        "positions": 14,
+        "filings": 14,
+        "median_pay": 123656.0
+       }
+      ]
+     },
+     "mark": {
+      "type": "bar",
+      "point": false
+     },
+     "encoding": {
+      "y": {
+       "field": "employer",
+       "type": "nominal",
+       "sort": "-x",
+       "title": null
+      },
+      "x": {
+       "field": "positions",
+       "type": "quantitative"
+      },
+      "tooltip": [
+       {
+        "field": "employer",
+        "type": "nominal"
+       },
+       {
+        "field": "positions",
+        "type": "quantitative"
+       },
+       {
+        "field": "filings",
+        "type": "quantitative"
+       },
+       {
+        "field": "median_pay",
+        "type": "quantitative"
+       }
+      ]
+     },
+     "width": "container"
+    },
+    "table": {
+     "columns": [
+      "employer",
+      "positions",
+      "filings",
+      "median_pay"
+     ],
+     "rows": [
+      [
+       "Bloomberg",
+       173,
+       19,
+       151819.0
+      ],
+      [
+       "Yahoo Holdings",
+       31,
+       2,
+       118674.5
+      ],
+      [
+       "Meta",
+       27,
+       27,
+       218402.0
+      ],
+      [
+       "JPMorgan Chase",
+       24,
+       24,
+       177500.0
+      ],
+      [
+       "Pinterest",
+       14,
+       14,
+       123656.0
+      ]
+     ],
+     "row_count": 5,
+     "truncated": false
+    }
+   },
+   "plain_ok": false,
+   "agent_ok": true
+  }
+ ]
+}

@@ -1,0 +1,848 @@
+{
+  "synthetic": false,
+  "as_of": "FY2026 Q3",
+  "stats": {
+    "rows": 1532089,
+    "employers": 107638,
+    "min_fy": 2024,
+    "max_fy": 2026
+  },
+  "tables": {
+    "lca": {
+      "description": "One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.",
+      "columns": [
+        {
+          "name": "case_number",
+          "type": "VARCHAR",
+          "description": "DOL case number, unique per row."
+        },
+        {
+          "name": "case_status",
+          "type": "VARCHAR",
+          "description": "DOL decision. Use 'CERTIFIED' for filings employers could actually use.",
+          "enum_values": [
+            "CERTIFIED",
+            "CERTIFIED - WITHDRAWN",
+            "DENIED",
+            "WITHDRAWN"
+          ]
+        },
+        {
+          "name": "fiscal_year",
+          "type": "INTEGER",
+          "description": "US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.",
+          "enum_values": [
+            2024,
+            2025,
+            2026
+          ]
+        },
+        {
+          "name": "quarter",
+          "type": "INTEGER",
+          "description": "Fiscal quarter 1-4 (Q1 = Oct-Dec).",
+          "enum_values": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "received_date",
+          "type": "DATE",
+          "description": "Date DOL received the LCA."
+        },
+        {
+          "name": "decision_date",
+          "type": "DATE",
+          "description": "Date DOL decided the LCA."
+        },
+        {
+          "name": "job_title",
+          "type": "VARCHAR",
+          "description": "Job title as typed by the employer (free text, messy). Do not filter on it: use role_family."
+        },
+        {
+          "name": "title_norm",
+          "type": "VARCHAR",
+          "description": "Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning)."
+        },
+        {
+          "name": "role_family",
+          "type": "VARCHAR",
+          "description": "Clean role category built offline from the title and SOC code. Get the value from find_role.",
+          "enum_values": [
+            "Accountant / Auditor",
+            "Analyst (other)",
+            "Architect (buildings)",
+            "Business / Systems Analyst",
+            "Consultant",
+            "Data Analyst",
+            "Data Engineer",
+            "Data Scientist",
+            "Database / Systems Admin",
+            "Designer",
+            "DevOps / SRE / Cloud",
+            "Engineer (other)",
+            "Financial Analyst",
+            "Hardware / Semiconductor Engineer",
+            "IT Architect",
+            "Lawyer / Legal",
+            "Machine Learning Engineer",
+            "Management",
+            "Mechanical / Civil / Electrical Engineer",
+            "Other",
+            "Physician / Healthcare",
+            "Postdoc / Research Associate",
+            "Product Manager",
+            "Professor / Lecturer",
+            "Project / Program Manager",
+            "QA / Test Engineer",
+            "Quant",
+            "Research Scientist",
+            "Sales / Solutions Engineer",
+            "Scientist (other)",
+            "Security Engineer",
+            "Software Engineer",
+            "Supply Chain / Logistics"
+          ]
+        },
+        {
+          "name": "seniority",
+          "type": "VARCHAR",
+          "description": "Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.",
+          "enum_values": [
+            "intern",
+            "junior",
+            "manager",
+            "mid",
+            "senior",
+            "staff_plus",
+            "unspecified"
+          ]
+        },
+        {
+          "name": "soc_code",
+          "type": "VARCHAR",
+          "description": "Standard Occupational Classification code, e.g. 15-1252 = Software Developers."
+        },
+        {
+          "name": "soc_title",
+          "type": "VARCHAR",
+          "description": "Name of the SOC occupation."
+        },
+        {
+          "name": "full_time",
+          "type": "VARCHAR",
+          "description": "'Y' if full-time.",
+          "enum_values": [
+            "N",
+            "Y"
+          ]
+        },
+        {
+          "name": "total_worker_positions",
+          "type": "INTEGER",
+          "description": "Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings."
+        },
+        {
+          "name": "filing_type",
+          "type": "VARCHAR",
+          "description": "Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.",
+          "enum_values": [
+            "amended",
+            "change_employer",
+            "change_same_employer",
+            "continuation",
+            "new_concurrent",
+            "new_employment"
+          ]
+        },
+        {
+          "name": "new_employment",
+          "type": "INTEGER",
+          "description": "Workers in this filing who are new employment.",
+          "enum_values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            35,
+            37,
+            40,
+            43,
+            44,
+            45,
+            50,
+            55,
+            60,
+            65,
+            70,
+            75,
+            80,
+            100,
+            120,
+            125,
+            127,
+            150,
+            170,
+            200,
+            250,
+            350,
+            400,
+            450,
+            1250,
+            1325
+          ]
+        },
+        {
+          "name": "continued_employment",
+          "type": "INTEGER",
+          "description": "Workers who are continuing employment (extensions).",
+          "enum_values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            15,
+            16,
+            18,
+            19,
+            20,
+            21,
+            25,
+            26,
+            28,
+            30,
+            35,
+            40,
+            45,
+            50,
+            58,
+            60,
+            75,
+            80,
+            85,
+            97,
+            100,
+            107,
+            120,
+            125,
+            200
+          ]
+        },
+        {
+          "name": "change_employer",
+          "type": "INTEGER",
+          "description": "Workers transferring from another employer.",
+          "enum_values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            19,
+            20,
+            21,
+            25,
+            30,
+            32,
+            35,
+            40,
+            50,
+            60,
+            75,
+            100,
+            200
+          ]
+        },
+        {
+          "name": "employer_id",
+          "type": "INTEGER",
+          "description": "Resolved employer key: all legal-name variants of one company share it. Get it from find_employer."
+        },
+        {
+          "name": "employer",
+          "type": "VARCHAR",
+          "description": "Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer."
+        },
+        {
+          "name": "employer_type",
+          "type": "VARCHAR",
+          "description": "big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).",
+          "enum_values": [
+            "big_tech",
+            "consulting",
+            "finance",
+            "h1b_dependent",
+            "other",
+            "staffing_it_services",
+            "university"
+          ]
+        },
+        {
+          "name": "employer_name_raw",
+          "type": "VARCHAR",
+          "description": "Employer name exactly as filed. Do not filter on it: use employer_id."
+        },
+        {
+          "name": "naics_code",
+          "type": "VARCHAR",
+          "description": "Employer's industry code (NAICS)."
+        },
+        {
+          "name": "worksite_city",
+          "type": "VARCHAR",
+          "description": "Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...)."
+        },
+        {
+          "name": "worksite_city_raw",
+          "type": "VARCHAR",
+          "description": "Worksite city as typed by the employer."
+        },
+        {
+          "name": "worksite_county",
+          "type": "VARCHAR",
+          "description": "Worksite county as filed."
+        },
+        {
+          "name": "worksite_state",
+          "type": "VARCHAR",
+          "description": "Two-letter worksite state.",
+          "enum_values": [
+            "AK",
+            "AL",
+            "AR",
+            "AZ",
+            "CA",
+            "CO",
+            "CT",
+            "DC",
+            "DE",
+            "FL",
+            "GA",
+            "GU",
+            "HI",
+            "IA",
+            "ID",
+            "IL",
+            "IN",
+            "KS",
+            "KY",
+            "LA",
+            "MA",
+            "MD",
+            "ME",
+            "MI",
+            "MN",
+            "MO",
+            "MP",
+            "MS",
+            "MT",
+            "NC",
+            "ND",
+            "NE",
+            "NH",
+            "NJ",
+            "NM",
+            "NV",
+            "NY",
+            "OH",
+            "OK",
+            "OR",
+            "PA",
+            "PR",
+            "RI",
+            "SC",
+            "SD",
+            "TN",
+            "TX",
+            "UT",
+            "VA",
+            "VI",
+            "VT",
+            "WA",
+            "WI",
+            "WV",
+            "WY"
+          ]
+        },
+        {
+          "name": "worksite_zip",
+          "type": "VARCHAR",
+          "description": "Five-digit worksite ZIP code."
+        },
+        {
+          "name": "area_code",
+          "type": "VARCHAR",
+          "description": "OFLC wage area (metro) code for the worksite. Get it from find_location."
+        },
+        {
+          "name": "metro_name",
+          "type": "VARCHAR",
+          "description": "OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'."
+        },
+        {
+          "name": "wage_from_raw",
+          "type": "DOUBLE",
+          "description": "Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it."
+        },
+        {
+          "name": "wage_to_raw",
+          "type": "DOUBLE",
+          "description": "Top of the offered wage range as filed, in wage_unit, often blank."
+        },
+        {
+          "name": "wage_unit",
+          "type": "VARCHAR",
+          "description": "Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.",
+          "enum_values": [
+            "Bi-Weekly",
+            "Hour",
+            "Month",
+            "Week",
+            "Year"
+          ]
+        },
+        {
+          "name": "wage_annual_from",
+          "type": "DOUBLE",
+          "description": "Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay."
+        },
+        {
+          "name": "wage_annual_to",
+          "type": "DOUBLE",
+          "description": "Top of the offered range, yearly (equals wage_annual_from when no range)."
+        },
+        {
+          "name": "wage_flag",
+          "type": "VARCHAR",
+          "description": "'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.",
+          "enum_values": [
+            "ok",
+            "too_high",
+            "too_low",
+            "unit_mixup_year_as_hourly"
+          ]
+        },
+        {
+          "name": "pw_annual",
+          "type": "DOUBLE",
+          "description": "Prevailing wage the employer cited, yearly."
+        },
+        {
+          "name": "pw_wage_level",
+          "type": "VARCHAR",
+          "description": "Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.",
+          "enum_values": [
+            "I",
+            "II",
+            "III",
+            "IV"
+          ]
+        },
+        {
+          "name": "pw_level_num",
+          "type": "INTEGER",
+          "description": "pw_wage_level as a number 1-4.",
+          "enum_values": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "offer_wage_level",
+          "type": "INTEGER",
+          "description": "Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.",
+          "enum_values": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "h1b_dependent",
+          "type": "VARCHAR",
+          "description": "'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B).",
+          "enum_values": [
+            "N",
+            "Y"
+          ]
+        },
+        {
+          "name": "willful_violator",
+          "type": "VARCHAR",
+          "description": "'Y' if DOL found the employer a willful violator.",
+          "enum_values": [
+            "N",
+            "Y"
+          ]
+        },
+        {
+          "name": "total_worksite_locations",
+          "type": "INTEGER",
+          "description": "Number of worksites on the filing.",
+          "enum_values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "name": "source_file",
+          "type": "VARCHAR",
+          "description": "DOL file the row came from.",
+          "enum_values": [
+            "LCA_Disclosure_Data_FY2024_Q1.xlsx",
+            "LCA_Disclosure_Data_FY2024_Q2.xlsx",
+            "LCA_Disclosure_Data_FY2024_Q3.xlsx",
+            "LCA_Disclosure_Data_FY2024_Q4.xlsx",
+            "LCA_Disclosure_Data_FY2025_Q1.xlsx",
+            "LCA_Disclosure_Data_FY2025_Q2.xlsx",
+            "LCA_Disclosure_Data_FY2025_Q3.xlsx",
+            "LCA_Disclosure_Data_FY2025_Q4.xlsx",
+            "LCA_Disclosure_Data_FY2026_Q3.xlsx"
+          ]
+        },
+        {
+          "name": "offer_lottery_entries",
+          "type": "INTEGER",
+          "description": "Lottery entries (1-4) this offer would get under the wage-weighted H-1B lottery, from offer_wage_level. Approximate: uses the 2026-27 wage table for all years.",
+          "enum_values": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    "employers": {
+      "description": "One row per resolved employer.",
+      "columns": [
+        {
+          "name": "employer_id",
+          "type": "INTEGER",
+          "description": "Employer key (joins lca.employer_id)."
+        },
+        {
+          "name": "employer",
+          "type": "VARCHAR",
+          "description": "Canonical name."
+        },
+        {
+          "name": "employer_type",
+          "type": "VARCHAR",
+          "description": "See lca.employer_type.",
+          "enum_values": [
+            "big_tech",
+            "consulting",
+            "finance",
+            "h1b_dependent",
+            "other",
+            "staffing_it_services",
+            "university"
+          ]
+        },
+        {
+          "name": "naics_code",
+          "type": "VARCHAR",
+          "description": "Most common NAICS code across its filings."
+        },
+        {
+          "name": "filings",
+          "type": "INTEGER",
+          "description": "Number of H-1B LCAs in the data."
+        },
+        {
+          "name": "alias_count",
+          "type": "INTEGER",
+          "description": "How many raw name spellings were merged into this employer.",
+          "enum_values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            12,
+            13,
+            14,
+            15,
+            16,
+            42,
+            53
+          ]
+        },
+        {
+          "name": "h1b_dependent_share",
+          "type": "DOUBLE",
+          "description": "Share of its filings marked H-1B dependent."
+        },
+        {
+          "name": "aliases",
+          "type": "VARCHAR[]",
+          "description": "Up to 25 raw name spellings, most common first."
+        }
+      ]
+    },
+    "wage_levels": {
+      "description": "OFLC prevailing wage thresholds for wage year Jul 2026 - Jun 2027, annualized (hourly x 2080). One row per area x SOC code.",
+      "columns": [
+        {
+          "name": "area_code",
+          "type": "VARCHAR",
+          "description": "OFLC wage area code (joins lca.area_code)."
+        },
+        {
+          "name": "metro_name",
+          "type": "VARCHAR",
+          "description": "Area name."
+        },
+        {
+          "name": "soc_code",
+          "type": "VARCHAR",
+          "description": "SOC code (joins lca.soc_code)."
+        },
+        {
+          "name": "soc_title",
+          "type": "VARCHAR",
+          "description": "SOC occupation name."
+        },
+        {
+          "name": "level_1",
+          "type": "DOUBLE",
+          "description": "Level I (entry) annual wage."
+        },
+        {
+          "name": "level_2",
+          "type": "DOUBLE",
+          "description": "Level II annual wage."
+        },
+        {
+          "name": "level_3",
+          "type": "DOUBLE",
+          "description": "Level III annual wage."
+        },
+        {
+          "name": "level_4",
+          "type": "DOUBLE",
+          "description": "Level IV (fully competent) annual wage."
+        },
+        {
+          "name": "geo_level",
+          "type": "INTEGER",
+          "description": "1 = wage from this area's own data; higher = borrowed from a wider area.",
+          "enum_values": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    "areas": {
+      "description": "OFLC wage areas (metros and non-metro regions).",
+      "columns": [
+        {
+          "name": "area_code",
+          "type": "VARCHAR",
+          "description": "Area code."
+        },
+        {
+          "name": "metro_name",
+          "type": "VARCHAR",
+          "description": "Area name."
+        },
+        {
+          "name": "states",
+          "type": "VARCHAR",
+          "description": "States it covers."
+        },
+        {
+          "name": "counties_or_towns",
+          "type": "BIGINT",
+          "description": "Number of counties/towns in it."
+        }
+      ]
+    },
+    "role_titles_summary": {
+      "description": "Distinct normalized titles with their role family and filing counts. find_role searches this.",
+      "columns": [
+        {
+          "name": "title_norm",
+          "type": "VARCHAR",
+          "description": "Normalized title."
+        },
+        {
+          "name": "role_family",
+          "type": "VARCHAR",
+          "description": "Role family.",
+          "enum_values": [
+            "Accountant / Auditor",
+            "Analyst (other)",
+            "Architect (buildings)",
+            "Business / Systems Analyst",
+            "Consultant",
+            "Data Analyst",
+            "Data Engineer",
+            "Data Scientist",
+            "Database / Systems Admin",
+            "Designer",
+            "DevOps / SRE / Cloud",
+            "Engineer (other)",
+            "Financial Analyst",
+            "Hardware / Semiconductor Engineer",
+            "IT Architect",
+            "Lawyer / Legal",
+            "Machine Learning Engineer",
+            "Management",
+            "Mechanical / Civil / Electrical Engineer",
+            "Other",
+            "Physician / Healthcare",
+            "Postdoc / Research Associate",
+            "Product Manager",
+            "Professor / Lecturer",
+            "Project / Program Manager",
+            "QA / Test Engineer",
+            "Quant",
+            "Research Scientist",
+            "Sales / Solutions Engineer",
+            "Scientist (other)",
+            "Security Engineer",
+            "Software Engineer",
+            "Supply Chain / Logistics"
+          ]
+        },
+        {
+          "name": "seniority",
+          "type": "VARCHAR",
+          "description": "Parsed seniority.",
+          "enum_values": [
+            "intern",
+            "junior",
+            "manager",
+            "mid",
+            "senior",
+            "staff_plus",
+            "unspecified"
+          ]
+        },
+        {
+          "name": "filings",
+          "type": "BIGINT",
+          "description": "Filings with this title."
+        }
+      ]
+    }
+  },
+  "glossary": {
+    "LCA": "Labor Condition Application: the employer's wage attestation to the Department of Labor, filed before an H-1B petition. Certified LCA != approved petition != visa. Many LCAs are never used.",
+    "wage level": "OFLC sets four prevailing-wage levels per occupation and area: Level I (entry) to Level IV (fully competent).",
+    "wage-weighted lottery": "Since the DHS rule effective Feb 27, 2026 (FY2027 cap season onward), each H-1B registration is entered once per wage level of the offered wage: Level I = 1 entry, II = 2, III = 3, IV = 4. Higher-paid offers have proportionally better odds.",
+    "lottery entries": "offer_lottery_entries: 1-4, from the level the offered wage reaches in the OFLC table. 0 means the wage is below Level I.",
+    "cap-exempt": "Universities, their affiliated nonprofits and nonprofit/government research organizations can sponsor H-1Bs without the lottery.",
+    "fiscal year": "Oct 1 - Sep 30. FY2026 Q3 ends June 30, 2026 (the last data in this database).",
+    "H-1B dependent": "An employer with a large share of H-1B workers; must make extra attestations. Common among IT staffing/outsourcing firms.",
+    "filings vs workers": "COUNT(*) counts LCAs; SUM(total_worker_positions) counts positions."
+  },
+  "join_hints": [
+    "lca.employer_id = employers.employer_id",
+    "lca.area_code = wage_levels.area_code AND lca.soc_code = wage_levels.soc_code",
+    "lca.area_code = areas.area_code"
+  ],
+  "limitations": [
+    "Who actually won the lottery, got a petition approved, or got a visa: LCAs stop before the petition stage.",
+    "Salaries actually paid: LCAs show the wage offered on the filing.",
+    "Anything about an individual person, interview odds, offer rates or green-card (PERM) sponsorship.",
+    "Anything after FY2026 Q3 (June 30, 2026) or before FY2024.",
+    "Whether the $100,000 H-1B fee applies to a specific case, or immigration/legal advice.",
+    "Exact selection probability: entries are known, but the total pool of registrations by level is not in this data."
+  ],
+  "example_queries": [
+    {
+      "question": "Median offered pay and filing count for one employer's role family, by fiscal year",
+      "sql": "SELECT fiscal_year, median(wage_annual_from) AS median_pay, count(*) AS filings FROM lca WHERE employer_id = 42 AND role_family = 'Data Engineer' AND case_status = 'CERTIFIED' AND wage_flag = 'ok' GROUP BY 1 ORDER BY 1"
+    },
+    {
+      "question": "Share of an employer's new-employment filings at each employer-chosen wage level",
+      "sql": "SELECT pw_wage_level, count(*) AS filings, round(100.0 * count(*) / sum(count(*)) OVER (), 1) AS pct FROM lca WHERE employer_id = 42 AND filing_type = 'new_employment' AND case_status = 'CERTIFIED' AND pw_wage_level IS NOT NULL GROUP BY 1 ORDER BY 1"
+    },
+    {
+      "question": "Top employers by worker positions in a metro for a role family",
+      "sql": "SELECT employer, sum(total_worker_positions) AS positions, count(*) AS filings FROM lca WHERE area_code = '12060' AND role_family = 'Software Engineer' AND case_status = 'CERTIFIED' GROUP BY 1 ORDER BY positions DESC LIMIT 10"
+    },
+    {
+      "question": "Average lottery entries for offers by employer type",
+      "sql": "SELECT employer_type, round(avg(offer_lottery_entries), 2) AS avg_entries, count(*) AS filings FROM lca WHERE case_status = 'CERTIFIED' AND offer_lottery_entries > 0 GROUP BY 1 ORDER BY avg_entries DESC"
+    }
+  ]
+}

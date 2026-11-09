@@ -1,0 +1,30 @@
+# Virtual environment. uv recreates it from pyproject.toml + uv.lock.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local secrets and config. Commit .env.example instead, never .env.
+.env
+
+# macOS
+.DS_Store
+
+# The session store. The app recreates it.
+conversations.db*
+
+# Raw DOL downloads: large, re-downloadable (see README > Data).
+raw/
+
+# Built by build.py. The full database goes to GCS, not GitHub (over 100 MB).
+# The 2% sample and mappings.json ARE committed so the app runs from a fresh clone.
+data/h1b.duckdb
+data/baseline.duckdb
+data/*.wal
+
+# Eval run dumps (history.csv is committed)
+evals/results/
+
+# Local logs
+build.log
+evals/*.log

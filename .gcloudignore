@@ -1,0 +1,9 @@
+.git
+.gitignore
+.venv/
+raw/
+data/h1b.duckdb
+data/baseline.duckdb
+evals/results/
+traces/
+__pycache__/

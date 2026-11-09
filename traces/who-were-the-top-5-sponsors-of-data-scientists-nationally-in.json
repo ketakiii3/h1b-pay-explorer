@@ -1,0 +1,904 @@
+{
+ "question": "Who were the top 5 sponsors of data scientists nationally in FY2025, by positions?",
+ "gold": [
+  "Goldman Sachs",
+  "Amazon",
+  "Microsoft",
+  "Meta",
+  "Walmart"
+ ],
+ "gold_sql": "SELECT employer FROM lca WHERE role_family = 'Data Scientist' AND fiscal_year = 2025 AND case_status = 'CERTIFIED' GROUP BY 1 ORDER BY sum(total_worker_positions) DESC LIMIT 5",
+ "no_tools": "Because Fiscal Year 2025 (FY2025) is currently ongoing and official, fully consolidated immigration data is typically not finalized and released by the U.S. Citizenship and Immigration Services (USCIS) until after the fiscal year ends, **complete and official national data for the entirety of FY2025 is not yet available.** Additionally, I do not have real-time data access to pull live-updating labor condition applications (LCAs) or H-1B petition filings.\n\nHowever, based on historical filing trends from recent fiscal years (FY2023 and FY2024), the top sponsors for \"Data Scientist\" positions in the United States consistently remain highly predictable. \n\nIf you are looking at the top employers sponsoring H-1B visas and green cards for Data Scientists, the top 5 national sponsors are historically dominated by the following tech giants:\n\n### 1. Amazon (Amazon.com Services LLC)\n* **Typical Standing:** Consistently #1.\n* **Details:** Amazon is historically the largest sponsor of Data Scientists and related roles (such as Business Intelligence Engineers and Applied Scientists) in the U.S., filing thousands of LCAs annually.\n\n### 2. Meta Platforms, Inc.\n* **Typical Standing:** Consistently #2 or #3.\n* **Details:** Meta relies heavily on data science for product analytics, infrastructure, and AI. They sponsor a massive volume of Data Scientist roles, particularly at their Menlo Park, CA, and Seattle, WA offices.\n\n### 3. Google LLC\n* **Typical Standing:** Consistently #2 or #3.\n* **Details:** Google sponsors hundreds of Data Scientists and Quantitative Analysts annually. Their sponsorships are heavily concentrated in California, Washington, and New York.\n\n### 4. Microsoft Corporation\n* **Typical Standing:** Consistently #4.\n* **Details:** Microsoft is a massive sponsor of Data Scientists, Applied Scientists, and Data Engineers, primarily based out of their Redmond, Washington headquarters.\n\n### 5. Walmart / Uber / Apple (Tied/Varying by Year)\n* **Typical Standing:** Rounding out the top 5.\n* **Details:** \n  * **Walmart (Walmart Associates):** Has surged in recent years due to massive investments in supply chain tech, e-commerce, and retail analytics.\n  * **Uber Technologies:** Consistently sponsors a high volume of Data Scientists for marketplace optimization, pricing algorithms, and maps.\n  * **Apple:** Frequently ranks in the top 5 for specialized data science and AI/machine learning roles.\n\n---\n\n### How to track the finalized FY2025 data:\nOnce the fiscal year concludes and the data is fully processed, you can find the exact, finalized numbers of approved petitions and LCAs for FY2025 using these public databases:\n* **USCIS H-1B Employer Data Hub:** The official government database where you can download CSVs of approved and denied petitions by employer and state.\n* **MyVisaJobs.com:** A widely used portal that aggregates LCA data and allows you to search specifically by the job title \"Data Scientist\" for any given fiscal year.\n* **H1BGrader.com:** Another excellent tool for tracking real-time and historical H-1B sponsor data by job title and company.",
+ "runs": [
+  {
+   "plain": {
+    "response": "FAILED: MaxTurnsExceeded: Max turns (15) exceeded",
+    "tool_calls": [
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "DESCRIBE lca;"
+      },
+      "result": "{\"columns\": [\"column_name\", \"column_type\", \"null\", \"key\", \"default\", \"extra\"], \"rows\": [[\"case_number\", \"VARCHAR\", \"YES\", null, null, null], [\"case_status\", \"VARCHAR\", \"YES\", null, null, null], [\"received_date\", \"VARCHAR\", \"YES\", null, null, null], [\"decision_date\", \"VARCHAR\", \"YES\", null, null, null], [\"visa_class\", \"VARCHAR\", \"YES\", null, null, null], [\"job_title\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_code\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_title\", \"VARCHAR\", \"YES\", null, null, null], [\"full_time\", \"VARCHAR\", \"YES\", null, null, null], [\"begin_date\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worker_positions\", \"VARCHAR\", \"YES\", null, null, null], [\"new_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"continued_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_previous_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"new_concurrent_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_employer\", \"VARCHAR\", \"YES\", null, null, null], [\"amended_petition\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_name\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_city\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_state\", \"VARCHAR\", \"YES\", null, null, null], [\"naics_code\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_city\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_county\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_state\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_zip\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_from\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_to\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_wage_level\", \"VARCHAR\", \"YES\", null, null, null], [\"h1b_dependent\", \"VARCHAR\", \"YES\", null, null, null], [\"willful_violator\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worksite_locations\", \"VARCHAR\", \"YES\", null, null, null], [\"source_file\", \"VARCHAR\", \"YES\", null, null, null]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT received_date, decision_date, source_file FROM lca LIMIT 10;"
+      },
+      "result": "{\"columns\": [\"received_date\", \"decision_date\", \"source_file\"], \"rows\": [[\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45402\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45402\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45402\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT source_file, COUNT(*) FROM lca GROUP BY source_file;"
+      },
+      "result": "{\"columns\": [\"source_file\", \"count_star()\"], \"rows\": [[\"LCA_Disclosure_Data_FY2025_Q3.xlsx\", 234726], [\"LCA_Disclosure_Data_FY2024_Q4.xlsx\", 117339], [\"LCA_Disclosure_Data_FY2024_Q3.xlsx\", 212766], [\"LCA_Disclosure_Data_FY2025_Q1.xlsx\", 104046], [\"LCA_Disclosure_Data_FY2024_Q1.xlsx\", 96294], [\"LCA_Disclosure_Data_FY2025_Q2.xlsx\", 128673], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", 114826], [\"LCA_Disclosure_Data_FY2024_Q2.xlsx\", 120408], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\", 426952]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT typeof(total_worker_positions), MIN(CAST(total_worker_positions AS INTEGER)), MAX(CAST(total_worker_positions AS INTEGER)) FROM lca;"
+      },
+      "result": "{\"error\": \"Binder Error: column \\\"total_worker_positions\\\" must appear in the GROUP BY clause or must be part of an aggregate function.\\nEither add it to the GROUP BY list, or use ANY_VALUE(\\\"total_worker_positions\\\") if the exact value of \\\"total_worker_positions\\\" is not important.\\n\\nLINE 1: SELECT typeof(total_worker_positions), MIN(CAST(total_worker_positions...\\n                      ^^^^^^^^^^^^^^^^^^^^^^\"}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT MIN(CAST(total_worker_positions AS INTEGER)), MAX(CAST(total_worker_positions AS INTEGER)) FROM lca;"
+      },
+      "result": "{\"columns\": [\"min(CAST(total_worker_positions AS INTEGER))\", \"max(CAST(total_worker_positions AS INTEGER))\"], \"rows\": [[1, 1325]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT case_status, COUNT(*) FROM lca GROUP BY case_status;"
+      },
+      "result": "{\"columns\": [\"case_status\", \"count_star()\"], \"rows\": [[\"Certified\", 1433993], [\"Certified - Withdrawn\", 87320], [\"Denied\", 9674], [\"Withdrawn\", 25043]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT soc_code, soc_title, COUNT(*) FROM lca WHERE LOWER(soc_title) LIKE '%data scientist%' OR LOWER(job_title) LIKE '%data scientist%' GROUP BY soc_code, soc_title ORDER BY COUNT(*) DESC LIMIT 20;"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\", \"count_star()\"], \"rows\": [[\"15-2051.00\", \"Data Scientists\", 52501], [\"15-2041.00\", \"Statisticians\", 1371], [\"15-2031.00\", \"Operations Research Analysts\", 724], [\"15-2051.01\", \"Business Intelligence Analysts\", 638], [\"15-2051\", \"Data Scientists\", 379], [\"15-1252.00\", \"Software Developers\", 290], [\"15-1221.00\", \"Computer and Information Research Scientists\", 244], [\"19-1029.01\", \"Bioinformatics Scientists\", 198], [\"15-2051.02\", \"Clinical Data Managers\", 60], [\"11-3021.00\", \"Computer and Information Systems Managers\", 51], [\"15-2041.01\", \"Biostatisticians\", 50], [\"15-1242.00\", \"Database Administrators\", 42], [\"15-1199.00\", \"Computer Occupations, All Other\", 39], [\"15-1299.00\", \"Computer Occupations, All Other\", 37], [\"15-1211.00\", \"Computer Systems Analysts\", 36], [\"13-2099.01\", \"Financial Quantitative Analysts\", 35], [\"15-2051\", \"Data Scientist\", 34], [\"15-1299.08\", \"Computer Systems Engineers/Architects\", 32], [\"17-2112.00\", \"Industrial Engineers\", 31], [\"15-1243.00\", \"Database Architects\", 29]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT soc_code, soc_title, COUNT(*) FROM lca WHERE LOWER(soc_title) = 'data scientists' GROUP BY soc_code, soc_title;"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\", \"count_star()\"], \"rows\": [[\"15-2051.01\", \"Data Scientists\", 3], [\"15-2051\", \"DATA SCIENTISTS\", 10], [\"15-2051.00\", \"DATA SCIENTISTS\", 3], [\"15-1251.00\", \"Data Scientists\", 1], [\"12-2051.00\", \"Data Scientists\", 1], [\"15-2051.00\", \"Data Scientists\", 52501], [\"15-2051\", \"Data Scientists\", 379], [\"15-1252.00\", \"Data Scientists\", 2], [\"12-5021.00\", \"Data Scientists\", 1], [\"15-2021\", \"Data Scientists\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT COUNT(*) FROM lca WHERE source_file LIKE '%FY2025%';"
+      },
+      "result": "{\"columns\": [\"count_star()\"], \"rows\": [[582271]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT \n    employer_name, \n    SUM(CAST(total_worker_positions AS INTEGER)) as total_positions\nFROM lca \nWHERE source_file LIKE '%FY2025%' \n  AND case_status = 'Certified'\n  AND LOWER(soc_title) = 'data scientists'\nGROUP BY employer_name\nORDER BY total_positions DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"total_positions\"], \"rows\": [[\"Amazon.com Services LLC\", 2288], [\"Microsoft Corporation\", 1736], [\"GOLDMAN SACHS & CO. LLC\", 924], [\"GOLDMAN SACHS SERVICES LLC\", 910], [\"GOLDMAN SACHS BANK USA\", 904], [\"Meta Platforms, Inc\", 640], [\"TikTok Inc.\", 456], [\"Oracle America, Inc.\", 425], [\"Capital One, National Association\", 392], [\"WAL-MART ASSOCIATES, INC.\", 363]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT \n    employer_name, \n    SUM(CAST(total_worker_positions AS INTEGER)) as total_positions\nFROM lca \nWHERE source_file LIKE '%FY2025%' \n  AND case_status = 'Certified'\n  AND LOWER(job_title) LIKE '%data scientist%'\nGROUP BY employer_name\nORDER BY total_positions DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"total_positions\"], \"rows\": [[\"Amazon.com Services LLC\", 1502], [\"Meta Platforms, Inc\", 527], [\"Oracle America, Inc.\", 406], [\"WAL-MART ASSOCIATES, INC.\", 336], [\"Amazon Web Services, Inc.\", 240], [\"Google LLC\", 222], [\"Cisco Systems, Inc.\", 193], [\"Apple Inc.\", 182], [\"TikTok Inc.\", 112], [\"NVIDIA Corporation\", 111]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT \n    employer_name, \n    SUM(CAST(total_worker_positions AS INTEGER)) as total_positions\nFROM lca \nWHERE source_file LIKE '%FY2025%' \n  AND case_status = 'Certified'\n  AND (soc_code LIKE '15-2051%' OR LOWER(soc_title) = 'data scientists')\nGROUP BY employer_name\nORDER BY total_positions DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"total_positions\"], \"rows\": [[\"Amazon.com Services LLC\", 7175], [\"Microsoft Corporation\", 1967], [\"Amazon Web Services, Inc.\", 1148], [\"GOLDMAN SACHS & CO. LLC\", 1006], [\"GOLDMAN SACHS SERVICES LLC\", 934], [\"GOLDMAN SACHS BANK USA\", 927], [\"WAL-MART ASSOCIATES, INC.\", 881], [\"Meta Platforms, Inc\", 804], [\"Cisco Systems, Inc.\", 726], [\"KFORCE INC. \", 610]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT soc_code, soc_title, job_title, SUM(CAST(total_worker_positions AS INTEGER)) as total_positions\nFROM lca \nWHERE source_file LIKE '%FY2025%' \n  AND case_status = 'Certified'\n  AND employer_name = 'Amazon.com Services LLC'\n  AND (soc_code LIKE '15-2051%' OR LOWER(soc_title) = 'data scientists')\nGROUP BY soc_code, soc_title, job_title\nORDER BY total_positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\", \"job_title\", \"total_positions\"], \"rows\": [[\"15-2051.01\", \"Business Intelligence Analysts\", \"Business Intelligence Engineer II\", 1826], [\"15-2051.00\", \"Data Scientists\", \"Data Scientist II\", 856], [\"15-2051.01\", \"Business Intelligence Analysts\", \"Business Intelligence Engineer III\", 775], [\"15-2051.01\", \"Business Intelligence Analysts\", \"Business Analyst II\", 606], [\"15-2051.01\", \"Business Intelligence Analysts\", \"Business Intelligence Engineer I\", 516], [\"15-2051.00\", \"Data Scientists\", \"Data Scientist III\", 472], [\"15-2051.00\", \"Data Scientists\", \"Data Engineer II\", 377], [\"15-2051.01\", \"Business Intelligence Analysts\", \"Manager III, Business Intelligence\", 279], [\"15-2051.01\", \"Business Intelligence Analysts\", \"Business Analyst III\", 232], [\"15-2051.01\", \"Business Intelligence Analysts\", \"Business Analyst I\", 141], [\"15-2051.00\", \"Data Scientists\", \"Data Engineer I\", 124], [\"15-2051.00\", \"Data Scientists\", \"Data Scientist I\", 120], [\"15-2051.00\", \"Data Scientists\", \"Manager III, Data Science\", 72], [\"15-2051.00\", \"Data Scientists\", \"Data Engineer III\", 68], [\"15-2051.01\", \"Business Intelligence Analysts\", \"Data Engineer III\", 56]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT soc_code, soc_title, COUNT(*) FROM lca WHERE LOWER(soc_title) LIKE '%data scientist%' GROUP BY soc_code, soc_title ORDER BY COUNT(*) DESC;"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\", \"count_star()\"], \"rows\": [[\"15-2051.00\", \"Data Scientists\", 52501], [\"15-2051\", \"Data Scientists\", 379], [\"15-2051\", \"Data Scientist\", 34], [\"15-2051.00\", \"Data Scientist\", 18], [\"15-2051\", \"DATA SCIENTISTS\", 10], [\"15-2051\", \"DATA SCIENTIST\", 3], [\"15-2051.00\", \"DATA SCIENTISTS\", 3], [\"15-2051.01\", \"Data Scientists\", 3], [\"15-1252.00\", \"Data Scientists\", 2], [\"15-1251.00\", \"Data Scientists\", 1], [\"12-2051.00\", \"Data Scientists\", 1], [\"15-2021\", \"Data Scientists\", 1], [\"15-2031\", \"Data Scientist\", 1], [\"12-5021.00\", \"Data Scientists\", 1], [\"15-2031.00\", \"Data Scientist, Analytics\", 1]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT \n    employer_name, \n    SUM(CAST(total_worker_positions AS INTEGER)) as total_positions\nFROM lca \nWHERE source_file LIKE '%FY2025%' \n  AND LOWER(soc_title) = 'data scientists'\nGROUP BY employer_name\nORDER BY total_positions DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"total_positions\"], \"rows\": [[\"Microsoft Corporation\", 2636], [\"Amazon.com Services LLC\", 2298], [\"GOLDMAN SACHS & CO. LLC\", 1024], [\"GOLDMAN SACHS SERVICES LLC\", 911], [\"GOLDMAN SACHS BANK USA\", 904], [\"Meta Platforms, Inc\", 640], [\"TikTok Inc.\", 463], [\"Oracle America, Inc.\", 425], [\"Capital One, National Association\", 392], [\"WAL-MART ASSOCIATES, INC.\", 368]], \"truncated\": false}"
+     }
+    ]
+   },
+   "agent": {
+    "response": "The top five sponsors of certified data scientist positions nationally in FY2025 were **Goldman Sachs**, **Amazon**, **Microsoft**, **Meta**, and **Walmart**, accounting for over 29% of all 26,232 positions.\n\n* **Goldman Sachs** led with 2,817 certified positions across 144 filings in FY2025.\n* **Amazon** sponsored 2,495 certified positions across 668 filings.\n* **Microsoft** followed with 1,100 certified positions across 704 filings.\n* **Meta** (689 positions, 425 filings) and **Walmart** (664 positions, 664 filings) rounded out the top five.\n\nNationally, employers submitted a total of 18,608 certified filings for data scientists during this fiscal year.",
+    "session_id": "5fce83d4-d3c0-4b34-be67-e1ded8791355",
+    "tool_calls": [
+     {
+      "agent": "H-1B Analyst",
+      "name": "read_mappings",
+      "args": {},
+      "result": "{\"as_of\": \"FY2026 Q3\", \"tables\": {\"lca\": {\"description\": \"One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.\", \"columns\": [{\"name\": \"case_number\", \"type\": \"VARCHAR\", \"description\": \"DOL case number, unique per row.\"}, {\"name\": \"case_status\", \"type\": \"VARCHAR\", \"description\": \"DOL decision. Use 'CERTIFIED' for filings employers could actually use.\", \"is_enum\": true}, {\"name\": \"fiscal_year\", \"type\": \"INTEGER\", \"description\": \"US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.\", \"is_enum\": true}, {\"name\": \"quarter\", \"type\": \"INTEGER\", \"description\": \"Fiscal quarter 1-4 (Q1 = Oct-Dec).\", \"is_enum\": true}, {\"name\": \"received_date\", \"type\": \"DATE\", \"description\": \"Date DOL received the LCA.\"}, {\"name\": \"decision_date\", \"type\": \"DATE\", \"description\": \"Date DOL decided the LCA.\"}, {\"name\": \"job_title\", \"type\": \"VARCHAR\", \"description\": \"Job title as typed by the employer (free text, messy). Do not filter on it: use role_family.\"}, {\"name\": \"title_norm\", \"type\": \"VARCHAR\", \"description\": \"Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning).\"}, {\"name\": \"role_family\", \"type\": \"VARCHAR\", \"description\": \"Clean role category built offline from the title and SOC code. Get the value from find_role.\", \"is_enum\": true}, {\"name\": \"seniority\", \"type\": \"VARCHAR\", \"description\": \"Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.\", \"is_enum\": true}, {\"name\": \"soc_code\", \"type\": \"VARCHAR\", \"description\": \"Standard Occupational Classification code, e.g. 15-1252 = Software Developers.\"}, {\"name\": \"soc_title\", \"type\": \"VARCHAR\", \"description\": \"Name of the SOC occupation.\"}, {\"name\": \"full_time\", \"type\": \"VARCHAR\", \"description\": \"'Y' if full-time.\", \"is_enum\": true}, {\"name\": \"total_worker_positions\", \"type\": \"INTEGER\", \"description\": \"Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings.\"}, {\"name\": \"filing_type\", \"type\": \"VARCHAR\", \"description\": \"Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.\", \"is_enum\": true}, {\"name\": \"new_employment\", \"type\": \"INTEGER\", \"description\": \"Workers in this filing who are new employment.\", \"is_enum\": true}, {\"name\": \"continued_employment\", \"type\": \"INTEGER\", \"description\": \"Workers who are continuing employment (extensions).\", \"is_enum\": true}, {\"name\": \"change_employer\", \"type\": \"INTEGER\", \"description\": \"Workers transferring from another employer.\", \"is_enum\": true}, {\"name\": \"employer_id\", \"type\": \"INTEGER\", \"description\": \"Resolved employer key: all legal-name variants of one company share it. Get it from find_employer.\"}, {\"name\": \"employer\", \"type\": \"VARCHAR\", \"description\": \"Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer.\"}, {\"name\": \"employer_type\", \"type\": \"VARCHAR\", \"description\": \"big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).\", \"is_enum\": true}, {\"name\": \"employer_name_raw\", \"type\": \"VARCHAR\", \"description\": \"Employer name exactly as filed. Do not filter on it: use employer_id.\"}, {\"name\": \"naics_code\", \"type\": \"VARCHAR\", \"description\": \"Employer's industry code (NAICS).\"}, {\"name\": \"worksite_city\", \"type\": \"VARCHAR\", \"description\": \"Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...).\"}, {\"name\": \"worksite_city_raw\", \"type\": \"VARCHAR\", \"description\": \"Worksite city as typed by the employer.\"}, {\"name\": \"worksite_county\", \"type\": \"VARCHAR\", \"description\": \"Worksite county as filed.\"}, {\"name\": \"worksite_state\", \"type\": \"VARCHAR\", \"description\": \"Two-letter worksite state.\", \"is_enum\": true}, {\"name\": \"worksite_zip\", \"type\": \"VARCHAR\", \"description\": \"Five-digit worksite ZIP code.\"}, {\"name\": \"area_code\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area (metro) code for the worksite. Get it from find_location.\"}, {\"name\": \"metro_name\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'.\"}, {\"name\": \"wage_from_raw\", \"type\": \"DOUBLE\", \"description\": \"Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it.\"}, {\"name\": \"wage_to_raw\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered wage range as filed, in wage_unit, often blank.\"}, {\"name\": \"wage_unit\", \"type\": \"VARCHAR\", \"description\": \"Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.\", \"is_enum\": true}, {\"name\": \"wage_annual_from\", \"type\": \"DOUBLE\", \"description\": \"Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay.\"}, {\"name\": \"wage_annual_to\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered range, yearly (equals wage_annual_from when no range).\"}, {\"name\": \"wage_flag\", \"type\": \"VARCHAR\", \"description\": \"'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.\", \"is_enum\": true}, {\"name\": \"pw_annual\", \"type\": \"DOUBLE\", \"description\": \"Prevailing wage the employer cited, yearly.\"}, {\"name\": \"pw_wage_level\", \"type\": \"VARCHAR\", \"description\": \"Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.\", \"is_enum\": true}, {\"name\": \"pw_level_num\", \"type\": \"INTEGER\", \"description\": \"pw_wage_level as a number 1-4.\", \"is_enum\": true}, {\"name\": \"offer_wage_level\", \"type\": \"INTEGER\", \"description\": \"Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.\", \"is_enum\": true}, {\"name\": \"h1b_dependent\", \"type\": \"VARCHAR\", \"description\": \"'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B)"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_role",
+      "args": {
+       "text": "data scientist"
+      },
+      "result": "{\"role_family\": \"Data Scientist\", \"matched_by\": \"rules\", \"main_soc_codes\": [{\"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"filings\": 38958}, {\"soc_code\": \"15-2041\", \"soc_title\": \"Statisticians\", \"filings\": 6341}, {\"soc_code\": \"15-2031\", \"soc_title\": \"Operations Research Analysts\", \"filings\": 969}], \"example_titles\": [\"data scientist\", \"senior data scientist\", \"data scientist ii\", \"data scientist iii\", \"data science\", \"machine learning\"]}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer, sum(total_worker_positions) AS positions, count(*) AS filings FROM lca WHERE role_family = 'Data Scientist' AND fiscal_year = 2025 AND case_status = 'CERTIFIED' GROUP BY employer ORDER BY positions DESC LIMIT 10"
+      },
+      "result": "{\"columns\": [\"employer\", \"positions\", \"filings\"], \"rows\": [[\"Goldman Sachs\", 2817, 144], [\"Amazon\", 2495, 668], [\"Microsoft\", 1100, 704], [\"Meta\", 689, 425], [\"Walmart\", 664, 664], [\"Google\", 474, 474], [\"Apple\", 460, 376], [\"Oracle\", 406, 26], [\"Cisco\", 399, 31], [\"TikTok / ByteDance\", 398, 206]], \"row_count\": 10, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT sum(total_worker_positions) AS positions, count(*) AS filings FROM lca WHERE role_family = 'Data Scientist' AND fiscal_year = 2025 AND case_status = 'CERTIFIED'"
+      },
+      "result": "{\"columns\": [\"positions\", \"filings\"], \"rows\": [[26232, 18608]], \"row_count\": 1, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "color": null,
+       "y": "positions",
+       "x": "employer",
+       "mark": "bar",
+       "title": "Top Sponsors of Data Scientists by Positions, FY2025"
+      },
+      "result": "{\"error\": \"'employer' is not in the last result. Columns: ['positions', 'filings']\"}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer, sum(total_worker_positions) AS positions FROM lca WHERE role_family = 'Data Scientist' AND fiscal_year = 2025 AND case_status = 'CERTIFIED' GROUP BY employer ORDER BY positions DESC LIMIT 10"
+      },
+      "result": "{\"columns\": [\"employer\", \"positions\"], \"rows\": [[\"Goldman Sachs\", 2817], [\"Amazon\", 2495], [\"Microsoft\", 1100], [\"Meta\", 689], [\"Walmart\", 664], [\"Google\", 474], [\"Apple\", 460], [\"Oracle\", 406], [\"Cisco\", 399], [\"TikTok / ByteDance\", 398]], \"row_count\": 10, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "mark": "bar",
+       "color": null,
+       "title": "Top Sponsors of Data Scientists by Positions, FY2025",
+       "y": "positions",
+       "x": "employer"
+      },
+      "result": "{\"ok\": true, \"note\": \"Chart shown to the user. Do not describe the chart's styling.\"}"
+     }
+    ],
+    "chart": {
+     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+     "title": "Top Sponsors of Data Scientists by Positions, FY2025",
+     "data": {
+      "values": [
+       {
+        "employer": "Goldman Sachs",
+        "positions": 2817
+       },
+       {
+        "employer": "Amazon",
+        "positions": 2495
+       },
+       {
+        "employer": "Microsoft",
+        "positions": 1100
+       },
+       {
+        "employer": "Meta",
+        "positions": 689
+       },
+       {
+        "employer": "Walmart",
+        "positions": 664
+       },
+       {
+        "employer": "Google",
+        "positions": 474
+       },
+       {
+        "employer": "Apple",
+        "positions": 460
+       },
+       {
+        "employer": "Oracle",
+        "positions": 406
+       },
+       {
+        "employer": "Cisco",
+        "positions": 399
+       },
+       {
+        "employer": "TikTok / ByteDance",
+        "positions": 398
+       }
+      ]
+     },
+     "mark": {
+      "type": "bar",
+      "point": false
+     },
+     "encoding": {
+      "y": {
+       "field": "employer",
+       "type": "nominal",
+       "sort": "-x",
+       "title": null
+      },
+      "x": {
+       "field": "positions",
+       "type": "quantitative"
+      },
+      "tooltip": [
+       {
+        "field": "employer",
+        "type": "nominal"
+       },
+       {
+        "field": "positions",
+        "type": "quantitative"
+       }
+      ]
+     },
+     "width": "container"
+    },
+    "table": {
+     "columns": [
+      "employer",
+      "positions"
+     ],
+     "rows": [
+      [
+       "Goldman Sachs",
+       2817
+      ],
+      [
+       "Amazon",
+       2495
+      ],
+      [
+       "Microsoft",
+       1100
+      ],
+      [
+       "Meta",
+       689
+      ],
+      [
+       "Walmart",
+       664
+      ],
+      [
+       "Google",
+       474
+      ],
+      [
+       "Apple",
+       460
+      ],
+      [
+       "Oracle",
+       406
+      ],
+      [
+       "Cisco",
+       399
+      ],
+      [
+       "TikTok / ByteDance",
+       398
+      ]
+     ],
+     "row_count": 10,
+     "truncated": false
+    }
+   },
+   "plain_ok": true,
+   "agent_ok": true
+  },
+  {
+   "plain": {
+    "response": "FAILED: MaxTurnsExceeded: Max turns (15) exceeded",
+    "tool_calls": [
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "DESCRIBE lca;"
+      },
+      "result": "{\"columns\": [\"column_name\", \"column_type\", \"null\", \"key\", \"default\", \"extra\"], \"rows\": [[\"case_number\", \"VARCHAR\", \"YES\", null, null, null], [\"case_status\", \"VARCHAR\", \"YES\", null, null, null], [\"received_date\", \"VARCHAR\", \"YES\", null, null, null], [\"decision_date\", \"VARCHAR\", \"YES\", null, null, null], [\"visa_class\", \"VARCHAR\", \"YES\", null, null, null], [\"job_title\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_code\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_title\", \"VARCHAR\", \"YES\", null, null, null], [\"full_time\", \"VARCHAR\", \"YES\", null, null, null], [\"begin_date\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worker_positions\", \"VARCHAR\", \"YES\", null, null, null], [\"new_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"continued_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_previous_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"new_concurrent_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_employer\", \"VARCHAR\", \"YES\", null, null, null], [\"amended_petition\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_name\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_city\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_state\", \"VARCHAR\", \"YES\", null, null, null], [\"naics_code\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_city\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_county\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_state\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_zip\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_from\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_to\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_wage_level\", \"VARCHAR\", \"YES\", null, null, null], [\"h1b_dependent\", \"VARCHAR\", \"YES\", null, null, null], [\"willful_violator\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worksite_locations\", \"VARCHAR\", \"YES\", null, null, null], [\"source_file\", \"VARCHAR\", \"YES\", null, null, null]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT distinct source_file FROM lca LIMIT 10;"
+      },
+      "result": "{\"columns\": [\"source_file\"], \"rows\": [[\"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q2.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q1.xlsx\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT soc_code, soc_title, COUNT(*) as cnt\nFROM lca\nWHERE (soc_title ILIKE '%data scientist%' OR job_title ILIKE '%data scientist%')\nGROUP BY 1, 2\nORDER BY cnt DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\", \"cnt\"], \"rows\": [[\"15-2051.00\", \"Data Scientists\", 52501], [\"15-2041.00\", \"Statisticians\", 1371], [\"15-2031.00\", \"Operations Research Analysts\", 724], [\"15-2051.01\", \"Business Intelligence Analysts\", 638], [\"15-2051\", \"Data Scientists\", 379], [\"15-1252.00\", \"Software Developers\", 290], [\"15-1221.00\", \"Computer and Information Research Scientists\", 244], [\"19-1029.01\", \"Bioinformatics Scientists\", 198], [\"15-2051.02\", \"Clinical Data Managers\", 60], [\"11-3021.00\", \"Computer and Information Systems Managers\", 51]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT source_file, COUNT(*)\nFROM lca\nWHERE source_file LIKE '%FY2025%'\nGROUP BY 1\nORDER BY 1;"
+      },
+      "result": "{\"columns\": [\"source_file\", \"count_star()\"], \"rows\": [[\"LCA_Disclosure_Data_FY2025_Q1.xlsx\", 104046], [\"LCA_Disclosure_Data_FY2025_Q2.xlsx\", 128673], [\"LCA_Disclosure_Data_FY2025_Q3.xlsx\", 234726], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\", 114826]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT case_status, COUNT(*), SUM(CAST(total_worker_positions AS INTEGER)) \nFROM lca \nWHERE source_file LIKE '%FY2025%' \nGROUP BY 1;"
+      },
+      "result": "{\"columns\": [\"case_status\", \"count_star()\", \"sum(CAST(total_worker_positions AS INTEGER))\"], \"rows\": [[\"Denied\", 3505, 11152], [\"Withdrawn\", 9211, 11765], [\"Certified\", 539444, 881599], [\"Certified - Withdrawn\", 30111, 39764]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT soc_code, soc_title FROM lca WHERE soc_code LIKE '15-2051%';"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\"], \"rows\": [[\"15-2051.01\", \"Business intelligence analyst\"], [\"15-2051.00\", \"Data Scientists\"], [\"15-2051\", \"Data Scientists\"], [\"15-2051.01\", \"Data Scientists\"], [\"15-2051.02\", \"Business Intelligence Analyst\"], [\"15-2051.01\", \"BUSINESS INTELLIGENCE ANALYSTS\"], [\"15-2051\", \"Business Intelligence Analyst\"], [\"15-2051.00\", \"Business Intelligence Analysts\"], [\"15-2051\", \"DATA SCIENTIST\"], [\"15-2051\", \"Business Intelligence Analysts\"], [\"15-2051.01\", \"Business Intelligence Analysts\"], [\"15-2051.02\", \"Clinical Data Managers\"], [\"15-2051.01\", \"Business Intelligence Analyst\"], [\"15-2051.00\", \"Data Scientist\"], [\"15-2051\", \"Data Scientist\"], [\"15-2051.00\", \"DataScientists\"], [\"15-2051-01\", \"Business Intelligence Analysts\"], [\"15-2051.08\", \"Business Intelligence Analysts\"], [\"15-2051\", \"DATA SCIENTISTS\"], [\"15-2051.00\", \"DATA SCIENTISTS\"], [\"15-2051.01\", \"Business intelligence Analyst\"], [\"15-2051.01\", \"BusinessIntelligenceAnalysts\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, COUNT(*) AS cases, SUM(CAST(total_worker_positions AS INTEGER)) AS positions\nFROM lca\nWHERE source_file LIKE '%FY2025%' AND soc_code IN ('15-2051.00', '15-2051')\nGROUP BY employer_name\nORDER BY positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"cases\", \"positions\"], \"rows\": [[\"Microsoft Corporation\", 755, 2636], [\"Amazon.com Services LLC\", 506, 2298], [\"GOLDMAN SACHS & CO. LLC\", 34, 1024], [\"GOLDMAN SACHS SERVICES LLC\", 20, 911], [\"GOLDMAN SACHS BANK USA\", 13, 904], [\"Meta Platforms, Inc\", 448, 640], [\"TikTok Inc.\", 200, 463], [\"Oracle America, Inc.\", 26, 425], [\"Capital One, National Association\", 392, 392], [\"WAL-MART ASSOCIATES, INC.\", 368, 368], [\"Amazon Web Services, Inc.\", 83, 353], [\"Capital One Services, LLC\", 317, 317], [\"ByteDance Inc.\", 149, 309], [\"Google LLC\", 302, 302], [\"Cisco Systems, Inc.\", 20, 238]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, COUNT(*) AS cases, SUM(CAST(total_worker_positions AS INTEGER)) AS positions\nFROM lca\nWHERE source_file LIKE '%FY2025%' AND soc_code IN ('15-2051.00', '15-2051') AND case_status = 'Certified'\nGROUP BY employer_name\nORDER BY positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"cases\", \"positions\"], \"rows\": [[\"Amazon.com Services LLC\", 505, 2288], [\"Microsoft Corporation\", 746, 1736], [\"GOLDMAN SACHS & CO. LLC\", 33, 924], [\"GOLDMAN SACHS SERVICES LLC\", 19, 910], [\"GOLDMAN SACHS BANK USA\", 13, 904], [\"Meta Platforms, Inc\", 448, 640], [\"TikTok Inc.\", 193, 456], [\"Oracle America, Inc.\", 26, 425], [\"Capital One, National Association\", 392, 392], [\"WAL-MART ASSOCIATES, INC.\", 363, 363], [\"Amazon Web Services, Inc.\", 83, 353], [\"Capital One Services, LLC\", 317, 317], [\"Google LLC\", 300, 300], [\"ByteDance Inc.\", 140, 300], [\"Cisco Systems, Inc.\", 20, 238]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT soc_code FROM lca WHERE source_file LIKE '%FY2025%' AND soc_code LIKE '15-2051%';"
+      },
+      "result": "{\"columns\": [\"soc_code\"], \"rows\": [[\"15-2051.02\"], [\"15-2051.00\"], [\"15-2051.01\"], [\"15-2051\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, COUNT(*) AS cases, SUM(CAST(total_worker_positions AS INTEGER)) AS positions\nFROM lca\nWHERE source_file LIKE '%FY2025%' AND (soc_code IN ('15-2051.00', '15-2051') OR (soc_code LIKE '15-2051%' AND soc_title ILIKE '%Data Scientist%'))\nGROUP BY employer_name\nORDER BY positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"cases\", \"positions\"], \"rows\": [[\"Microsoft Corporation\", 755, 2636], [\"Amazon.com Services LLC\", 506, 2298], [\"GOLDMAN SACHS & CO. LLC\", 34, 1024], [\"GOLDMAN SACHS SERVICES LLC\", 20, 911], [\"GOLDMAN SACHS BANK USA\", 13, 904], [\"Meta Platforms, Inc\", 448, 640], [\"TikTok Inc.\", 200, 463], [\"Oracle America, Inc.\", 26, 425], [\"Capital One, National Association\", 392, 392], [\"WAL-MART ASSOCIATES, INC.\", 368, 368], [\"Amazon Web Services, Inc.\", 83, 353], [\"Capital One Services, LLC\", 317, 317], [\"ByteDance Inc.\", 149, 309], [\"Google LLC\", 302, 302], [\"Cisco Systems, Inc.\", 20, 238]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, COUNT(*) AS cases, SUM(CAST(total_worker_positions AS INTEGER)) AS positions\nFROM lca\nWHERE source_file LIKE '%FY2025%' AND job_title ILIKE '%Data Scientist%'\nGROUP BY employer_name\nORDER BY positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"cases\", \"positions\"], \"rows\": [[\"Amazon.com Services LLC\", 251, 1502], [\"Meta Platforms, Inc\", 335, 527], [\"Oracle America, Inc.\", 26, 406], [\"WAL-MART ASSOCIATES, INC.\", 338, 338], [\"Amazon Web Services, Inc.\", 51, 240], [\"Google LLC\", 225, 225], [\"Cisco Systems, Inc.\", 17, 193], [\"Apple Inc.\", 104, 184], [\"TikTok Inc.\", 57, 113], [\"NVIDIA Corporation\", 6, 111], [\"Intel Corporation \", 54, 103], [\"CGI Technologies and Solutions Inc.\", 4, 102], [\"ByteDance Inc.\", 45, 102], [\"Intuit Inc.\", 75, 93], [\"Amazon Development Center U.S., Inc.\", 12, 75]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, soc_code, soc_title, total_worker_positions, case_status, case_number\nFROM lca\nWHERE source_file LIKE '%FY2025%' AND soc_code IN ('15-2051.00', '15-2051') AND employer_name LIKE 'GOLDMAN SACHS%'\nORDER BY total_worker_positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"soc_code\", \"soc_title\", \"total_worker_positions\", \"case_status\", \"case_number\"], \"rows\": [[\"VICE PRESIDENT\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25073-775163\"], [\"VICE PRESIDENT\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25073-775170\"], [\"VICE PRESIDENT\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25073-775172\"], [\"VICE PRESIDENT\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25072-771941\"], [\"VICE PRESIDENT\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25072-771953\"], [\"ANALYST\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767807\"], [\"VICE PRESIDENT\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767964\"], [\"VICE PRESIDENT\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767959\"], [\"ASSOCIATE\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767827\"], [\"ASSOCIATE\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767962\"], [\"ANALYST\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767818\"], [\"ASSOCIATE\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767822\"], [\"VICE PRESIDENT\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767946\"], [\"ASSOCIATE\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767956\"], [\"ANALYST\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25071-767832\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, soc_code, soc_title, total_worker_positions, case_status, case_number\nFROM lca\nWHERE source_file LIKE '%FY2025%' AND soc_code IN ('15-2051.00', '15-2051') AND employer_name = 'Microsoft Corporation'\nORDER BY total_worker_positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"soc_code\", \"soc_title\", \"total_worker_positions\", \"case_status\", \"case_number\"], \"rows\": [[\"Data Engineering\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified - Withdrawn\", \"I-200-25174-119223\"], [\"Data Engineering\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified - Withdrawn\", \"I-200-25174-119226\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified - Withdrawn\", \"I-200-25022-633455\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified - Withdrawn\", \"I-200-25022-633449\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified - Withdrawn\", \"I-200-25022-633442\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified - Withdrawn\", \"I-200-24353-553189\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified - Withdrawn\", \"I-200-24353-553199\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified - Withdrawn\", \"I-200-24353-553186\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified - Withdrawn\", \"I-200-24353-553191\"], [\"Data Engineering\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-25174-119224\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-24353-553191\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-24353-553199\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-24353-553196\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-24353-553189\"], [\"Research, Applied and Data Sciences\", \"15-2051.00\", \"Data Scientists\", \"100\", \"Certified\", \"I-200-24353-553186\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, soc_code, soc_title, total_worker_positions, case_status, case_number\nFROM lca\nWHERE source_file LIKE '%FY2025%' AND soc_code IN ('15-2051.00', '15-2051') AND employer_name = 'Amazon.com Services LLC'\nORDER BY total_worker_positions DESC\nLIMIT 15;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"soc_code\", \"soc_title\", \"total_worker_positions\", \"case_status\", \"case_number\"], \"rows\": [[\"Data Engineer II\", \"15-2051.00\", \"Data Scientists\", \"20\", \"Certified\", \"I-200-25095-835091\"], [\"Data Scientist III\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-24366-578351\"], [\"Data Scientist II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-24365-575949\"], [\"Data Scientist III\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-24362-573356\"], [\"Data Scientist II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-24359-569728\"], [\"Data Scientist II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-24268-360231\"], [\"Data Engineer II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-25260-314087\"], [\"Data Engineer II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-25258-307991\"], [\"Business Intelligence Engineer II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Withdrawn\", \"I-200-25262-320635\"], [\"Data Engineer II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-25251-292392\"], [\"Data Engineer II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-25251-292885\"], [\"Data Scientist II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-25251-292386\"], [\"Data Scientist III\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-25244-279302\"], [\"Data Scientist II\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-25240-272625\"], [\"Manager III, Data Science\", \"15-2051.00\", \"Data Scientists\", \"10\", \"Certified\", \"I-200-25225-238986\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, COUNT(*) AS cases, SUM(CAST(total_worker_positions AS INTEGER)) AS positions\nFROM lca\nWHERE source_file LIKE '%FY2025%' AND job_title ILIKE '%Data Scientist%' AND case_status = 'Certified'\nGROUP BY employer_name\nORDER BY positions DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"cases\", \"positions\"], \"rows\": [[\"Amazon.com Services LLC\", 251, 1502], [\"Meta Platforms, Inc\", 335, 527], [\"Oracle America, Inc.\", 26, 406], [\"WAL-MART ASSOCIATES, INC.\", 336, 336], [\"Amazon Web Services, Inc.\", 51, 240], [\"Google LLC\", 222, 222], [\"Cisco Systems, Inc.\", 17, 193], [\"Apple Inc.\", 102, 182], [\"TikTok Inc.\", 56, 112], [\"NVIDIA Corporation\", 6, 111]], \"truncated\": false}"
+     }
+    ]
+   },
+   "agent": {
+    "response": "Goldman Sachs was the top national sponsor of data scientists in FY2025, certifying 2,817 worker positions. \n\nThe top five sponsors for certified Data Scientist filings in FY2025 were:\n\n* **Goldman Sachs**: 2,817 positions (144 filings) with a median offered salary of $102k.\n* **Amazon**: 2,495 positions (668 filings) with a median offered salary of $155k.\n* **Microsoft**: 1,100 positions (704 filings) with a median offered salary of $169k.\n* **Meta**: 689 positions (425 filings) with a median offered salary of $201k.\n* **Walmart**: 664 positions (664 filings) with a median offered salary of $152k.\n\nThese statistics reflect certified Labor Condition Applications (LCAs) decided in FY2025. LCAs represent employer job offers rather than final visa approvals.",
+    "session_id": "a6a38ff7-fa88-4c83-84da-8019a992cf43",
+    "tool_calls": [
+     {
+      "agent": "H-1B Analyst",
+      "name": "read_mappings",
+      "args": {},
+      "result": "{\"as_of\": \"FY2026 Q3\", \"tables\": {\"lca\": {\"description\": \"One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.\", \"columns\": [{\"name\": \"case_number\", \"type\": \"VARCHAR\", \"description\": \"DOL case number, unique per row.\"}, {\"name\": \"case_status\", \"type\": \"VARCHAR\", \"description\": \"DOL decision. Use 'CERTIFIED' for filings employers could actually use.\", \"is_enum\": true}, {\"name\": \"fiscal_year\", \"type\": \"INTEGER\", \"description\": \"US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.\", \"is_enum\": true}, {\"name\": \"quarter\", \"type\": \"INTEGER\", \"description\": \"Fiscal quarter 1-4 (Q1 = Oct-Dec).\", \"is_enum\": true}, {\"name\": \"received_date\", \"type\": \"DATE\", \"description\": \"Date DOL received the LCA.\"}, {\"name\": \"decision_date\", \"type\": \"DATE\", \"description\": \"Date DOL decided the LCA.\"}, {\"name\": \"job_title\", \"type\": \"VARCHAR\", \"description\": \"Job title as typed by the employer (free text, messy). Do not filter on it: use role_family.\"}, {\"name\": \"title_norm\", \"type\": \"VARCHAR\", \"description\": \"Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning).\"}, {\"name\": \"role_family\", \"type\": \"VARCHAR\", \"description\": \"Clean role category built offline from the title and SOC code. Get the value from find_role.\", \"is_enum\": true}, {\"name\": \"seniority\", \"type\": \"VARCHAR\", \"description\": \"Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.\", \"is_enum\": true}, {\"name\": \"soc_code\", \"type\": \"VARCHAR\", \"description\": \"Standard Occupational Classification code, e.g. 15-1252 = Software Developers.\"}, {\"name\": \"soc_title\", \"type\": \"VARCHAR\", \"description\": \"Name of the SOC occupation.\"}, {\"name\": \"full_time\", \"type\": \"VARCHAR\", \"description\": \"'Y' if full-time.\", \"is_enum\": true}, {\"name\": \"total_worker_positions\", \"type\": \"INTEGER\", \"description\": \"Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings.\"}, {\"name\": \"filing_type\", \"type\": \"VARCHAR\", \"description\": \"Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.\", \"is_enum\": true}, {\"name\": \"new_employment\", \"type\": \"INTEGER\", \"description\": \"Workers in this filing who are new employment.\", \"is_enum\": true}, {\"name\": \"continued_employment\", \"type\": \"INTEGER\", \"description\": \"Workers who are continuing employment (extensions).\", \"is_enum\": true}, {\"name\": \"change_employer\", \"type\": \"INTEGER\", \"description\": \"Workers transferring from another employer.\", \"is_enum\": true}, {\"name\": \"employer_id\", \"type\": \"INTEGER\", \"description\": \"Resolved employer key: all legal-name variants of one company share it. Get it from find_employer.\"}, {\"name\": \"employer\", \"type\": \"VARCHAR\", \"description\": \"Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer.\"}, {\"name\": \"employer_type\", \"type\": \"VARCHAR\", \"description\": \"big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).\", \"is_enum\": true}, {\"name\": \"employer_name_raw\", \"type\": \"VARCHAR\", \"description\": \"Employer name exactly as filed. Do not filter on it: use employer_id.\"}, {\"name\": \"naics_code\", \"type\": \"VARCHAR\", \"description\": \"Employer's industry code (NAICS).\"}, {\"name\": \"worksite_city\", \"type\": \"VARCHAR\", \"description\": \"Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...).\"}, {\"name\": \"worksite_city_raw\", \"type\": \"VARCHAR\", \"description\": \"Worksite city as typed by the employer.\"}, {\"name\": \"worksite_county\", \"type\": \"VARCHAR\", \"description\": \"Worksite county as filed.\"}, {\"name\": \"worksite_state\", \"type\": \"VARCHAR\", \"description\": \"Two-letter worksite state.\", \"is_enum\": true}, {\"name\": \"worksite_zip\", \"type\": \"VARCHAR\", \"description\": \"Five-digit worksite ZIP code.\"}, {\"name\": \"area_code\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area (metro) code for the worksite. Get it from find_location.\"}, {\"name\": \"metro_name\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'.\"}, {\"name\": \"wage_from_raw\", \"type\": \"DOUBLE\", \"description\": \"Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it.\"}, {\"name\": \"wage_to_raw\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered wage range as filed, in wage_unit, often blank.\"}, {\"name\": \"wage_unit\", \"type\": \"VARCHAR\", \"description\": \"Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.\", \"is_enum\": true}, {\"name\": \"wage_annual_from\", \"type\": \"DOUBLE\", \"description\": \"Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay.\"}, {\"name\": \"wage_annual_to\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered range, yearly (equals wage_annual_from when no range).\"}, {\"name\": \"wage_flag\", \"type\": \"VARCHAR\", \"description\": \"'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.\", \"is_enum\": true}, {\"name\": \"pw_annual\", \"type\": \"DOUBLE\", \"description\": \"Prevailing wage the employer cited, yearly.\"}, {\"name\": \"pw_wage_level\", \"type\": \"VARCHAR\", \"description\": \"Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.\", \"is_enum\": true}, {\"name\": \"pw_level_num\", \"type\": \"INTEGER\", \"description\": \"pw_wage_level as a number 1-4.\", \"is_enum\": true}, {\"name\": \"offer_wage_level\", \"type\": \"INTEGER\", \"description\": \"Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.\", \"is_enum\": true}, {\"name\": \"h1b_dependent\", \"type\": \"VARCHAR\", \"description\": \"'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B)"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_role",
+      "args": {
+       "text": "data scientist"
+      },
+      "result": "{\"role_family\": \"Data Scientist\", \"matched_by\": \"rules\", \"main_soc_codes\": [{\"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"filings\": 38958}, {\"soc_code\": \"15-2041\", \"soc_title\": \"Statisticians\", \"filings\": 6341}, {\"soc_code\": \"15-2031\", \"soc_title\": \"Operations Research Analysts\", \"filings\": 969}], \"example_titles\": [\"data scientist\", \"senior data scientist\", \"data scientist ii\", \"data scientist iii\", \"data science\", \"machine learning\"]}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer, sum(total_worker_positions) AS positions, count(*) AS filings, median(CASE WHEN wage_flag = 'ok' THEN wage_annual_from ELSE NULL END) AS median_pay FROM lca WHERE role_family = 'Data Scientist' AND fiscal_year = 2025 AND case_status = 'CERTIFIED' GROUP BY employer ORDER BY positions DESC LIMIT 5"
+      },
+      "result": "{\"columns\": [\"employer\", \"positions\", \"filings\", \"median_pay\"], \"rows\": [[\"Goldman Sachs\", 2817, 144, 101700.0], [\"Amazon\", 2495, 668, 155000.0], [\"Microsoft\", 1100, 704, 168702.0], [\"Meta\", 689, 425, 200527.0], [\"Walmart\", 664, 664, 152148.0]], \"row_count\": 5, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "y": "positions",
+       "x": "employer",
+       "color": null,
+       "mark": "bar",
+       "title": "Top Sponsors of Data Scientists by Positions, FY2025"
+      },
+      "result": "{\"ok\": true, \"note\": \"Chart shown to the user. Do not describe the chart's styling.\"}"
+     }
+    ],
+    "chart": {
+     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+     "title": "Top Sponsors of Data Scientists by Positions, FY2025",
+     "data": {
+      "values": [
+       {
+        "employer": "Goldman Sachs",
+        "positions": 2817,
+        "filings": 144,
+        "median_pay": 101700.0
+       },
+       {
+        "employer": "Amazon",
+        "positions": 2495,
+        "filings": 668,
+        "median_pay": 155000.0
+       },
+       {
+        "employer": "Microsoft",
+        "positions": 1100,
+        "filings": 704,
+        "median_pay": 168702.0
+       },
+       {
+        "employer": "Meta",
+        "positions": 689,
+        "filings": 425,
+        "median_pay": 200527.0
+       },
+       {
+        "employer": "Walmart",
+        "positions": 664,
+        "filings": 664,
+        "median_pay": 152148.0
+       }
+      ]
+     },
+     "mark": {
+      "type": "bar",
+      "point": false
+     },
+     "encoding": {
+      "y": {
+       "field": "employer",
+       "type": "nominal",
+       "sort": "-x",
+       "title": null
+      },
+      "x": {
+       "field": "positions",
+       "type": "quantitative"
+      },
+      "tooltip": [
+       {
+        "field": "employer",
+        "type": "nominal"
+       },
+       {
+        "field": "positions",
+        "type": "quantitative"
+       },
+       {
+        "field": "filings",
+        "type": "quantitative"
+       },
+       {
+        "field": "median_pay",
+        "type": "quantitative"
+       }
+      ]
+     },
+     "width": "container"
+    },
+    "table": {
+     "columns": [
+      "employer",
+      "positions",
+      "filings",
+      "median_pay"
+     ],
+     "rows": [
+      [
+       "Goldman Sachs",
+       2817,
+       144,
+       101700.0
+      ],
+      [
+       "Amazon",
+       2495,
+       668,
+       155000.0
+      ],
+      [
+       "Microsoft",
+       1100,
+       704,
+       168702.0
+      ],
+      [
+       "Meta",
+       689,
+       425,
+       200527.0
+      ],
+      [
+       "Walmart",
+       664,
+       664,
+       152148.0
+      ]
+     ],
+     "row_count": 5,
+     "truncated": false
+    }
+   },
+   "plain_ok": false,
+   "agent_ok": true
+  },
+  {
+   "plain": {
+    "response": "FAILED: MaxTurnsExceeded: Max turns (15) exceeded",
+    "tool_calls": [
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "DESCRIBE lca;"
+      },
+      "result": "{\"columns\": [\"column_name\", \"column_type\", \"null\", \"key\", \"default\", \"extra\"], \"rows\": [[\"case_number\", \"VARCHAR\", \"YES\", null, null, null], [\"case_status\", \"VARCHAR\", \"YES\", null, null, null], [\"received_date\", \"VARCHAR\", \"YES\", null, null, null], [\"decision_date\", \"VARCHAR\", \"YES\", null, null, null], [\"visa_class\", \"VARCHAR\", \"YES\", null, null, null], [\"job_title\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_code\", \"VARCHAR\", \"YES\", null, null, null], [\"soc_title\", \"VARCHAR\", \"YES\", null, null, null], [\"full_time\", \"VARCHAR\", \"YES\", null, null, null], [\"begin_date\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worker_positions\", \"VARCHAR\", \"YES\", null, null, null], [\"new_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"continued_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_previous_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"new_concurrent_employment\", \"VARCHAR\", \"YES\", null, null, null], [\"change_employer\", \"VARCHAR\", \"YES\", null, null, null], [\"amended_petition\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_name\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_city\", \"VARCHAR\", \"YES\", null, null, null], [\"employer_state\", \"VARCHAR\", \"YES\", null, null, null], [\"naics_code\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_city\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_county\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_state\", \"VARCHAR\", \"YES\", null, null, null], [\"worksite_zip\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_from\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_to\", \"VARCHAR\", \"YES\", null, null, null], [\"wage_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_unit\", \"VARCHAR\", \"YES\", null, null, null], [\"pw_wage_level\", \"VARCHAR\", \"YES\", null, null, null], [\"h1b_dependent\", \"VARCHAR\", \"YES\", null, null, null], [\"willful_violator\", \"VARCHAR\", \"YES\", null, null, null], [\"total_worksite_locations\", \"VARCHAR\", \"YES\", null, null, null], [\"source_file\", \"VARCHAR\", \"YES\", null, null, null]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT received_date, decision_date, source_file FROM lca LIMIT 10;"
+      },
+      "result": "{\"columns\": [\"received_date\", \"decision_date\", \"source_file\"], \"rows\": [[\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45402\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45401\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45402\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"45402\", \"45408\", \"LCA_Disclosure_Data_FY2024_Q3.xlsx\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT source_file FROM lca;"
+      },
+      "result": "{\"columns\": [\"source_file\"], \"rows\": [[\"LCA_Disclosure_Data_FY2024_Q4.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q2.xlsx\"], [\"LCA_Disclosure_Data_FY2026_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q3.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q1.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q1.xlsx\"], [\"LCA_Disclosure_Data_FY2025_Q4.xlsx\"], [\"LCA_Disclosure_Data_FY2024_Q2.xlsx\"]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT count(*) FROM lca WHERE source_file LIKE '%FY2025%';"
+      },
+      "result": "{\"columns\": [\"count_star()\"], \"rows\": [[582271]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT soc_code, soc_title FROM lca WHERE LOWER(soc_title) LIKE '%data scientist%' OR LOWER(job_title) LIKE '%data scientist%';"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\"], \"rows\": [[\"15-2051.01\", \"Data Scientists\"], [\"19-2012.00\", \"Physicists\"], [\"19-2042.00\", \"Geoscientists, Except Hydrologists and Geographers\"], [\"19-3011.00\", \"Economists\"], [\"15-1299.02\", \"Geographic Information Systems Technologists and Technicians\"], [\"13-1161.00\", \"Market Research Analysts and Marketing Specialists\"], [\"15-1199.08\", \"Business Intelligence Analysts\"], [\"13-2054.00\", \"Financial Risk Specialists\"], [\"11-3051.00\", \"Industrial Production Managers\"], [\"19-2021.00\", \"Atmospheric and Space Scientists\"], [\"17-2051.01\", \"Transportation Engineers\"], [\"19-2099.00\", \"Physical Scientists, All Other\"], [\"17-2021.00\", \"Agricultural Engineers\"], [\"13-2011.00\", \"Accountants and Auditors\"], [\"17-2071.00\", \"Electrical Engineers\"], [\"15-1221.00\", \"Computer and Information Research Scientists\"], [\"15-1133.00\", \"Software Developers, Systems Software\"], [\"19-1011.00\", \"Animal Scientists\"], [\"15-1211.01\", \"Health Informatics Specialists\"], [\"17-2074.00\", \"Electrical Engineers, R&D\"], [\"19-4061.00\", \"Social Science Research Assistants\"], [\"17-2112.01\", \"Human Factors Engineers and Ergonomists\"], [\"11-2021.00\", \"Marketing Managers\"], [\"43-9111.00\", \"Statistical Assistants\"], [\"17-2141.02\", \"Automotive Engineers\"], [\"15-2041.01\", \"Biostatisticians\"], [\"13-1111.00\", \"Management Analysts\"], [\"17-2031.00\", \"Bioengineers and Biomedical Engineers\"], [\"15-2051\", \"DATA SCIENTIST\"], [\"17-2131.00\", \"Materials Engineers\"], [\"15-1199.00\", \"Computer Occupations, All Other\"], [\"15-1252\", \"Software Developers\"], [\"15-2051.00\", \"Business Intelligence Analysts\"], [\"15-1299.05\", \"Information Security Engineers\"], [\"15-2051\", \"Business Intelligence Analyst\"], [\"15-2041.00\", \"Statisticians\"], [\"19-1029.01\", \"Bioinformatics Scientists\"], [\"19-2099.01\", \"Remote Sensing Scientists and Technologists\"], [\"15-1253.00\", \"Software Quality Assurance Analysts and Testers\"], [\"27-1021.00\", \"Commercial and Industrial Designers\"], [\"15-1199.02\", \"Computer Systems Engineers/Architects\"], [\"15-2031\", \"Operations Research Scientist\"], [\"11-3021.00\", \"Computer and Information Systems Managers\"], [\"17-2041.00\", \"Chemical Engineers\"], [\"11-9041.00\", \"Architectural and Engineering Managers\"], [\"15-2011.00\", \"Actuaries\"], [\"19-3092.00\", \"Geographers\"], [\"15-1299\", \"Computer Occupations, All Other\"], [\"19-2031.00\", \"Chemists\"], [\"15-2021\", \"Data Scientists\"], [\"17-2112.03\", \"Manufacturing Engineers\"], [\"15-1199.06\", \"Database Architects\"], [\"13-2051.00\", \"Financial and Investment Analysts\"], [\"19-1042.00\", \"Medical Scientists, Except Epidemiologists\"], [\"19-2011.00\", \"Astronomers\"], [\"15-1295.00\", \"Software Developers, Non R&D\"], [\"19-3022.00\", \"Survey Researchers\"], [\"13-1161.01\", \"Search Marketing Strategists\"], [\"15-1299.00\", \"Computer Occupations, All Other\"], [\"15-2031.00\", \"Operations Research Analysts\"], [\"12-2051\", \"Business Intelligence Analysts\"], [\"17-2112.00\", \"Industrial Engineers\"], [\"15-1111.00\", \"Computer and Information Research Scientists\"], [\"17-2081.00\", \"Environmental Engineers\"], [\"15-1221\", \"Computer and Information Research Scientists\"], [\"15-2031\", \"Data Scientist\"], [\"15-2051.00\", \"Data Scientists\"], [\"15-2051\", \"Data Scientists\"], [\"17-2011.00\", \"Aerospace Engineers\"], [\"15-2021.00\", \"Mathematicians\"], [\"19-1012.00\", \"Food Scientists and Technologists\"], [\"17-2141.00\", \"Mechanical Engineers\"], [\"17-2199.05\", \"Mechatronics Engineers\"], [\"15-1252.00\", \"Data Scientists\"], [\"11-3031.00\", \"Financial Managers\"], [\"15-2041.02\", \"Clinical Data Managers\"], [\"27-3042.00\", \"Technical Writers\"], [\"15-1211.00\", \"Computer Systems Analysts\"], [\"15-1252.00\", \"Software Developers\"], [\"13-1081.01\", \"Logistics Engineers\"], [\"15-1251.00\", \"Computer Programmers\"], [\"15-1299.08\", \"Computer Systems Engineers/Architects\"], [\"15-2031\", \"Operations Research Analysts\"], [\"19-3094.00\", \"Political Scientists\"], [\"15-2099.00\", \"Mathematical Science Occupations, All Other\"], [\"11-9121.00\", \"Natural Sciences Managers\"], [\"13-1082.00\", \"Project Management Specialists\"], [\"15-1241.00\", \"Computer Network Architects\"], [\"15-1254.00\", \"Web Developers\"], [\"19-1029\", \"Biological Scientists, All Other\"], [\"12-5021.00\", \"Data Scientists\"], [\"15-1243.01\", \"Data Warehousing Specialists\"], [\"19-3099.01\", \"Transportation Planners\"], [\"15-1299.09\", \"Information Technology Project Managers\"], [\"19-1029.00\", \"Biological Scientists, All Other\"], [\"15-1243.00\", \"Database Architects\"], [\"15-2031.00\", \"Data Scientist, Analytics\"], [\"15-1212.00\", \"Information Security Analysts\"], [\"15-1296.00\", \"Software Developers, R&D\"], [\"15-1199.07\", \"Data Warehousing Specialists\"]], \"truncated\": true}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT total_worker_positions, COUNT(*) FROM lca GROUP BY total_worker_positions LIMIT 10;"
+      },
+      "result": "{\"columns\": [\"total_worker_positions\", \"count_star()\"], \"rows\": [[\"3\", 9154], [\"21\", 7], [\"125\", 28], [\"15\", 1360], [\"26\", 5], [\"29\", 5], [\"24\", 1], [\"38\", 1], [\"1250\", 4], [\"7\", 145]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT case_status, COUNT(*) FROM lca GROUP BY case_status;"
+      },
+      "result": "{\"columns\": [\"case_status\", \"count_star()\"], \"rows\": [[\"Denied\", 9674], [\"Withdrawn\", 25043], [\"Certified\", 1433993], [\"Certified - Withdrawn\", 87320]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, \n       SUM(TRY_CAST(total_worker_positions AS INTEGER)) AS positions_job_title\nFROM lca \nWHERE source_file LIKE '%FY2025%'\n  AND case_status IN ('Certified', 'Certified - Withdrawn')\n  AND LOWER(job_title) LIKE '%data scientist%'\nGROUP BY employer_name\nORDER BY positions_job_title DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"positions_job_title\"], \"rows\": [[\"Amazon.com Services LLC\", 1502], [\"Meta Platforms, Inc\", 527], [\"Oracle America, Inc.\", 406], [\"WAL-MART ASSOCIATES, INC.\", 336], [\"Amazon Web Services, Inc.\", 240], [\"Google LLC\", 224], [\"Cisco Systems, Inc.\", 193], [\"Apple Inc.\", 184], [\"TikTok Inc.\", 112], [\"NVIDIA Corporation\", 111]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, \n       SUM(TRY_CAST(total_worker_positions AS INTEGER)) AS positions_soc\nFROM lca \nWHERE source_file LIKE '%FY2025%'\n  AND case_status IN ('Certified', 'Certified - Withdrawn')\n  AND (soc_code LIKE '15-2051%' OR LOWER(soc_title) LIKE 'data scientists%')\nGROUP BY employer_name\nORDER BY positions_soc DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"positions_soc\"], \"rows\": [[\"Amazon.com Services LLC\", 7175], [\"Microsoft Corporation\", 2867], [\"Amazon Web Services, Inc.\", 1148], [\"GOLDMAN SACHS & CO. LLC\", 1006], [\"GOLDMAN SACHS SERVICES LLC\", 934], [\"GOLDMAN SACHS BANK USA\", 927], [\"WAL-MART ASSOCIATES, INC.\", 884], [\"Meta Platforms, Inc\", 804], [\"Cisco Systems, Inc.\", 726], [\"KFORCE INC. \", 610]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, COUNT(*), SUM(TRY_CAST(total_worker_positions AS INTEGER)) AS pos \nFROM lca \nWHERE source_file LIKE '%FY2025%'\n  AND case_status IN ('Certified', 'Certified - Withdrawn')\n  AND (soc_code LIKE '15-2051%' OR LOWER(soc_title) LIKE 'data scientists%')\n  AND employer_name LIKE 'GOLDMAN SACHS%'\nGROUP BY job_title\nORDER BY pos DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"count_star()\", \"pos\"], \"rows\": [[\"ANALYST\", 9, 900], [\"VICE PRESIDENT\", 9, 900], [\"ASSOCIATE\", 9, 900], [\"Associate, Data Analytics\", 11, 11], [\"Snr Analyst, Technology Audit\", 9, 9], [\"Associate, Technology Audit\", 9, 9], [\"Vice President, Product Management\", 9, 9], [\"Associate, Product Management\", 5, 5], [\"Vice President, Data Analytics\", 5, 5], [\"Analyst, Data Analytics BI\", 5, 5]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, COUNT(*), SUM(TRY_CAST(total_worker_positions AS INTEGER)) AS pos \nFROM lca \nWHERE source_file LIKE '%FY2025%'\n  AND case_status IN ('Certified', 'Certified - Withdrawn')\n  AND (soc_code LIKE '15-2051%' OR LOWER(soc_title) LIKE 'data scientists%')\n  AND employer_name LIKE 'Microsoft%'\nGROUP BY job_title\nORDER BY pos DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"count_star()\", \"pos\"], \"rows\": [[\"Research, Applied and Data Sciences\", 15, 1500], [\"Data Engineering\", 135, 531], [\"Data Science\", 263, 263], [\"Applied Sciences\", 191, 191], [\"Product Management\", 94, 94], [\"Technical Program Management\", 61, 61], [\"Data Analytics\", 38, 38], [\"Research Sciences\", 33, 33], [\"Security Research\", 30, 30], [\"Business Analytics\", 24, 24]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT job_title, COUNT(*), SUM(TRY_CAST(total_worker_positions AS INTEGER)) AS pos \nFROM lca \nWHERE source_file LIKE '%FY2025%'\n  AND case_status IN ('Certified', 'Certified - Withdrawn')\n  AND (soc_code LIKE '15-2051%' OR LOWER(soc_title) LIKE 'data scientists%')\n  AND employer_name = 'Amazon.com Services LLC'\nGROUP BY job_title\nORDER BY pos DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"job_title\", \"count_star()\", \"pos\"], \"rows\": [[\"Business Intelligence Engineer II\", 323, 1836], [\"Data Scientist II\", 136, 856], [\"Business Intelligence Engineer III\", 119, 776], [\"Business Analyst II\", 108, 606], [\"Business Intelligence Engineer I\", 85, 517], [\"Data Scientist III\", 85, 472], [\"Data Engineer II\", 109, 380], [\"Manager III, Business Intelligence\", 37, 289], [\"Business Analyst III\", 43, 232], [\"Business Analyst I\", 34, 142]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, \n       SUM(TRY_CAST(total_worker_positions AS INTEGER)) AS positions_all_job_title\nFROM lca \nWHERE source_file LIKE '%FY2025%'\n  AND LOWER(job_title) LIKE '%data scientist%'\nGROUP BY employer_name\nORDER BY positions_all_job_title DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"positions_all_job_title\"], \"rows\": [[\"Amazon.com Services LLC\", 1502], [\"Meta Platforms, Inc\", 527], [\"Oracle America, Inc.\", 406], [\"WAL-MART ASSOCIATES, INC.\", 338], [\"Amazon Web Services, Inc.\", 240], [\"Google LLC\", 225], [\"Cisco Systems, Inc.\", 193], [\"Apple Inc.\", 184], [\"TikTok Inc.\", 113], [\"NVIDIA Corporation\", 111]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer_name, \n       SUM(TRY_CAST(total_worker_positions AS INTEGER)) AS positions_all_soc\nFROM lca \nWHERE source_file LIKE '%FY2025%'\n  AND (soc_code LIKE '15-2051%' OR LOWER(soc_title) LIKE 'data scientists%')\nGROUP BY employer_name\nORDER BY positions_all_soc DESC\nLIMIT 10;"
+      },
+      "result": "{\"columns\": [\"employer_name\", \"positions_all_soc\"], \"rows\": [[\"Amazon.com Services LLC\", 7197], [\"Microsoft Corporation\", 2868], [\"Amazon Web Services, Inc.\", 1148], [\"GOLDMAN SACHS & CO. LLC\", 1107], [\"GOLDMAN SACHS SERVICES LLC\", 935], [\"GOLDMAN SACHS BANK USA\", 927], [\"WAL-MART ASSOCIATES, INC.\", 895], [\"Meta Platforms, Inc\", 804], [\"Cisco Systems, Inc.\", 726], [\"KFORCE INC. \", 610]], \"truncated\": false}"
+     },
+     {
+      "agent": "Plain SQL Agent",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT DISTINCT soc_code, soc_title \nFROM lca \nWHERE source_file LIKE '%FY2025%' \n  AND (LOWER(soc_title) LIKE '%data scientist%' OR LOWER(soc_code) LIKE '15-2051%')\nORDER BY soc_code;"
+      },
+      "result": "{\"columns\": [\"soc_code\", \"soc_title\"], \"rows\": [[\"12-2051.00\", \"Data Scientists\"], [\"15-1251.00\", \"Data Scientists\"], [\"15-2051\", \"Data Scientist\"], [\"15-2051\", \"DATA SCIENTISTS\"], [\"15-2051\", \"Business Intelligence Analysts\"], [\"15-2051\", \"DATA SCIENTIST\"], [\"15-2051\", \"Data Scientists\"], [\"15-2051.00\", \"Data Scientist\"], [\"15-2051.00\", \"Business Intelligence Analysts\"], [\"15-2051.00\", \"Data Scientists\"], [\"15-2051.01\", \"Data Scientists\"], [\"15-2051.01\", \"Business Intelligence Analysts\"], [\"15-2051.01\", \"Business Intelligence Analyst\"], [\"15-2051.01\", \"Business intelligence Analyst\"], [\"15-2051.01\", \"BUSINESS INTELLIGENCE ANALYSTS\"], [\"15-2051.02\", \"Business Intelligence Analyst\"], [\"15-2051.02\", \"Clinical Data Managers\"]], \"truncated\": false}"
+     }
+    ]
+   },
+   "agent": {
+    "response": "Goldman Sachs was the top sponsor of data scientists nationally in FY2025, sponsoring 2,817 worker positions.\n\n* **Goldman Sachs** led with 2,817 positions across 144 certified LCAs, offering a median salary of $102k.\n* **Amazon** followed with 2,495 positions from 668 certified filings, offering a median salary of $155k.\n* **Microsoft** sponsored 1,100 positions across 704 certified filings with a median salary of $169k, followed by **Meta** with 689 positions across 425 certified filings and a median salary of $201k.\n* **Walmart** completed the top five with 664 positions from 664 certified filings, offering a median salary of $152k.",
+    "session_id": "53e0dbba-960c-4b85-be91-ebcf3b2727ca",
+    "tool_calls": [
+     {
+      "agent": "H-1B Analyst",
+      "name": "read_mappings",
+      "args": {},
+      "result": "{\"as_of\": \"FY2026 Q3\", \"tables\": {\"lca\": {\"description\": \"One row per H-1B Labor Condition Application (LCA) filed with the Department of Labor, FY2024 Q1 to FY2026 Q3, amendments deduplicated. An LCA is a filing an employer must make BEFORE an H-1B petition; it is not an approval or a visa.\", \"columns\": [{\"name\": \"case_number\", \"type\": \"VARCHAR\", \"description\": \"DOL case number, unique per row.\"}, {\"name\": \"case_status\", \"type\": \"VARCHAR\", \"description\": \"DOL decision. Use 'CERTIFIED' for filings employers could actually use.\", \"is_enum\": true}, {\"name\": \"fiscal_year\", \"type\": \"INTEGER\", \"description\": \"US federal fiscal year of the decision (Oct 1 - Sep 30). FY2026 = Oct 2025 - Sep 2026.\", \"is_enum\": true}, {\"name\": \"quarter\", \"type\": \"INTEGER\", \"description\": \"Fiscal quarter 1-4 (Q1 = Oct-Dec).\", \"is_enum\": true}, {\"name\": \"received_date\", \"type\": \"DATE\", \"description\": \"Date DOL received the LCA.\"}, {\"name\": \"decision_date\", \"type\": \"DATE\", \"description\": \"Date DOL decided the LCA.\"}, {\"name\": \"job_title\", \"type\": \"VARCHAR\", \"description\": \"Job title as typed by the employer (free text, messy). Do not filter on it: use role_family.\"}, {\"name\": \"title_norm\", \"type\": \"VARCHAR\", \"description\": \"Lowercased job title with abbreviations expanded (sr -> senior, ml -> machine learning).\"}, {\"name\": \"role_family\", \"type\": \"VARCHAR\", \"description\": \"Clean role category built offline from the title and SOC code. Get the value from find_role.\", \"is_enum\": true}, {\"name\": \"seniority\", \"type\": \"VARCHAR\", \"description\": \"Seniority parsed from the title: intern, junior, mid, senior, staff_plus, manager or unspecified.\", \"is_enum\": true}, {\"name\": \"soc_code\", \"type\": \"VARCHAR\", \"description\": \"Standard Occupational Classification code, e.g. 15-1252 = Software Developers.\"}, {\"name\": \"soc_title\", \"type\": \"VARCHAR\", \"description\": \"Name of the SOC occupation.\"}, {\"name\": \"full_time\", \"type\": \"VARCHAR\", \"description\": \"'Y' if full-time.\", \"is_enum\": true}, {\"name\": \"total_worker_positions\", \"type\": \"INTEGER\", \"description\": \"Number of workers this one LCA covers. SUM it to count jobs; COUNT(*) counts filings.\"}, {\"name\": \"filing_type\", \"type\": \"VARCHAR\", \"description\": \"Why the LCA was filed. 'new_employment' is the closest proxy for a new (often lottery) hire; 'continuation' is an extension; 'change_employer' is a transfer.\", \"is_enum\": true}, {\"name\": \"new_employment\", \"type\": \"INTEGER\", \"description\": \"Workers in this filing who are new employment.\", \"is_enum\": true}, {\"name\": \"continued_employment\", \"type\": \"INTEGER\", \"description\": \"Workers who are continuing employment (extensions).\", \"is_enum\": true}, {\"name\": \"change_employer\", \"type\": \"INTEGER\", \"description\": \"Workers transferring from another employer.\", \"is_enum\": true}, {\"name\": \"employer_id\", \"type\": \"INTEGER\", \"description\": \"Resolved employer key: all legal-name variants of one company share it. Get it from find_employer.\"}, {\"name\": \"employer\", \"type\": \"VARCHAR\", \"description\": \"Canonical employer name (e.g. 'Google' for GOOGLE LLC, Google Inc.). Get it from find_employer.\"}, {\"name\": \"employer_type\", \"type\": \"VARCHAR\", \"description\": \"big_tech, finance, consulting, staffing_it_services, h1b_dependent, university or other. Universities are usually cap-exempt (no lottery).\", \"is_enum\": true}, {\"name\": \"employer_name_raw\", \"type\": \"VARCHAR\", \"description\": \"Employer name exactly as filed. Do not filter on it: use employer_id.\"}, {\"name\": \"naics_code\", \"type\": \"VARCHAR\", \"description\": \"Employer's industry code (NAICS).\"}, {\"name\": \"worksite_city\", \"type\": \"VARCHAR\", \"description\": \"Normalized worksite city ('New York City' covers Manhattan, Brooklyn, NYC, ...).\"}, {\"name\": \"worksite_city_raw\", \"type\": \"VARCHAR\", \"description\": \"Worksite city as typed by the employer.\"}, {\"name\": \"worksite_county\", \"type\": \"VARCHAR\", \"description\": \"Worksite county as filed.\"}, {\"name\": \"worksite_state\", \"type\": \"VARCHAR\", \"description\": \"Two-letter worksite state.\", \"is_enum\": true}, {\"name\": \"worksite_zip\", \"type\": \"VARCHAR\", \"description\": \"Five-digit worksite ZIP code.\"}, {\"name\": \"area_code\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area (metro) code for the worksite. Get it from find_location.\"}, {\"name\": \"metro_name\", \"type\": \"VARCHAR\", \"description\": \"OFLC wage area name, e.g. 'New York-Newark-Jersey City, NY-NJ'.\"}, {\"name\": \"wage_from_raw\", \"type\": \"DOUBLE\", \"description\": \"Offered wage as filed, in wage_unit (mixes hourly and yearly). Never aggregate it.\"}, {\"name\": \"wage_to_raw\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered wage range as filed, in wage_unit, often blank.\"}, {\"name\": \"wage_unit\", \"type\": \"VARCHAR\", \"description\": \"Unit of the raw wage: Hour, Week, Bi-Weekly, Month or Year.\", \"is_enum\": true}, {\"name\": \"wage_annual_from\", \"type\": \"DOUBLE\", \"description\": \"Offered wage converted to a yearly amount (Hour x 2080, Week x 52, Bi-Weekly x 26, Month x 12). Use this for pay.\"}, {\"name\": \"wage_annual_to\", \"type\": \"DOUBLE\", \"description\": \"Top of the offered range, yearly (equals wage_annual_from when no range).\"}, {\"name\": \"wage_flag\", \"type\": \"VARCHAR\", \"description\": \"'ok' or why the wage is unreliable. Filter wage_flag = 'ok' for any pay statistic.\", \"is_enum\": true}, {\"name\": \"pw_annual\", \"type\": \"DOUBLE\", \"description\": \"Prevailing wage the employer cited, yearly.\"}, {\"name\": \"pw_wage_level\", \"type\": \"VARCHAR\", \"description\": \"Wage level (I-IV) the EMPLOYER chose for the prevailing wage. Blank when a survey or union wage was used.\", \"is_enum\": true}, {\"name\": \"pw_level_num\", \"type\": \"INTEGER\", \"description\": \"pw_wage_level as a number 1-4.\", \"is_enum\": true}, {\"name\": \"offer_wage_level\", \"type\": \"INTEGER\", \"description\": \"Level (0-4) the OFFERED annual wage reaches in the 2026-27 OFLC table for this SOC and area; 0 = below Level I. Computed offline.\", \"is_enum\": true}, {\"name\": \"h1b_dependent\", \"type\": \"VARCHAR\", \"description\": \"'Y' if the employer declared itself H-1B dependent (a large share of its workforce is on H-1B)"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "find_role",
+      "args": {
+       "text": "data scientist"
+      },
+      "result": "{\"role_family\": \"Data Scientist\", \"matched_by\": \"rules\", \"main_soc_codes\": [{\"soc_code\": \"15-2051\", \"soc_title\": \"Data Scientists\", \"filings\": 38958}, {\"soc_code\": \"15-2041\", \"soc_title\": \"Statisticians\", \"filings\": 6341}, {\"soc_code\": \"15-2031\", \"soc_title\": \"Operations Research Analysts\", \"filings\": 969}], \"example_titles\": [\"data scientist\", \"senior data scientist\", \"data scientist ii\", \"data scientist iii\", \"data science\", \"machine learning\"]}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "run_sql",
+      "args": {
+       "query": "SELECT employer, sum(total_worker_positions) AS positions, count(*) AS filings, median(wage_annual_from) FILTER (WHERE wage_flag = 'ok') AS median_pay FROM lca WHERE role_family = 'Data Scientist' AND fiscal_year = 2025 AND case_status = 'CERTIFIED' GROUP BY 1 ORDER BY positions DESC LIMIT 5"
+      },
+      "result": "{\"columns\": [\"employer\", \"positions\", \"filings\", \"median_pay\"], \"rows\": [[\"Goldman Sachs\", 2817, 144, 101700.0], [\"Amazon\", 2495, 668, 155000.0], [\"Microsoft\", 1100, 704, 168702.0], [\"Meta\", 689, 425, 200527.0], [\"Walmart\", 664, 664, 152148.0]], \"row_count\": 5, \"truncated\": false}"
+     },
+     {
+      "agent": "H-1B Analyst",
+      "name": "make_chart",
+      "args": {
+       "color": null,
+       "x": "employer",
+       "title": "Top Data Scientist Sponsors by Positions, FY2025",
+       "mark": "bar",
+       "y": "positions"
+      },
+      "result": "{\"ok\": true, \"note\": \"Chart shown to the user. Do not describe the chart's styling.\"}"
+     }
+    ],
+    "chart": {
+     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+     "title": "Top Data Scientist Sponsors by Positions, FY2025",
+     "data": {
+      "values": [
+       {
+        "employer": "Goldman Sachs",
+        "positions": 2817,
+        "filings": 144,
+        "median_pay": 101700.0
+       },
+       {
+        "employer": "Amazon",
+        "positions": 2495,
+        "filings": 668,
+        "median_pay": 155000.0
+       },
+       {
+        "employer": "Microsoft",
+        "positions": 1100,
+        "filings": 704,
+        "median_pay": 168702.0
+       },
+       {
+        "employer": "Meta",
+        "positions": 689,
+        "filings": 425,
+        "median_pay": 200527.0
+       },
+       {
+        "employer": "Walmart",
+        "positions": 664,
+        "filings": 664,
+        "median_pay": 152148.0
+       }
+      ]
+     },
+     "mark": {
+      "type": "bar",
+      "point": false
+     },
+     "encoding": {
+      "y": {
+       "field": "employer",
+       "type": "nominal",
+       "sort": "-x",
+       "title": null
+      },
+      "x": {
+       "field": "positions",
+       "type": "quantitative"
+      },
+      "tooltip": [
+       {
+        "field": "employer",
+        "type": "nominal"
+       },
+       {
+        "field": "positions",
+        "type": "quantitative"
+       },
+       {
+        "field": "filings",
+        "type": "quantitative"
+       },
+       {
+        "field": "median_pay",
+        "type": "quantitative"
+       }
+      ]
+     },
+     "width": "container"
+    },
+    "table": {
+     "columns": [
+      "employer",
+      "positions",
+      "filings",
+      "median_pay"
+     ],
+     "rows": [
+      [
+       "Goldman Sachs",
+       2817,
+       144,
+       101700.0
+      ],
+      [
+       "Amazon",
+       2495,
+       668,
+       155000.0
+      ],
+      [
+       "Microsoft",
+       1100,
+       704,
+       168702.0
+      ],
+      [
+       "Meta",
+       689,
+       425,
+       200527.0
+      ],
+      [
+       "Walmart",
+       664,
+       664,
+       152148.0
+      ]
+     ],
+     "row_count": 5,
+     "truncated": false
+    }
+   },
+   "plain_ok": false,
+   "agent_ok": true
+  }
+ ]
+}

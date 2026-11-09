@@ -1,0 +1,5 @@
+{
+  "deploy_url": "https://REPLACE-AFTER-FIRST-DEPLOY.run.app",
+  "authors": ["akm2259", "kvd2112"],
+  "path": "text2sql"
+}
