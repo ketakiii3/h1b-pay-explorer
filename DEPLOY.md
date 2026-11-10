@@ -65,7 +65,7 @@ Then run the self-check (about 10 minutes):
 uv run python evals/check.py --label "first real-data run"
 ```
 
-✅ **Check:** the page header shows the real row count and **no red "Synthetic" banner**, every chip returns a chart or table, and the self-check scores ≥ 20/26. If a check fails, open `evals/results/<latest>.json` to see the agent's SQL.
+✅ **Check:** the page header shows the real row count and **no red "Synthetic" banner**, every chip returns a chart or table, and the self-check scores ≥ 31/33. If a check fails, open `evals/results/<latest>.json` to see the agent's SQL.
 
 ## 5. Push to GitHub
 
@@ -118,7 +118,7 @@ Same flow as your last project ("Deploying to Cloud Run from GitHub"):
      | Name | Value |
      | --- | --- |
      | `GCS_BUCKET` | your bucket name, `ieor-project-1-kvd2112-h1b-data` |
-     | `GCS_OBJECT` | `v1/h1b.duckdb` |
+     | `GCS_OBJECT` | `v2/h1b.duckdb` (the current database; `v1/` is the older one without `petitions`) |
      | `MODEL` | `vertex_ai/gemini-3.5-flash` |
      | `VERTEX_LOCATION` | `global` |
      | `VERTEXAI_PROJECT` | your project ID |
@@ -182,7 +182,7 @@ uv run compare.py --check offer-ds-120k-nyc --runs 3
 
 - Billing → **Budgets & alerts** → a budget for this project with alerts at 50/90/100%.
 - Don't delete the service, the bucket or the project until grades are out.
-- To ship a rebuilt database without downtime: upload it as `v2/h1b.duckdb`, then commit the new `data/mappings.json` and change `GCS_OBJECT` to `v2/h1b.duckdb` together. The mappings must match the database.
+- To ship a rebuilt database without downtime: upload it under a new prefix (the live one is `v2/`, so next is `v3/h1b.duckdb`), then commit the new `data/mappings.json` and change `GCS_OBJECT` to match, together. The mappings must match the database.
 
 ## Submit
 

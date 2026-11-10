@@ -2,7 +2,20 @@
 
 Status as of **Nov 10, 2026**. Team: Ketaki Dabade (kvd2112) and Anamika Mishra (akm2259). Path: **Text2SQL**.
 
-**In one line:** the project is built, tested on the real data (33/33), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Continuous deploy from GitHub is on: every push to `main` redeploys automatically. Left: collaborators, the sign-up sheet, and submitting.
+**In one line:** the project is built, tested on the real data (33/33), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Continuous deploy from GitHub is on: every push to `main` redeploys automatically. The live app scores 33/33 on the self-check. Left: collaborators, the sign-up sheet, and submitting.
+
+## What changed on Nov 10 (all shipped)
+
+| # | Change | Commit |
+| --- | --- | --- |
+| 1 | **Third data source:** USCIS H-1B Employer Data Hub, FY2024 to FY2026. New `petitions` table (approvals and denials per employer and year) on the same `employer_id` as `lca`. The agent now answers approval questions and refuses approvals by role, salary or city | `dc238d6` |
+| 2 | **README numbers fixed** against the rebuilt database: Google NYC count is 460 (was 465), San Jose counts are 1,475 and 878 (were 1,551 and 899), employers 107,631 (was 107,638). Screenshot TODO removed | `dc238d6` |
+| 3 | **Sample query 3 is now an answered question** (Meta approvals: 6,294 in FY2025). The README cell and the trace come from a real three-way run: ours right 3/3, the plain agent hit the turn limit with no answer 3/3 | `dc238d6` |
+| 4 | **Evals grew from 29 to 33 checks.** Local 33/33 (p50 15 s), deployed 33/33 (p50 13 s). No prompt changes were needed after the run. Tests: 49, all pass | `dc238d6`, `f343cfd` |
+| 5 | **Database `v2/h1b.duckdb`** (124 MB) uploaded to GCS and Cloud Run's `GCS_OBJECT` switched to it. `v1/h1b.duckdb` is kept as the rollback | – |
+| 6 | **Page redesigned** around a lottery ticket. The headline is the calculator ("A $120,000 Data Scientist offer in New York City gets 2 of 4 entries"), with the salary, role and city editable in place. Four tear-off stubs, one per wage level, show the thresholds and fill in as the offer earns entries. New colours (indigo on lavender; yellow, orange, pink and violet for Levels I to IV) and type (Bricolage Grotesque, Public Sans). Example questions are a two-column list. Light, dark and phone layouts | `aee3cc0` |
+
+To roll back the database: set `GCS_OBJECT=v1/h1b.duckdb` on Cloud Run and `git revert dc238d6`. To roll back only the design: `git revert aee3cc0`.
 
 ## Nov 10 update: USCIS petitions added (shipped, live 33/33)
 
@@ -28,7 +41,7 @@ Do steps 4 to 6 close together: the new code expects the `petitions` table, and 
 | --- | --- |
 | Code | https://github.com/ketakiii3/h1b-pay-explorer (private, branch `main`) |
 | GCP project | `ieor-project-1-kvd2112` (billing on, Vertex AI on) |
-| Database in GCS | `gs://ieor-project-1-kvd2112-h1b-data/v1/h1b.duckdb` (114 MB, region `us-east1`); `v2/h1b.duckdb` after the Nov 10 update ships |
+| Database in GCS | `gs://ieor-project-1-kvd2112-h1b-data/v2/h1b.duckdb` (124 MB, region `us-east1`), live since Nov 10. `v1/h1b.duckdb` (114 MB, no `petitions` table) is the rollback |
 | **Live app** | **https://h1b-pay-explorer-314308831335.us-east1.run.app** (Cloud Run, `us-east1`, public) |
 | Cloud Run console | https://console.cloud.google.com/run/detail/us-east1/h1b-pay-explorer/metrics?project=ieor-project-1-kvd2112 |
 | Deploy guide | [DEPLOY.md](DEPLOY.md) |
@@ -40,8 +53,8 @@ Do steps 4 to 6 close together: the new code expects the `petitions` table, and 
 
 | Requirement | Status | Evidence |
 | --- | --- | --- |
-| Offline build step that supports the agent writing SQL | ✅ | `build.py` turns 9 DOL files (1 GB) into `h1b.duckdb` and `data/mappings.json`: wages converted to yearly amounts, 126,465 employer spellings merged into 107,638 employers, job titles sorted into role families (98.6% covered), worksites mapped to OFLC wage areas (99.9%), and each offer's wage level and lottery entries computed. Report: `docs/build_report.md`. |
-| Nicely present results (table or visualization) | ✅ | Each answer is a card with a headline number, a **Chart** tab (Vega-Lite), a **Table** tab (money and % formatting, inline bars, sorting, CSV download), a **SQL** tab and a **How I got this** step timeline. |
+| Offline build step that supports the agent writing SQL | ✅ | `build.py` turns 9 DOL files (1 GB), the OFLC wage tables and the USCIS exports into `h1b.duckdb` and `data/mappings.json`: wages converted to yearly amounts, 126,465 employer spellings merged into 107,631 employers, job titles sorted into role families (98.6% covered), worksites mapped to OFLC wage areas (99.9%), and each offer's wage level and lottery entries computed. Report: `docs/build_report.md`. |
+| Nicely present results (table or visualization) | ✅ | Each answer is a card with the answer text, a **Chart** tab (Vega-Lite), a **Table** tab (money and % formatting, inline bars, sorting, CSV download), a **SQL** tab and a **How I got this** step timeline. |
 | README: two questions the plain `run_sql` agent got wrong and ours got right, both traces | ✅ | Meta data scientist positions (plain **0/3**, ours 3/3) and lottery entries for a $120k offer (plain **0/3**, ours 3/3), with traces in `<details>` blocks. Raw traces are in `traces/`. |
 | Host data in BigQuery, CloudSQL or GCS, queryable with DuckDB | ✅ | The database is in GCS. On startup the app downloads it (tested: 4.1 s, 1,532,089 rows) and opens it read-only with DuckDB. |
 
@@ -53,14 +66,14 @@ Do steps 4 to 6 close together: the new code expects the `petitions` table, and 
 | --- | --- | --- |
 | Basics (1) | README.md | ✅ written; no placeholders left |
 | | Valid `submission.json` | ✅ has the live URL, both UNIs, `"path": "text2sql"` |
-| Functionality (9) | Deployed and reachable | ✅ live and tested (chat, chart, offer calculator), continuous deploy from GitHub `main` via a Cloud Build trigger |
+| Functionality (9) | Deployed and reachable | ✅ live and tested (chat, chart, offer check), continuous deploy from GitHub `main` via a Cloud Build trigger |
 | | Clear purpose | ✅ the first screen says what it does, who it's for and how to use it |
-| | Answers correctly | ✅ self-check **33/33** locally on the full data, about 15 s per answer |
+| | Answers correctly | ✅ self-check **33/33** locally and **33/33** on the deployed app, about 13 to 15 s per answer |
 | Data (4) | Unique dataset or problem | ✅ the H-1B LCA plus wage-weighted lottery angle (confirm no one else on the sign-up sheet has it) |
 | | Data the model doesn't know | ✅ the no-tools model guesses or refuses on all 3 sample queries (in the README) |
 | | Admits what the data can't answer | ✅ 5/5 "can't answer" checks refused, with no SQL run |
 | Path (7) | Text2SQL items above | ✅ all four |
-| Creativity (4) | Frontend changed from the starter | ✅ fully new design, plus an instant offer calculator |
+| Creativity (4) | Frontend changed from the starter | ✅ lottery-ticket design: the headline is an editable offer check with four level stubs (redone Nov 10 so it doesn't look like other sites) |
 | | Agent does something interesting | ✅ salary → wage level → lottery entries; shows the job code changes the entries (the $175k San Jose example) |
 | Team rule | One data source per member (2) | ✅ DOL LCA disclosure data, OFLC prevailing wage tables, and (Nov 10) the USCIS H-1B Employer Data Hub |
 | Submit | Grader collaborators added | ❌ not yet |
@@ -75,9 +88,11 @@ Do steps 4 to 6 close together: the new code expects the `petitions` table, and 
 | 3 | Add collaborators `codeboi07`, `bhuvighosh3`, `nniishhh`, `x`, and Anamika, on GitHub → Settings → Collaborators | Ketaki | 2 min |
 | 4 | ~~Write README "Why we built this"~~ ✅ done | – | – |
 | 5 | ~~Role spot-check~~ ✅ done: 93/100, misses fixed (in README) | – | – |
-| 7 | Run the self-check against the live URL: `uv run python evals/check.py --url <URL> --label deployed`, and add the row to the README's evals table | Ketaki | 10 min |
+| 7 | ~~Run the self-check against the live URL and add the row to the README~~ ✅ done: 33/33 | – | – |
+| 7b | Add the team's row to the class sign-up sheet (first come, first served) | Ketaki | 2 min |
 | 8 | Billing → Budgets & alerts: a budget for `ieor-project-1-kvd2112` | Ketaki | 2 min |
-| 9 | Open the live URL in a private window and on a phone, and click every example question | both | 5 min |
+| 9 | Open the live URL in a private window and on a phone, and look at the new design (every example question was already checked through the API on Nov 10) | both | 5 min |
+| 9b | Optional: add a screenshot of the new page to the README | either | 5 min |
 | 10 | Submit the repo URL on CourseWorks | one person | 1 min |
 
 
@@ -93,7 +108,7 @@ The first question after the app has been idle takes about 50 s while it starts 
 
 ### Current settings
 
-Region `us-east1`, public, 2 GiB memory, 1 CPU, startup boost, 600 s request timeout, 0-3 instances, service account `h1b-runner` (can only call Gemini and read the bucket). Env vars: `GCS_BUCKET=ieor-project-1-kvd2112-h1b-data`, `GCS_OBJECT=v1/h1b.duckdb`, `MODEL=vertex_ai/gemini-3.5-flash`, `VERTEX_LOCATION=global`, `VERTEXAI_PROJECT=ieor-project-1-kvd2112`.
+Region `us-east1`, public, 2 GiB memory, 1 CPU, startup boost, 600 s request timeout, 0-3 instances, service account `h1b-runner` (can only call Gemini and read the bucket). Env vars: `GCS_BUCKET=ieor-project-1-kvd2112-h1b-data`, `GCS_OBJECT=v2/h1b.duckdb`, `MODEL=vertex_ai/gemini-3.5-flash`, `VERTEX_LOCATION=global`, `VERTEXAI_PROJECT=ieor-project-1-kvd2112`.
 
 ### Continuous deploy ✅ set up
 
@@ -117,25 +132,27 @@ gcloud run deploy h1b-pay-explorer --source . --region us-east1 --project ieor-p
 ## Key results (for slides, peers, the README)
 
 - **1,532,089** H-1B filings, FY2024 Q1 to FY2026 Q3; Amazon alone filed under **53** name variants.
-- A **$120k data scientist offer in NYC** is Level II (2 entries) and beats only **29%** of 5,700 real filings (median $145k).
+- A **$120k data scientist offer in NYC** is Level II (2 entries) and beats only **30%** of 5,582 real filings (median $145k).
 - A **$175k ML engineer offer in San Jose** gets **1 entry** if filed as Software Developer, but **2** if filed as Data Scientist. The job code matters.
 - **Google files almost every engineer, ML included, as "Software Engineer"**, so "Google ML engineers in NYC" has no filings.
 - **Bloomberg** filed the most NYC ML engineer positions in FY2025 (173), six times the next employer.
 - **Goldman Sachs** was the top data scientist sponsor in FY2025 by positions (2,817), filing "Associate" roles in batches of 100.
 - **AI engineer filings grew about 5x**: 335 certified (FY2024), then 923 (FY2025), then 1,734 (FY2026 Q1-Q3). Forward Deployed roles are led by Palantir, BCG and Salesforce.
 - **FY2025 median offers:** ML Engineer $175k, Forward Deployed $163k, Research Scientist $159k, AI Engineer $138k, Data Scientist $135k.
+- **Meta had 6,294 approved petitions in FY2025**, 1,554 of them new employment, 59 denied (USCIS).
+- **Filings are not approvals:** in FY2025 NVIDIA had 28.2 certified new-employment LCA positions per approved new-employment petition and Infosys 21.5, against 3.9 for Google, 3.3 for Amazon and 1.2 for Meta.
 - No-tools Gemini says a lottery offer gets "exactly 1 entry". It doesn't know about the 2026 wage-weighted rule.
 
 ## How it's built (one paragraph)
 
-`build.py` (offline, on the laptop) reads the raw DOL Excel files and the OFLC wage tables and writes `data/h1b.duckdb` (full, uploaded to GCS), `data/h1b_sample.duckdb` (2%, in git, so the app runs from a fresh clone) and `data/mappings.json` (the agent's schema notes, glossary and limits). `app.py` is FastAPI plus the OpenAI Agents SDK with Gemini on Vertex. The agent has 8 tools: read_mappings, get_enum_values, find_employer, find_role, find_location, wage_level, run_sql and make_chart. Guardrails reject known-bad SQL (raw wages, name `LIKE`s, missing `wage_flag`) so the model rewrites it. `index.html` is the whole frontend. `baseline.py` and `compare.py` produce the plain-agent comparison, `evals/check.py` runs the 26-question self-check, and `tests/` has 32 offline tests (`uv run pytest`).
+`build.py` (offline, on the laptop) reads the raw DOL Excel files, the OFLC wage tables and the USCIS petition exports and writes `data/h1b.duckdb` (full, uploaded to GCS), `data/h1b_sample.duckdb` (2%, in git, so the app runs from a fresh clone) and `data/mappings.json` (the agent's schema notes, glossary and limits). `app.py` is FastAPI plus the OpenAI Agents SDK with Gemini on Vertex. The agent has 8 tools: read_mappings, get_enum_values, find_employer, find_role, find_location, wage_level, run_sql and make_chart. Guardrails reject known-bad SQL (raw wages, name `LIKE`s, missing `wage_flag`) so the model rewrites it. `index.html` is the whole frontend. `baseline.py` and `compare.py` produce the plain-agent comparison, `evals/check.py` runs the 33-question self-check, and `tests/` has 49 offline tests (`uv run pytest`).
 
 ## Rebuilding or changing things
 
 | To… | Run |
 | --- | --- |
 | Rebuild the database after changing `build.py` or `h1b_common.py` | `uv run build.py` (about 1 min) |
-| Ship a rebuilt database | upload as `v2/h1b.duckdb`, commit the new `data/mappings.json` **and** change `GCS_OBJECT` to `v2/h1b.duckdb` on Cloud Run, all together |
+| Ship a rebuilt database | upload under a new prefix (next is `v3/h1b.duckdb`), commit the new `data/mappings.json` **and** change `GCS_OBJECT` to match on Cloud Run, all together |
 | Test without Gemini | `uv run pytest` |
 | Score the agent | `uv run python evals/check.py [--url <live URL>]` |
 | Regenerate a comparison | `uv run compare.py --check <id> --runs 3` |
