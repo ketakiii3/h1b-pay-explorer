@@ -2,25 +2,25 @@
 
 Status as of **Nov 10, 2026**. Team: Ketaki Dabade (kvd2112) and Anamika Mishra (akm2259). Path: **Text2SQL**.
 
-**In one line:** the project is built, tested on the real data (33/33), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Continuous deploy from GitHub is on: every push to `main` redeploys automatically. Left: ship the Nov 10 update (below), collaborators, and submitting.
+**In one line:** the project is built, tested on the real data (33/33), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Continuous deploy from GitHub is on: every push to `main` redeploys automatically. Left: collaborators, the sign-up sheet, and submitting.
 
-## Nov 10 update: USCIS petitions added (not deployed yet)
+## Nov 10 update: USCIS petitions added (shipped, live 33/33)
 
 A third data source, from a different agency: the **USCIS H-1B Employer Data Hub** (FY2024 to FY2026), exported from the hub's Crosstab View into `raw/uscis/`. `build.py` now writes a `petitions` table (approvals and denials per employer and fiscal year) on the same `employer_id` as `lca`; 97.2% of approvals match an `lca` employer. The agent can now answer "how many H-1Bs did Meta get approved?" (6,294 approved petitions in FY2025, 1,554 of them new employment) and compare filings with approvals.
 
-Changed locally, **not committed or pushed**: `build.py`, `app.py` (prompt), `index.html` (two Approvals chips, new Limits chip, USCIS in sources), `employer_overrides.csv` (EY spelling, Fidelity), `evals/checks.jsonl` (33 checks: Meta approvals is now a scored answer, plus 3 more petition checks and a new refusal), `tests/test_app.py` (49 tests, all pass), `data/mappings.json`, `data/h1b_sample.duckdb`, `docs/build_report.md`, `README.md`. `data/h1b.duckdb` was rebuilt locally (124 MB).
+Changed (committed, pushed and deployed Nov 10): `build.py`, `app.py` (prompt), `index.html` (two Approvals chips, new Limits chip, USCIS in sources), `employer_overrides.csv` (EY spelling, Fidelity), `evals/checks.jsonl` (33 checks: Meta approvals is now a scored answer, plus 3 more petition checks and a new refusal), `tests/test_app.py` (49 tests, all pass), `data/mappings.json`, `data/h1b_sample.duckdb`, `docs/build_report.md`, `README.md`. `data/h1b.duckdb` was rebuilt locally (124 MB).
 
-To ship it, in this order:
+Ship steps, all done:
 
 | # | Step | Command |
 | --- | --- | --- |
 | 1 ✅ 33/33 | Score the new database locally | `uv run python evals/check.py --label "USCIS petitions added"` |
 | 2 ✅ ours 3/3 | Record sample query 3 (no tools, plain agent, ours) | `uv run compare.py "How many H-1B visas did Meta get approved in 2025?" --gold "SELECT sum(approved) FROM petitions WHERE employer = 'Meta' AND fiscal_year = 2025" --runs 3` |
 | 3 ✅ | Fill the sample query 3 cell in the README from that trace, and add the eval row | done |
-| 4 | Upload the new database | `gcloud storage cp data/h1b.duckdb gs://ieor-project-1-kvd2112-h1b-data/v2/h1b.duckdb` |
-| 5 | Point Cloud Run at it | `gcloud run services update h1b-pay-explorer --region us-east1 --project ieor-project-1-kvd2112 --update-env-vars GCS_OBJECT=v2/h1b.duckdb` |
-| 6 | Commit and push (redeploys) | `git add -A && git commit -m "Add USCIS petition approvals as a third data source" && git push` |
-| 7 | Score the live app and add the row to the README | `uv run python evals/check.py --url https://h1b-pay-explorer-314308831335.us-east1.run.app --label deployed` |
+| 4 ✅ | Upload the new database | `gcloud storage cp data/h1b.duckdb gs://ieor-project-1-kvd2112-h1b-data/v2/h1b.duckdb` |
+| 5 ✅ | Point Cloud Run at it | `gcloud run services update h1b-pay-explorer --region us-east1 --project ieor-project-1-kvd2112 --update-env-vars GCS_OBJECT=v2/h1b.duckdb` |
+| 6 ✅ | Commit and push (redeploys) | `git add -A && git commit -m "Add USCIS petition approvals as a third data source" && git push` |
+| 7 ✅ 33/33 | Score the live app and add the row to the README | `uv run python evals/check.py --url https://h1b-pay-explorer-314308831335.us-east1.run.app --label deployed` |
 
 Do steps 4 to 6 close together: the new code expects the `petitions` table, and the old database doesn't have it.
 

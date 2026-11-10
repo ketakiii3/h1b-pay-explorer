@@ -564,6 +564,7 @@ It also writes `data/mappings.json`, the agent's offline context: every table an
 | 2026-11-09 | local, full database | **26/26** (p50 12 s per answer) | first run on real data |
 | 2026-11-09 | local, full database | **3/3** new checks; 26/26 unchanged | added AI Engineer (GenAI / LLM) and Forward Deployed role families |
 | 2026-11-10 | local, full database | **33/33** (p50 15 s per answer) | added USCIS petitions: 4 approval checks and 1 new refusal |
+| 2026-11-10 | deployed app (Cloud Run) | **33/33** (p50 13 s per answer) | same 33 checks against the live URL |
 
 ## What it can't answer
 
