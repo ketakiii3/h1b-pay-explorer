@@ -28,3 +28,7 @@ evals/results/
 # Local logs
 build.log
 evals/*.log
+
+# Internal working notes: kept locally, not part of the submission.
+HANDOFF.md
+DEPLOY.md
