@@ -7,246 +7,227 @@
 <meta name="description" content="Who sponsors your role, what they actually offer, and how many entries your offer gets in the wage-weighted H-1B lottery. Built on every DOL H-1B filing, FY2024 to mid-2026." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
 <style>
+/* Identity: a raffle ticket. Four tear-off stubs, one per wage level; the level colours
+   (yellow, orange, pink, violet) are the only bright colours and always mean a level. */
 :root {
-  --bg: #f3f4ef; --surface: #ffffff; --raised: #fafbf7; --ink: #0e1a17; --text: #1f2a27; --muted: #5f6b67;
-  --line: #e2e5dd; --line-strong: #cfd4c9; --accent: #0d6b57; --accent-ink: #ffffff; --accent-soft: #e2f1ec;
-  --warm: #d9862b; --warm-soft: #fbefdf; --bad: #a33a2b;
-  --l0: #e6e8e2; --l1: #cfe9df; --l2: #8fcdb9; --l3: #3f9f86; --l4: #0d6b57;
-  --shadow: 0 1px 2px rgba(14,26,23,.05), 0 12px 32px -18px rgba(14,26,23,.25);
+  --bg: #f4f3fa; --surface: #ffffff; --raised: #f0eef9; --ink: #1a1259; --text: #2a2550; --muted: #6a668c;
+  --line: #dedbee; --line-strong: #c3bedf; --accent: #3a2bd0; --accent-ink: #ffffff; --accent-soft: #e6e3fa;
+  --warm: #c2470c; --bad: #b3261e;
+  --l1: #ffd447; --l2: #ff9a3c; --l3: #f2527d; --l4: #6b2fd6; --stub-ink: #1a1259;
+  --display: "Bricolage Grotesque", "Public Sans", system-ui, sans-serif;
+  --code: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --r: 14px; --r-s: 9px;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0c1311; --surface: #121c19; --raised: #16221e; --ink: #eef3ef; --text: #d6ded9; --muted: #8e9b96;
-    --line: #22302b; --line-strong: #2e3f39; --accent: #4cc3a3; --accent-ink: #062019; --accent-soft: #15302a;
-    --warm: #f0a54a; --warm-soft: #33261a; --bad: #e07b6a;
-    --l0: #1e2a26; --l1: #1d4136; --l2: #23695a; --l3: #33a083; --l4: #6fe0bf;
-    --shadow: 0 12px 32px -18px rgba(0,0,0,.7);
+    --bg: #0f0b2e; --surface: #18134a; --raised: #211b5c; --ink: #f4f2ff; --text: #dad6f5; --muted: #9c96c9;
+    --line: #2b2568; --line-strong: #3d3690; --accent: #a79bff; --accent-ink: #0f0b2e; --accent-soft: #251f66;
+    --warm: #ffa25e; --bad: #ff8a7a;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font: 15px/1.55 "Geist", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-.mono { font-family: "Geist Mono", ui-monospace, monospace; }
-.wrap { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+body { background: var(--bg); color: var(--text); font: 15.5px/1.55 "Public Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
 a { color: inherit; }
 button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
 button:disabled { opacity: .45; cursor: progress; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 
 /* Top bar */
-.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 0; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.01em; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 0 14px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 700 18px var(--display); font-stretch: 85%; color: var(--ink); }
 .brand svg { flex: none; }
-.pill { font: 500 12px "Geist Mono", monospace; color: var(--muted); border: 1px solid var(--line-strong); border-radius: 99px; padding: 5px 10px; white-space: nowrap; }
-.pill b { color: var(--accent); font-weight: 500; }
+.top-meta { display: flex; gap: 18px; font-size: 13.5px; color: var(--muted); }
+.top-meta b { color: var(--ink); font-weight: 600; }
 .banner { display: none; background: var(--bad); color: #fff; border-radius: var(--r-s); padding: 8px 12px; font-size: 13.5px; margin-bottom: 12px; }
 
-/* Hero */
-.hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: start; padding: 18px 0 34px; }
-@media (max-width: 920px) { .hero { grid-template-columns: 1fr; } }
-h1 { font: 400 clamp(38px, 5.6vw, 64px)/1 "Instrument Serif", Georgia, serif; color: var(--ink); letter-spacing: -.015em; }
-h1 em { color: var(--accent); }
-.lede { margin-top: 16px; font-size: 16.5px; color: var(--muted); max-width: 56ch; }
-.lede b { color: var(--text); font-weight: 600; }
-.rule { margin-top: 22px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 14px 16px; display: grid; gap: 10px; }
-.rule-title { font-size: 12.5px; color: var(--muted); font-weight: 500; }
-.rule-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-.rule-steps div { border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--ink); }
-.rule-steps div b { display: block; font: 400 22px/1 "Instrument Serif", serif; }
-.rule-steps .s1 { background: var(--l1); } .rule-steps .s2 { background: var(--l2); }
-.rule-steps .s3 { background: var(--l3); color: #fff; } .rule-steps .s4 { background: var(--l4); color: #fff; }
-@media (prefers-color-scheme: dark) { .rule-steps .s3, .rule-steps .s4 { color: #04120e; } }
-.stats { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 22px; }
-.stat b { display: block; font: 500 22px/1.1 "Geist Mono", monospace; color: var(--ink); letter-spacing: -.02em; }
-.stat span { font-size: 12.5px; color: var(--muted); }
-
-/* Cards */
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
-.offer { padding: 20px; }
-.card-kicker { font: 500 11.5px "Geist Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
-.card h2 { font: 400 28px/1.1 "Instrument Serif", serif; color: var(--ink); margin: 4px 0 4px; }
-.card .sub { color: var(--muted); font-size: 13.5px; }
-.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-.fields .full { grid-column: 1 / -1; }
-.field label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 5px; }
-.field input { width: 100%; padding: 11px 12px; border: 1px solid var(--line-strong); border-radius: var(--r-s); background: var(--raised); color: var(--text); font: inherit; }
-.field input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
-.money { position: relative; }
-.money::before { content: "$"; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-family: "Geist Mono", monospace; }
-.money input { padding-left: 26px; font: 500 17px "Geist Mono", monospace; }
-.btn { background: var(--accent); color: var(--accent-ink); border-radius: var(--r-s); padding: 12px 16px; font-weight: 600; }
-.btn:hover { filter: brightness(1.08); }
-.btn.wide { width: 100%; margin-top: 12px; }
-.offer-out { display: none; margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line-strong); }
-.verdict { display: flex; align-items: end; justify-content: space-between; gap: 12px; }
-.verdict .lv { font: 400 46px/0.9 "Instrument Serif", serif; color: var(--ink); }
-.verdict .lv small { display: block; font: 500 12px "Geist", sans-serif; color: var(--muted); margin-bottom: 6px; }
-.tickets { text-align: right; }
-.tickets .dots { display: flex; gap: 5px; justify-content: flex-end; }
-.tickets .dots i { width: 22px; height: 30px; border-radius: 5px; border: 1.5px solid var(--line-strong); display: block; }
-.tickets .dots i.on { background: var(--accent); border-color: var(--accent); }
-.tickets small { display: block; font-size: 12.5px; color: var(--muted); margin-top: 5px; }
-.ladder { position: relative; margin: 22px 0 4px; padding-top: 24px; }
-.bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; height: 12px; }
-.bar i { border-radius: 3px; display: block; }
-.bar i:nth-child(1) { background: var(--l0); } .bar i:nth-child(2) { background: var(--l1); } .bar i:nth-child(3) { background: var(--l2); }
-.bar i:nth-child(4) { background: var(--l3); } .bar i:nth-child(5) { background: var(--l4); }
-.pin { position: absolute; top: 0; transform: translateX(-50%); font: 500 11.5px "Geist Mono", monospace; color: var(--ink); background: var(--warm-soft); border: 1px solid var(--warm); border-radius: 6px; padding: 1px 6px; white-space: nowrap; transition: left .5s cubic-bezier(.2,.8,.2,1); }
-.pin::after { content: ""; position: absolute; left: 50%; top: 100%; width: 2px; height: 16px; background: var(--warm); transform: translateX(-50%); }
-.ticks { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin-top: 6px; font: 11px/1.3 "Geist Mono", monospace; color: var(--muted); }
-.facts { list-style: none; display: grid; gap: 7px; margin-top: 14px; font-size: 13.5px; }
-.facts li { display: flex; gap: 8px; } .facts li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 7px; }
-.next { display: grid; gap: 6px; margin-top: 14px; }
-.ghost { text-align: left; border: 1px solid var(--line-strong); border-radius: var(--r-s); padding: 9px 11px; font-size: 13.5px; font-weight: 500; display: flex; justify-content: space-between; gap: 10px; }
+/* The ticket */
+.ticket { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 38%); background: var(--surface); border: 2px solid var(--ink); border-radius: 20px; position: relative; }
+.ticket-body { padding: 30px 32px 26px; min-width: 0; }
+h1 { font: 700 clamp(30px, 4.3vw, 54px)/1.16 var(--display); font-stretch: 82%; color: var(--ink); letter-spacing: -.012em; }
+h1 input { font: inherit; font-stretch: inherit; letter-spacing: inherit; color: var(--accent); background: transparent; border: 0; border-bottom: 3px solid var(--accent); border-radius: 0; padding: 0 .06em; max-width: 100%; min-width: 2ch; }
+h1 input:focus { outline: none; background: var(--accent-soft); }
+h1 input::-webkit-calendar-picker-indicator { display: none !important; }
+h1 output { color: var(--accent); white-space: nowrap; }
+h1 .measure { position: absolute; visibility: hidden; white-space: pre; pointer-events: none; }
+.btn { background: var(--ink); color: var(--bg); border-radius: 99px; padding: 12px 22px; font-weight: 600; }
+.btn:hover { background: var(--accent); color: var(--accent-ink); }
+.ticket-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 20px; }
+.ticket-actions p { font-size: 13.5px; color: var(--muted); }
+.offer-out { display: none; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+.facts { list-style: none; display: grid; gap: 6px; font-size: 14.5px; max-width: 62ch; }
+.facts li:first-child { font-weight: 600; color: var(--ink); }
+.next { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.ghost { text-align: left; border: 1.5px solid var(--line-strong); border-radius: 99px; padding: 7px 14px; font-size: 13.5px; font-weight: 500; color: var(--ink); }
 .ghost:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
-.fine { font-size: 12px; color: var(--muted); margin-top: 12px; }
+.fine { font-size: 12.5px; color: var(--muted); margin-top: 12px; }
+
+/* Stubs: one per wage level. The dashed edges are the perforations. */
+.stubs { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 2px dashed var(--ink); position: relative; }
+.stubs::before, .stubs::after { content: ""; position: absolute; left: -13px; width: 24px; height: 24px; border-radius: 50%; background: var(--bg); border: 2px solid var(--ink); }
+.stubs::before { top: -14px; clip-path: inset(50% 0 0 0); }
+.stubs::after { bottom: -14px; clip-path: inset(0 0 50% 0); }
+.stub { display: flex; flex-direction: column; justify-content: space-between; gap: 10px; padding: 22px 10px 18px; color: var(--muted); border-left: 2px dashed var(--line-strong); transition: background-color .35s ease, color .35s ease; }
+.stub:first-child { border-left: 0; }
+.stub:last-child { border-radius: 0 17px 17px 0; }
+.stub b { font: 800 clamp(52px, 6vw, 84px)/.85 var(--display); font-stretch: 75%; }
+.stub span { display: block; font-weight: 600; font-size: 14px; }
+.stub small { display: block; font-size: 12px; min-height: 1.5em; white-space: nowrap; }
+.stub.on { color: var(--stub-ink); }
+.stub.on:nth-child(1) { background: var(--l1); } .stub.on:nth-child(2) { background: var(--l2); }
+.stub.on:nth-child(3) { background: var(--l3); } .stub.on:nth-child(4) { background: var(--l4); color: #fff; }
+.stub.on:nth-child(2) { transition-delay: .12s; } .stub.on:nth-child(3) { transition-delay: .24s; } .stub.on:nth-child(4) { transition-delay: .36s; }
+.stub.on + .stub { border-left-color: var(--ink); }
+@media (max-width: 880px) {
+  .ticket { grid-template-columns: minmax(0, 1fr); }
+  .ticket-body { padding: 22px 20px; }
+  .stubs { border-left: 0; border-top: 2px dashed var(--ink); }
+  .stubs::before, .stubs::after { display: none; }
+  .stub { padding: 14px 8px; }
+  .stub small { white-space: normal; }
+  .stub:first-child { border-radius: 0 0 0 17px; } .stub:last-child { border-radius: 0 0 17px 0; }
+}
+@media (prefers-reduced-motion: reduce) { .stub { transition: none; } html { scroll-behavior: auto; } }
+
+.intro { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px 40px; padding: 26px 0 8px; font-size: 16px; }
+.intro p { max-width: 62ch; }
+.intro .built { color: var(--muted); font-size: 14.5px; }
+.intro b { color: var(--ink); font-weight: 600; }
+@media (max-width: 880px) { .intro { grid-template-columns: 1fr; } }
 
 /* Ask */
-.ask { padding: 8px 0 18px; }
-.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.section-head h2 { font: 400 32px/1 "Instrument Serif", serif; color: var(--ink); }
-.section-head p { color: var(--muted); font-size: 13.5px; }
-.composer { display: flex; gap: 10px; padding: 8px; border-radius: 16px; }
-.composer textarea { flex: 1; resize: none; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 16px; padding: 10px 10px; height: 48px; }
+.ask { padding: 34px 0 18px; }
+h2 { font: 700 34px/1.05 var(--display); font-stretch: 82%; color: var(--ink); }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.section-head p { color: var(--muted); font-size: 14px; }
+.composer { display: flex; gap: 10px; padding: 7px; border-radius: 99px; background: var(--surface); border: 2px solid var(--ink); }
+.composer textarea { flex: 1; resize: none; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 16px; padding: 10px 14px; height: 46px; }
 .composer textarea:focus { outline: none; }
-.composer:focus-within { outline: 2px solid var(--accent); outline-offset: 0; }
-.chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; margin-top: 12px; }
-.chip { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; display: grid; gap: 2px; }
-.chip:hover { border-color: var(--accent); }
-.chip .tag { font: 500 11px "Geist Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.composer:focus-within { border-color: var(--accent); }
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; margin-top: 16px; }
+.chip { text-align: left; display: grid; grid-template-columns: 84px 1fr; gap: 12px; align-items: baseline; padding: 11px 2px; border-bottom: 1px solid var(--line); }
+.chip:hover .q { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.chip .tag { font-size: 12.5px; font-weight: 600; color: var(--muted); }
 .chip.limit .tag { color: var(--warm); }
-.chip .q { font-size: 14px; font-weight: 500; color: var(--ink); }
+.chip .q { font-size: 15px; font-weight: 500; color: var(--ink); }
+@media (max-width: 760px) { .chips { grid-template-columns: 1fr; } }
 
 /* Feed */
 #feed { display: grid; gap: 18px; padding: 10px 0 30px; }
+.card { background: var(--surface); border: 1px solid var(--line-strong); border-top: 4px solid var(--ink); border-radius: var(--r); }
 .answer { padding: 0; overflow: hidden; }
 .a-head { display: flex; justify-content: space-between; align-items: start; gap: 14px; padding: 16px 20px 0; }
-.a-q { font: 400 23px/1.2 "Instrument Serif", serif; color: var(--ink); }
-.a-meta { font: 12px "Geist Mono", monospace; color: var(--muted); white-space: nowrap; padding-top: 6px; }
+.a-q { font: 700 23px/1.2 var(--display); font-stretch: 85%; color: var(--ink); }
+.a-meta { font-size: 12.5px; color: var(--muted); white-space: nowrap; padding-top: 6px; }
 .a-body { padding: 10px 20px 4px; font-size: 15.5px; max-width: 78ch; }
 .a-body p { margin: 0 0 9px; } .a-body ul { margin: 2px 0 9px 20px; } .a-body li { margin: 3px 0; }
 .a-body strong { color: var(--ink); }
 .tiles { display: flex; flex-wrap: wrap; gap: 10px; padding: 8px 20px 4px; }
-.tile { border: 1px solid var(--line); background: var(--raised); border-radius: 12px; padding: 10px 14px; min-width: 140px; }
-.tile b { display: block; font: 500 24px/1.1 "Geist Mono", monospace; color: var(--ink); letter-spacing: -.02em; }
-.tile span { font-size: 12px; color: var(--muted); }
+.tile { background: var(--raised); border-radius: 12px; padding: 10px 14px; min-width: 140px; }
+.tile b { display: block; font: 700 26px/1.1 var(--display); font-stretch: 85%; color: var(--ink); }
+.tile span { font-size: 12.5px; color: var(--muted); }
 .tabs { display: flex; gap: 4px; padding: 14px 20px 0; border-bottom: 1px solid var(--line); }
-.tab { padding: 8px 12px; font-size: 13.5px; font-weight: 500; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tab { padding: 8px 12px; font-size: 14px; font-weight: 500; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -1px; }
 .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-.tab .n { font: 11px "Geist Mono", monospace; color: var(--muted); margin-left: 4px; }
+.tab .n { font-size: 11.5px; color: var(--muted); margin-left: 5px; }
 .panel { padding: 16px 20px; }
 .panel[hidden] { display: none; }
 .viz, .viz .vega-embed, .vega-embed.chart { display: block !important; width: 100%; }
 .vega-embed summary { display: none; }
 .tbar { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--muted); margin-bottom: 8px; gap: 10px; }
-.link { color: var(--accent); font-weight: 500; font-size: 13px; }
+.link { color: var(--accent); font-weight: 600; font-size: 13.5px; text-decoration: underline; text-underline-offset: 3px; }
 .twrap { max-height: 360px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; }
 table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
 th, td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
-th { position: sticky; top: 0; z-index: 1; background: var(--raised); font-weight: 500; font-size: 12.5px; color: var(--muted); cursor: pointer; user-select: none; }
+th { position: sticky; top: 0; z-index: 1; background: var(--raised); font-weight: 600; font-size: 12.5px; color: var(--muted); cursor: pointer; user-select: none; }
 th:hover { color: var(--accent); }
-td.num { text-align: right; font-family: "Geist Mono", monospace; font-size: 13px; }
-td.rank { color: var(--muted); font: 12px "Geist Mono", monospace; width: 1%; }
+td.num { text-align: right; }
+td.rank { color: var(--muted); font-size: 12px; width: 1%; }
 td .barcell { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
-td .barcell i { display: block; height: 6px; border-radius: 3px; background: var(--l2); min-width: 2px; }
+td .barcell i { display: block; height: 7px; border-radius: 2px; background: var(--l2); min-width: 2px; }
 tr:hover td { background: var(--raised); }
 .sql { position: relative; }
-.sql pre { font: 12.5px/1.6 "Geist Mono", monospace; white-space: pre-wrap; word-break: break-word; background: var(--raised); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; color: var(--text); }
+.sql pre { font: 12.5px/1.6 var(--code); white-space: pre-wrap; word-break: break-word; background: var(--raised); border-radius: 10px; padding: 12px 14px; color: var(--text); }
 .sql pre + pre { margin-top: 10px; }
-.kw { color: var(--accent); font-weight: 500; } .str { color: var(--warm); }
+.kw { color: var(--accent); font-weight: 600; } .str { color: var(--warm); }
 .steps { list-style: none; display: grid; gap: 2px; counter-reset: s; }
-.steps li { border-left: 2px solid var(--line-strong); padding: 6px 0 6px 14px; position: relative; }
-.steps li::before { counter-increment: s; content: counter(s); position: absolute; left: -10px; top: 7px; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); border: 1.5px solid var(--accent); font: 500 10px/15px "Geist Mono", monospace; text-align: center; color: var(--accent); }
-.steps li.rejected::before { border-color: var(--warm); color: var(--warm); }
+.steps li { border-left: 2px solid var(--line-strong); padding: 6px 0 6px 16px; position: relative; }
+.steps li::before { counter-increment: s; content: counter(s); position: absolute; left: -11px; top: 6px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); font: 600 11px/20px "Public Sans", sans-serif; text-align: center; color: var(--bg); }
+.steps li.rejected::before { background: var(--warm); }
 .steps summary { cursor: pointer; font-size: 14px; list-style: none; }
 .steps summary::-webkit-details-marker { display: none; }
-.steps summary .tool { font: 11.5px "Geist Mono", monospace; color: var(--muted); margin-left: 6px; }
-.steps pre { margin-top: 6px; font: 12px/1.5 "Geist Mono", monospace; white-space: pre-wrap; word-break: break-word; background: var(--raised); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; max-height: 240px; overflow: auto; }
+.steps summary .tool { font-size: 12px; color: var(--muted); margin-left: 8px; }
+.steps pre { margin-top: 6px; font: 12px/1.5 var(--code); white-space: pre-wrap; word-break: break-word; background: var(--raised); border-radius: 8px; padding: 8px 10px; max-height: 240px; overflow: auto; }
 .loading .a-body { color: var(--muted); }
-.progress { list-style: none; display: grid; gap: 6px; padding: 8px 20px 20px; font-size: 13.5px; color: var(--muted); }
+.progress { list-style: none; display: grid; gap: 6px; padding: 8px 20px 20px; font-size: 14px; color: var(--muted); }
 .progress li { display: flex; align-items: center; gap: 9px; }
-.progress li i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--line-strong); flex: none; }
-.progress li.done { color: var(--text); } .progress li.done i { background: var(--accent); border-color: var(--accent); }
+.progress li i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line-strong); flex: none; }
+.progress li.done { color: var(--text); } .progress li.done i { background: var(--ink); border-color: var(--ink); }
 .progress li.now { color: var(--ink); } .progress li.now i { border-color: var(--accent); border-top-color: transparent; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.empty { border: 1px dashed var(--line-strong); border-radius: var(--r); padding: 22px; color: var(--muted); font-size: 14px; text-align: center; }
 .feed-tools { display: flex; justify-content: flex-end; }
 
 /* How it works */
-.how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 18px 0 8px; }
-@media (max-width: 820px) { .how { grid-template-columns: 1fr; } }
-.how div { border-top: 2px solid var(--ink); padding-top: 10px; font-size: 13.5px; color: var(--muted); }
-.how h3 { font: 400 22px/1.1 "Instrument Serif", serif; color: var(--ink); margin-bottom: 6px; }
-footer { padding: 18px 0 40px; font-size: 12.5px; color: var(--muted); display: grid; gap: 6px; border-top: 1px solid var(--line); margin-top: 18px; }
-@media (max-width: 560px) { .section-head { flex-direction: column; gap: 4px; } .fields { grid-template-columns: 1fr; } .a-head { flex-direction: column; gap: 2px; } .a-meta { padding-top: 0; } .pill.hide-sm { display: none; } }
+.how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; padding: 26px 0 8px; border-top: 2px solid var(--ink); margin-top: 10px; }
+@media (max-width: 820px) { .how { grid-template-columns: 1fr; gap: 18px; } }
+.how div { font-size: 14px; color: var(--muted); }
+.how h3 { font: 700 21px/1.1 var(--display); font-stretch: 85%; color: var(--ink); margin-bottom: 6px; }
+footer { padding: 18px 0 40px; font-size: 13px; color: var(--muted); display: grid; gap: 6px; margin-top: 18px; }
+@media (max-width: 560px) { .section-head { flex-direction: column; gap: 4px; } .a-head { flex-direction: column; gap: 2px; } .a-meta { padding-top: 0; } .top-meta .hide-sm { display: none; } .chip { grid-template-columns: 1fr; gap: 0; } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <nav class="top">
     <div class="brand">
-      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="17" width="5" height="8" rx="1.5" fill="var(--l1)"/><rect x="7.5" y="12" width="5" height="13" rx="1.5" fill="var(--l2)"/><rect x="14" y="7" width="5" height="18" rx="1.5" fill="var(--l3)"/><rect x="20.5" y="1" width="5" height="24" rx="1.5" fill="var(--l4)"/></svg>
+      <svg width="34" height="22" viewBox="0 0 34 22" aria-hidden="true"><rect x="0" y="0" width="7" height="22" rx="2" fill="var(--l1)"/><rect x="9" y="0" width="7" height="22" rx="2" fill="var(--l2)"/><rect x="18" y="0" width="7" height="22" rx="2" fill="var(--l3)"/><rect x="27" y="0" width="7" height="22" rx="2" fill="var(--l4)"/></svg>
       H-1B Pay Explorer
     </div>
-    <div style="display:flex;gap:8px">
-      <span class="pill hide-sm">data through <b id="asof">FY2026 Q3</b></span>
-      <a class="pill" href="#how">how it works</a>
+    <div class="top-meta">
+      <span class="hide-sm">Data through <b id="asof">FY2026 Q3</b></span>
+      <a href="#how">How it works</a>
     </div>
   </nav>
   <div class="banner" id="banner">Synthetic demo data: this copy is running on generated test filings, not the real DOL files.</div>
 
-  <section class="hero">
-    <div>
-      <h1>Know what your H-1B offer is <em>worth</em>, before the lottery does.</h1>
-      <p class="lede">Since 2026 the lottery is <b>wage-weighted</b>: the higher your offer sits in the official wage table, the more entries you get. Check an offer, then ask the filings who sponsors your role, what they pay and at which level they file. For international students on F-1/OPT and anyone weighing an H-1B offer.</p>
-      <div class="rule" aria-label="Lottery entries per wage level">
-        <div class="rule-title">Entries per registration under the new rule</div>
-        <div class="rule-steps"><div class="s1"><b>1</b>Level I</div><div class="s2"><b>2</b>Level II</div><div class="s3"><b>3</b>Level III</div><div class="s4"><b>4</b>Level IV</div></div>
-      </div>
-      <div class="stats">
-        <div class="stat"><b id="s-rows">–</b><span>H-1B filings, cleaned</span></div>
-        <div class="stat"><b id="s-emp">–</b><span>employers, names merged</span></div>
-        <div class="stat"><b>442,919</b><span>official wage thresholds</span></div>
-      </div>
-    </div>
-
-    <aside class="card offer" aria-labelledby="offer-title">
-      <div class="card-kicker">Offer check · instant</div>
-      <h2 id="offer-title">Where does your offer land?</h2>
-      <p class="sub">Compared with the OFLC 2026-27 wage table for your role and metro, and with real filings.</p>
+  <section class="ticket" aria-label="Offer check">
+    <div class="ticket-body">
       <form id="offer-form">
-        <div class="fields">
-          <div class="field full"><label for="salary">Yearly salary</label><div class="money"><input id="salary" inputmode="numeric" value="120,000" autocomplete="off" /></div></div>
-          <div class="field"><label for="role">Role</label><input id="role" list="roles" value="Data Scientist" autocomplete="off" /><datalist id="roles"></datalist></div>
-          <div class="field"><label for="place">City or metro</label><input id="place" list="places" value="New York City" autocomplete="off" /><datalist id="places"></datalist></div>
+        <h1>A $<input id="salary" inputmode="numeric" value="120,000" autocomplete="off" aria-label="Yearly salary in dollars" />
+          <input id="role" list="roles" value="Data Scientist" autocomplete="off" aria-label="Role" /><datalist id="roles"></datalist>
+          offer in <input id="place" list="places" value="New York City" autocomplete="off" aria-label="City or metro" /><datalist id="places"></datalist>
+          gets <output id="o-count" for="salary role place" aria-live="polite">…</output> in the H-1B lottery.</h1>
+        <div class="ticket-actions">
+          <button class="btn" id="offer-btn" type="submit">Count my entries</button>
+          <p>Change the salary, role or city. No model is involved, so it answers at once.</p>
         </div>
-        <button class="btn wide" id="offer-btn" type="submit">Check my offer</button>
       </form>
       <div class="offer-out" id="offer-out" aria-live="polite">
-        <div class="verdict">
-          <div class="lv"><small id="o-role"></small><span id="o-level">Level II</span></div>
-          <div class="tickets"><div class="dots" id="o-dots"></div><small id="o-entries"></small></div>
-        </div>
-        <div class="ladder"><div class="pin" id="o-pin">$120k</div><div class="bar"><i></i><i></i><i></i><i></i><i></i></div><div class="ticks" id="o-ticks"></div></div>
         <ul class="facts" id="o-facts"></ul>
         <div class="next" id="o-next"></div>
         <p class="fine" id="o-fine"></p>
       </div>
-    </aside>
+    </div>
+    <div class="stubs" id="o-stubs" aria-hidden="true"></div>
+  </section>
+
+  <section class="intro">
+    <p>Since 2026 the H-1B lottery is <b>wage-weighted</b>. An offer at Level I of the official wage table gets one entry, and an offer at Level IV gets four. Check an offer on the ticket, then ask the filings who sponsors your role, what they pay and at which level they file.</p>
+    <p class="built">Built on <b id="s-rows">1.5 million</b> H-1B filings from <b id="s-emp">107,000</b> employers, 442,919 official wage thresholds and USCIS's approvals per employer. For students on F-1 or OPT and anyone weighing an H-1B offer.</p>
   </section>
 
   <section class="ask" id="ask">
     <div class="section-head"><h2>Ask the filings</h2><p>Every answer comes with a chart, the table behind it and the exact SQL.</p></div>
-    <form class="card composer" id="composer">
-      <textarea id="input" placeholder="e.g. Which NYC employers file the most Level I data scientists?" aria-label="Your question"></textarea>
+    <form class="composer" id="composer">
+      <textarea id="input" placeholder="Which NYC employers file the most Level I data scientists?" aria-label="Your question"></textarea>
       <button class="btn" id="send" type="submit">Ask</button>
     </form>
     <div class="chips" id="chips"></div>
@@ -261,8 +242,8 @@ footer { padding: 18px 0 40px; font-size: 12.5px; color: var(--muted); display: 
     <div><h3>The agent</h3>Gemini writes DuckDB SQL over the cleaned tables, using lookup tools for employers, roles and places. Guardrails block known mistakes, and it says plainly when the data can't answer something.</div>
   </section>
   <footer>
-    <div>Sources: <a href="https://www.dol.gov/agencies/eta/foreign-labor/performance" target="_blank" rel="noopener">DOL OFLC LCA disclosure data</a> · <a href="https://flag.dol.gov/wage-data/wage-data-downloads" target="_blank" rel="noopener">OFLC prevailing wage tables 2026-27</a> · <a href="https://www.uscis.gov/tools/reports-and-studies/h-1b-employer-data-hub" target="_blank" rel="noopener">USCIS H-1B Employer Data Hub</a></div>
-    <div>Lottery entries follow the wage-weighted selection rule (Level I = 1 … Level IV = 4). Not legal advice.</div>
+    <div>Sources: <a href="https://www.dol.gov/agencies/eta/foreign-labor/performance" target="_blank" rel="noopener">DOL OFLC LCA disclosure data</a>, <a href="https://flag.dol.gov/wage-data/wage-data-downloads" target="_blank" rel="noopener">OFLC prevailing wage tables 2026-27</a>, <a href="https://www.uscis.gov/tools/reports-and-studies/h-1b-employer-data-hub" target="_blank" rel="noopener">USCIS H-1B Employer Data Hub</a></div>
+    <div>Lottery entries follow the wage-weighted selection rule (Level I gets 1, Level IV gets 4). Not legal advice.</div>
   </footer>
 </div>
 
@@ -305,39 +286,53 @@ async function loadMeta() {
 }
 
 // ---------- Offer check (deterministic, no model) ----------
-$("offer-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const btn = $("offer-btn"); btn.disabled = true; btn.textContent = "Checking…";
+// The three inputs sit inside the headline, so each one is sized to its text.
+const measure = el("span", "measure"); document.querySelector("h1").appendChild(measure);
+function fit(inp) { measure.textContent = inp.value || "   "; inp.style.width = (measure.offsetWidth + 8) + "px"; }
+const offerInputs = ["salary", "role", "place"].map($);
+offerInputs.forEach((inp) => inp.addEventListener("input", () => fit(inp)));
+const fitAll = () => offerInputs.forEach(fit);
+fitAll(); window.addEventListener("resize", fitAll);
+document.fonts?.load('700 40px "Bricolage Grotesque"').then(fitAll); document.fonts?.ready.then(fitAll); window.addEventListener("load", fitAll);
+$("salary").addEventListener("blur", () => { const n = Number($("salary").value.replace(/[^0-9.]/g, "")); if (n) { $("salary").value = Math.round(n).toLocaleString(); fit($("salary")); } });
+
+function drawStubs(r) {
+  const lv = r && r.thresholds ? [r.thresholds.level_1, r.thresholds.level_2, r.thresholds.level_3, r.thresholds.level_4] : [];
+  const stubs = $("o-stubs");
+  if (!stubs.children.length) stubs.innerHTML = [1, 2, 3, 4].map((i) => `<div class="stub"><b>${i}</b><div><span>Level ${ROMAN[i]}</span><small></small></div></div>`).join("");
+  [...stubs.children].forEach((s, i) => {
+    s.classList.toggle("on", !!r && i < (r.lottery_entries || 0));
+    s.querySelector("small").textContent = lv[i] != null ? `from ${k$(lv[i])}` : "";
+  });
+}
+drawStubs(null);
+
+async function checkOffer(quiet) {
+  const btn = $("offer-btn"); btn.disabled = true; btn.textContent = "Counting…";
   try {
     const res = await fetch("/api/offer", { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ salary: Number($("salary").value.replace(/[^0-9.]/g, "")), role: $("role").value, location: $("place").value }) });
     showOffer(await res.json());
-  } catch (_) { showOffer({ error: "The server didn't answer. If the app was idle it may be waking up: try again in about 20 seconds." }); }
-  btn.disabled = false; btn.textContent = "Check my offer";
-});
+  } catch (_) { if (!quiet) showOffer({ error: "The server didn't answer. If the app was idle it may be waking up: try again in about 20 seconds." }); }
+  btn.disabled = false; btn.textContent = "Count my entries";
+}
+$("offer-form").addEventListener("submit", (e) => { e.preventDefault(); checkOffer(false); });
 
 function showOffer(r) {
   $("offer-out").style.display = "block";
   if (r.error) {
-    $("o-role").textContent = ""; $("o-level").textContent = "Can't place that"; $("o-dots").innerHTML = ""; $("o-entries").textContent = "";
-    $("o-ticks").innerHTML = ""; $("o-next").innerHTML = ""; $("o-fine").textContent = ""; $("o-pin").style.display = "none";
+    $("o-count").textContent = "…"; drawStubs(null);
+    $("o-next").innerHTML = ""; $("o-fine").textContent = "";
     $("o-facts").innerHTML = `<li>${esc(r.error)}</li>`; return;
   }
-  $("o-pin").style.display = "";
-  $("o-role").textContent = `${r.role_family} · ${r.metro_name.split(",")[0]}`;
-  $("o-level").textContent = r.wage_level ? `Level ${ROMAN[r.wage_level]}` : "Below Level I";
-  $("o-dots").innerHTML = [1, 2, 3, 4].map((i) => `<i class="${i <= r.lottery_entries ? "on" : ""}"></i>`).join("");
-  $("o-entries").textContent = r.wage_level ? `${r.lottery_entries} of 4 lottery entries` : "not certifiable at this wage";
-  const t = r.thresholds, lv = [t.level_1, t.level_2, t.level_3, t.level_4];
-  $("o-ticks").innerHTML = `<span>&lt; I</span>` + lv.map((v, i) => `<span>${ROMAN[i + 1]} · ${k$(v)}</span>`).join("");
-  const lo = [lv[0] * 0.75, ...lv], hi = [...lv, lv[3] * 1.25], s = r.wage_level;
-  const frac = Math.min(.95, Math.max(.05, (r.salary - lo[s]) / ((hi[s] - lo[s]) || 1)));
-  $("o-pin").style.left = ((s + frac) / 5 * 100) + "%";
-  $("o-pin").textContent = k$(r.salary);
+  const n = r.wage_level ? r.lottery_entries : 0;
+  $("o-count").textContent = n ? `${n} of 4 entries` : "no entries";
+  drawStubs(r);
   const facts = [];
-  facts.push(r.raise_needed_for_next_level != null
-    ? `${full$(r.raise_needed_for_next_level)} more reaches Level ${ROMAN[r.wage_level + 1]} and ${r.wage_level + 1} entr${r.wage_level ? "ies" : "y"}.`
-    : "That's the top level: the most entries an offer can get.");
+  if (!r.wage_level) facts.push(`That is below Level I for this role and area (${full$(r.thresholds.level_1)}), so the filing can't be certified at this wage.`);
+  else facts.push(r.raise_needed_for_next_level != null
+    ? `Level ${ROMAN[r.wage_level]}. ${full$(r.raise_needed_for_next_level)} more reaches Level ${ROMAN[r.wage_level + 1]} and ${r.wage_level + 1} entries.`
+    : "Level IV, the top level: the most entries an offer can get.");
   if (r.peer_filings_fy2025_on >= 5) facts.push(`It beats ${Math.round(r.salary_percentile_among_peer_filings)}% of ${r.peer_filings_fy2025_on.toLocaleString()} certified ${r.role_family} filings in this metro since FY2025 (median ${k$(r.peer_median_offer)}).`);
   facts.push(`Wage table: SOC ${r.soc_code} ${r.soc_title}, ${r.metro_name}.`);
   $("o-facts").innerHTML = facts.map((f) => `<li>${esc(f)}</li>`).join("");
@@ -345,7 +340,7 @@ function showOffer(r) {
   $("o-next").innerHTML = "";
   [[`Who files ${r.role_family}s at Level I in ${metro}?`, `Which employers filed the most certified ${r.role_family} new-employment LCAs at wage Level I in the ${r.metro_name} area in FY2025?`],
    [`Who pays ${r.role_family}s the most in ${metro}?`, `Which employers have the highest median offered salary for ${r.role_family} in the ${r.metro_name} area since FY2025, among employers with at least 10 filings?`]]
-    .forEach(([label, q]) => { const b = el("button", "ghost", `<span>${esc(label)}</span><span aria-hidden="true">→</span>`); b.type = "button"; b.onclick = () => ask(q, label); $("o-next").appendChild(b); });
+    .forEach(([label, q]) => { const b = el("button", "ghost", esc(label)); b.type = "button"; b.onclick = () => ask(q, label); $("o-next").appendChild(b); });
   $("o-fine").textContent = `${r.wage_year}${r.approximate ? "; this area borrows wages from a wider region" : ""}. Assumes one worksite: with several, the lowest level counts.`;
 }
 
@@ -413,7 +408,7 @@ function pretty(col) {
 function renderAnswer(card, question, data, secs) {
   card.classList.remove("loading");
   const sqls = (data.tool_calls || []).filter((c) => c.name === "run_sql").map((c) => c.args?.query).filter(Boolean);
-  card.innerHTML = `<div class="a-head"><div class="a-q">${esc(question)}</div><div class="a-meta">${secs.toFixed(0)}s · ${(data.tool_calls || []).length} steps</div></div>`;
+  card.innerHTML = `<div class="a-head"><div class="a-q">${esc(question)}</div><div class="a-meta">${secs.toFixed(0)} s, ${(data.tool_calls || []).length} steps</div></div>`;
   card.appendChild(el("div", "a-body", DOMPurify.sanitize(marked.parse(data.response || ""))));
   const t = data.table;
   let tiled = false;
@@ -455,12 +450,12 @@ function chartPanel(spec) {
   const enc = spec.encoding || {};
   ["x", "y"].forEach((ax) => { const f = enc[ax]; if (f && f.type === "quantitative" && MONEY.test(f.field) && !NOT_MONEY.test(f.field)) f.axis = { ...(f.axis || {}), format: "$,.0f" }; if (f && f.field && !f.title && f.title !== null) f.title = pretty(f.field); });
   requestAnimationFrame(() => vegaEmbed(box, spec, { actions: false, renderer: "svg", config: {
-    background: null, font: "Geist", view: { stroke: null }, padding: 4,
-    axis: { labelColor: c("--muted"), titleColor: c("--muted"), gridColor: c("--line"), domainColor: c("--line-strong"), tickColor: c("--line-strong"), labelFont: "Geist", titleFont: "Geist", titleFontWeight: 500, labelLimit: 240, labelFontSize: 12 },
-    legend: { labelColor: c("--muted"), titleColor: c("--muted"), labelFont: "Geist", titleFont: "Geist" },
-    title: { color: c("--ink"), font: "Instrument Serif", fontSize: 19, fontWeight: 400, anchor: "start", offset: 12 },
+    background: null, font: "Public Sans", view: { stroke: null }, padding: 4,
+    axis: { labelColor: c("--muted"), titleColor: c("--muted"), gridColor: c("--line"), domainColor: c("--line-strong"), tickColor: c("--line-strong"), labelFont: "Public Sans", titleFont: "Public Sans", titleFontWeight: 500, labelLimit: 240, labelFontSize: 12 },
+    legend: { labelColor: c("--muted"), titleColor: c("--muted"), labelFont: "Public Sans", titleFont: "Public Sans" },
+    title: { color: c("--ink"), font: "Bricolage Grotesque", fontSize: 18, fontWeight: 700, anchor: "start", offset: 12 },
     bar: { color: c("--accent"), cornerRadiusEnd: 3 }, line: { color: c("--accent"), strokeWidth: 2.5 }, point: { color: c("--accent"), size: 60 },
-    range: { category: [c("--accent"), c("--warm"), c("--l2"), c("--ink"), c("--l3"), c("--muted")] } } }).catch(() => { box.innerHTML = '<p class="fine">The chart could not be drawn; see the Table tab.</p>'; }));
+    range: { category: [c("--accent"), c("--l2"), c("--l3"), c("--l1"), c("--l4"), c("--muted")] } } }).catch(() => { box.innerHTML = '<p class="fine">The chart could not be drawn; see the Table tab.</p>'; }));
   return box;
 }
 
@@ -470,11 +465,11 @@ function tablePanel(t) {
   // The column that gets an inline bar: the first measure after any label column.
   const barCol = t.rows.length < 3 ? -1 : kinds.findIndex((k, i) => (k === "num" || k === "money" || k === "pct") && i > 0);
   const max = barCol >= 0 ? Math.max(...t.rows.map((r) => Math.abs(r[barCol] || 0))) || 1 : 1;
-  const bar = el("div", "tbar", `<span>${t.row_count.toLocaleString()} row${t.row_count === 1 ? "" : "s"}${t.truncated ? " (first 200)" : ""} · click a column to sort</span>`);
+  const bar = el("div", "tbar", `<span>${t.row_count.toLocaleString()} row${t.row_count === 1 ? "" : "s"}${t.truncated ? " (first 200)" : ""}. Click a column to sort.</span>`);
   const dl = el("button", "link", "Download CSV"); dl.type = "button";
   dl.onclick = () => {
     const csv = [t.columns, ...t.rows].map((r) => r.map((v) => v == null ? "" : `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
-    const a = el("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "h1b-pay-explorer.csv"; a.click();
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "h1b-pay-explorer.csv"; a.click();
   };
   bar.appendChild(dl); box.appendChild(bar);
   const wrap = el("div", "twrap"), table = el("table");
@@ -529,13 +524,14 @@ function stepsPanel(calls) {
     const li = el("li", warn ? "rejected" : "");
     let result = c.result; try { result = JSON.stringify(JSON.parse(c.result), null, 1); } catch (_) {}
     const args = c.args?.query ? c.args.query.trim() : JSON.stringify(c.args, null, 1);
-    li.innerHTML = `<details><summary>${esc(label)}<span class="tool">${esc(c.agent || "H-1B Analyst")} · ${esc(c.name)}</span></summary><pre>${esc(args)}</pre><pre>${esc(result.length > 2000 ? result.slice(0, 2000) + " …" : result)}</pre></details>`;
+    li.innerHTML = `<details><summary>${esc(label)}<span class="tool">${esc(c.agent || "H-1B Analyst")}, ${esc(c.name)}</span></summary><pre>${esc(args)}</pre><pre>${esc(result.length > 2000 ? result.slice(0, 2000) + " …" : result)}</pre></details>`;
     ol.appendChild(li);
   });
   return ol;
 }
 
 loadMeta();
+checkOffer(true);
 </script>
 </body>
 </html>

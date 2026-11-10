@@ -20,9 +20,9 @@ Since February 27, 2026, the H-1B lottery is no longer one ticket per person. A 
 
 ## How to use it
 
-1. **Check an offer** (left panel): type a salary, a role and a city. You get the wage level, the lottery entries, the four official thresholds on a ladder, the raise needed to reach the next level, and where your salary sits among real filings for that role and metro. This runs instantly and calls no model.
-2. **Ask a question** (right panel): click one of the example questions or type your own. The agent answers in a few sentences with a chart and the table behind it. You can sort the table and download it as a CSV.
-3. **Open "Show work"** under any answer to see each tool call: the names it resolved, the exact SQL and what came back.
+1. **Check an offer** (the ticket at the top): the headline is a sentence you can edit. Type a salary, a role and a city. The sentence fills in your lottery entries and the four stubs on the ticket light up, one per wage level, each with its official threshold. Below it you get the raise needed to reach the next level and where your salary sits among real filings for that role and metro. This runs instantly and calls no model.
+2. **Ask a question** (under the ticket): click one of the example questions or type your own. The agent answers in a few sentences with a chart and the table behind it. You can sort the table and download it as a CSV.
+3. **Open "How I got this"** under any answer to see each tool call: the names it resolved, the exact SQL and what came back.
 
 ## Sample queries for grading
 
@@ -587,7 +587,7 @@ uv run pytest            # 49 deterministic checks, no model calls
 | `h1b_common.py` | Normalizers shared by the build and the agent (employers, titles, cities, wages) |
 | `employer_overrides.csv` | Hand-curated grouping of big employers' legal entities |
 | `app.py` | FastAPI server, the agent, its tools and guardrails |
-| `index.html` | The page: offer checker, chat, charts, sortable tables, "Show work" |
+| `index.html` | The page: offer checker, chat, charts, sortable tables, "How I got this" |
 | `baseline.py`, `compare.py` | The plain agent and the three-way comparison that produced the traces above |
 | `evals/` | Self-check questions, scorer, score history |
 
