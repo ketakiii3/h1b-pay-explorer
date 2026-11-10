@@ -9,6 +9,8 @@ Inputs (download by hand, see README "Data"):
     raw/lca/*.xlsx|*.csv|*.parquet   DOL OFLC LCA disclosure files, FY2024 Q1 .. FY2026 Q3
     raw/pw/ALC_Export.csv            OFLC prevailing wages (wage year 2026-27), Level I-IV per SOC x area
     raw/pw/Geography.csv             OFLC area <-> county/town
+    raw/uscis/*.csv                  USCIS H-1B Employer Data Hub exports (Crosstab View -> Download -> CSV),
+                                     FY2024 .. FY2026: petition approvals and denials per employer
 
 Outputs:
     data/h1b.duckdb           full database (upload to GCS; too big for GitHub)
@@ -24,11 +26,13 @@ Steps:
     4. Classify roles: title rules -> SOC fallback -> (optional) Gemini, cached in role_cache.json.
     5. Map worksites to OFLC wage areas (county, then town, then the city's usual area).
     6. Build the Level I-IV wage table and compute each offer's level and lottery entries.
-    7. Write the database, the sample and mappings.json.
+    7. Load USCIS petition decisions and match each petitioner to the same employer_id.
+    8. Write the database, the sample and mappings.json.
 """
 
 import argparse
 import csv
+import io
 import json
 import re
 import time
@@ -260,12 +264,30 @@ def load_overrides() -> list[tuple[re.Pattern, str, str]]:
         return [(re.compile(r["pattern"]), r["canonical_name"], r["employer_type"]) for r in csv.DictReader(f)]
 
 
+EMPLOYER_KEYS: dict[str, int] = {}  # group key -> employer_id, reused to match USCIS petitioners
+LOOSE_KEYS: dict[str, int] = {}  # second-chance key (see loose_key) -> employer_id
+
+
+def loose_key(raw: str) -> str:
+    """A forgiving key for matching USCIS names to DOL names: USCIS drops apostrophes ("LOWES" for
+    "LOWE'S") and writes "D B A" where DOL files "DBA" or "D/B/A"."""
+    s = re.sub(r"\bD\s*/?\s*B\s*/?\s*A\b.*$", " ", raw.upper().replace("'", "").replace("\u2019", ""))
+    return hc.normalize_employer(s).replace(" ", "")
+
+
+def employer_key(raw: str, overrides) -> tuple[str, str | None]:
+    """The key that groups one company's name variants: an override's canonical name, else the normalized name."""
+    norm = hc.normalize_employer(raw)
+    hit = next((canon for pat, canon, _ in overrides if pat.search(norm)), None)
+    return ("OVR:" + hit if hit else "NORM:" + norm), hit
+
+
 def resolve_employers(con):
     overrides = load_overrides()
     names = con.execute("""
         SELECT employer_name_raw, count(*) AS n, any_value(naics_code) AS naics,
                avg(CASE WHEN h1b_dependent = 'Y' THEN 1.0 ELSE 0 END) AS dep_share
-        FROM stage WHERE employer_name_raw IS NOT NULL GROUP BY 1
+        FROM stage WHERE employer_name_raw IS NOT NULL GROUP BY 1 ORDER BY 1
     """).fetchall()
 
     # Group key: an override's canonical name, else the normalized name.
@@ -287,7 +309,7 @@ def resolve_employers(con):
         g["dep"] += dep * n
 
     employers, alias_rows = [], []
-    for i, (key, g) in enumerate(sorted(groups.items(), key=lambda kv: -kv[1]["n"]), start=1):
+    for i, (key, g) in enumerate(sorted(groups.items(), key=lambda kv: (-kv[1]["n"], kv[0])), start=1):
         canon = g["canon"] or titlecase_company(g["names"].most_common(1)[0][0])
         naics = g["naics"].most_common(1)[0][0] if g["naics"] else None
         dep_share = g["dep"] / g["n"]
@@ -295,6 +317,9 @@ def resolve_employers(con):
         employers.append((i, canon, etype, naics, g["n"], len(g["names"]), round(dep_share, 3),
                           [a for a, _ in g["names"].most_common(25)]))
         alias_rows += [(raw, i) for raw in g["names"]]
+        EMPLOYER_KEYS[key] = i
+        for raw in g["names"]:  # biggest employer first, so it wins a shared loose key
+            LOOSE_KEYS.setdefault(loose_key(raw), i)
 
     con.execute("""CREATE OR REPLACE TABLE employers (employer_id INT, employer VARCHAR, employer_type VARCHAR,
                naics_code VARCHAR, filings INT, alias_count INT, h1b_dependent_share DOUBLE, aliases VARCHAR[])""")
@@ -496,6 +521,87 @@ def assemble(con):
     log(f"lca: {n:,} rows")
 
 
+# --- 7. USCIS petitions ---
+
+# Our column prefix -> the hub's column prefix. Each has an "Approval" and a "Denial" column.
+USCIS_KINDS = {
+    "new_employment": "New Employment",
+    "continuation": "Continuation",
+    "change_same_employer": "Change with Same Employer",
+    "new_concurrent": "New Concurrent",
+    "change_employer": "Change of Employer",
+    "amended": "Amended",
+}
+PETITION_COUNTS = [f"{k}_{s}" for k in USCIS_KINDS for s in ("approved", "denied")]
+
+
+def read_uscis(path: Path):
+    """Yield one dict per row of a hub export. Tableau writes UTF-16, tab-separated; a re-saved CSV also works."""
+    raw = path.read_bytes()
+    text = raw.decode("utf-16" if raw[:2] in (b"\xff\xfe", b"\xfe\xff") else "utf-8-sig")
+    delimiter = "\t" if "\t" in text.split("\n", 1)[0] else ","
+    reader = csv.reader(io.StringIO(text), delimiter=delimiter)
+    header = [h.strip() for h in next(reader)]
+    for row in reader:
+        yield dict(zip(header, row))
+
+
+def load_petitions(con):
+    """USCIS first decisions on H-1B petitions, one row per employer and fiscal year, on our employer_id."""
+    con.execute(f"""CREATE OR REPLACE TABLE petitions (fiscal_year INT, employer_id INT, employer VARCHAR,
+               in_lca BOOLEAN, industry VARCHAR, name_variants INT,
+               {", ".join(c + " BIGINT" for c in PETITION_COUNTS)}, approved BIGINT, denied BIGINT)""")
+    files = sorted((RAW / "uscis").glob("*.csv"))
+    if not files:
+        log("No raw/uscis/*.csv: petitions table left empty.")
+        return
+    overrides = load_overrides()
+    canon_by_id = dict(con.execute("SELECT employer_id, employer FROM employers").fetchall())
+    num = lambda v: int((v or "0").replace(",", "") or 0)  # noqa: E731
+    groups: dict[tuple[int, str], dict] = {}
+    raw_rows = 0
+    for f in files:
+        for d in read_uscis(f):
+            name = (d.get("Employer (Petitioner) Name") or "").strip()
+            fy = d.get("Fiscal Year", "").strip()
+            if not fy.isdigit():
+                continue
+            raw_rows += 1
+            key, canon = employer_key(name, overrides) if name else ("NONE", None)
+            eid = EMPLOYER_KEYS.get(key) or (LOOSE_KEYS.get(loose_key(name)) if name else None)
+            if eid:
+                key = f"ID:{eid}"  # every spelling that reaches one employer lands in one row
+            g = groups.setdefault((int(fy), key), {"names": Counter(), "industry": Counter(), "canon": canon,
+                                                   "eid": eid, "counts": dict.fromkeys(PETITION_COUNTS, 0)})
+            total = 0
+            for ours, theirs in USCIS_KINDS.items():
+                a, den = num(d.get(f"{theirs} Approval")), num(d.get(f"{theirs} Denial"))
+                g["counts"][f"{ours}_approved"] += a
+                g["counts"][f"{ours}_denied"] += den
+                total += a + den
+            g["names"][name] += max(total, 1)
+            if d.get("Industry (NAICS) Code", "").strip():
+                g["industry"][d["Industry (NAICS) Code"].strip()] += max(total, 1)
+
+    rows = []
+    for (fy, key), g in groups.items():
+        eid = g["eid"]
+        if key == "NONE":
+            employer = "(name not reported)"
+        else:
+            employer = canon_by_id.get(eid) or g["canon"] or titlecase_company(g["names"].most_common(1)[0][0])
+        c = g["counts"]
+        approved = sum(v for k, v in c.items() if k.endswith("_approved"))
+        denied = sum(v for k, v in c.items() if k.endswith("_denied"))
+        industry = g["industry"].most_common(1)[0][0] if g["industry"] else None
+        rows.append((fy, eid, employer, eid is not None, industry, len(g["names"]),
+                     *[c[k] for k in PETITION_COUNTS], approved, denied))
+    con.executemany(f"INSERT INTO petitions VALUES ({', '.join('?' * len(rows[0]))})", rows)
+    matched, total = con.execute("SELECT sum(approved) FILTER (in_lca), sum(approved) FROM petitions").fetchone()
+    log(f"petitions: {raw_rows:,} USCIS rows -> {len(rows):,} employer-years; "
+        f"{100 * matched / max(total, 1):.1f}% of approvals matched to an LCA employer")
+
+
 def write_baseline(con, path: Path):
     """The plain agent's database: H-1B rows with DOL's own column names and no cleaning."""
     path.unlink(missing_ok=True)
@@ -510,7 +616,7 @@ def write_db(con, path: Path, sample: bool):
     con.execute(f"ATTACH '{path}' AS out")
     where = f"WHERE hash(case_number) % 1000 < {int(SAMPLE_RATE * 1000)}" if sample else ""
     con.execute(f"CREATE TABLE out.lca AS SELECT * FROM lca {where} ORDER BY fiscal_year, employer_id")
-    for t in ["employers", "wage_levels", "areas", "role_titles_summary"]:
+    for t in ["employers", "wage_levels", "areas", "role_titles_summary", "petitions"]:
         con.execute(f"CREATE TABLE out.{t} AS SELECT * FROM {t}")
     con.execute("DETACH out")
     log(f"wrote {path.name} ({path.stat().st_size / 1e6:.1f} MB)")
@@ -600,10 +706,35 @@ DESCRIPTIONS = {
         "title_norm": "Normalized title.", "role_family": "Role family.", "seniority": "Parsed seniority.",
         "filings": "Filings with this title.",
     },
+    "petitions": {
+        "_table": "USCIS H-1B Employer Data Hub, FY2024 to FY2026: the FIRST DECISION U.S. Citizenship and Immigration Services made on H-1B petitions (Form I-129), one row per employer and fiscal year. This is the step AFTER the LCA. Employer-level only: no role, salary, wage level or worksite. An approved petition is not yet a visa. FY2026 covers the full fiscal year (to Sep 30, 2026), while lca stops at FY2026 Q3.",
+        "fiscal_year": "Fiscal year USCIS decided the petitions (Oct 1 - Sep 30). A petition is usually decided months after its LCA, often in the next fiscal year.",
+        "employer_id": "Same key as lca.employer_id and employers.employer_id; NULL when the petitioner has no LCA in this database. Get it from find_employer.",
+        "employer": "Canonical employer name (the lca name when matched, else the USCIS name).",
+        "in_lca": "True when the petitioner was matched to an employer in lca.",
+        "industry": "Employer's NAICS sector as USCIS reports it, e.g. '54 - Professional, Scientific, and Technical Services'.",
+        "name_variants": "How many USCIS petitioner spellings were merged into this row.",
+        "new_employment_approved": "Approved petitions for NEW employment: first-time H-1B workers, mostly lottery (cap) winners plus cap-exempt hires. The closest count to 'new H-1B hires approved'.",
+        "new_employment_denied": "Denied new-employment petitions.",
+        "continuation_approved": "Approved extensions for workers continuing with the same employer.",
+        "continuation_denied": "Denied extensions.",
+        "change_same_employer_approved": "Approved petitions changing the job terms with the same employer.",
+        "change_same_employer_denied": "Denied same-employer change petitions.",
+        "new_concurrent_approved": "Approved petitions for a second, concurrent H-1B job.",
+        "new_concurrent_denied": "Denied concurrent petitions.",
+        "change_employer_approved": "Approved transfers: workers already in H-1B status moving to this employer.",
+        "change_employer_denied": "Denied transfers.",
+        "amended_approved": "Approved amended petitions.",
+        "amended_denied": "Denied amended petitions.",
+        "approved": "All approved petitions that year (sum of the six *_approved columns).",
+        "denied": "All denied petitions that year (sum of the six *_denied columns).",
+    },
 }
 
 GLOSSARY = {
     "LCA": "Labor Condition Application: the employer's wage attestation to the Department of Labor, filed before an H-1B petition. Certified LCA != approved petition != visa. Many LCAs are never used.",
+    "petition": "Form I-129, filed with USCIS after the LCA is certified. The `petitions` table has USCIS's first decisions (approved or denied) per employer and fiscal year. Pipeline: LCA (DOL) -> lottery registration (new cap-subject hires only) -> petition (USCIS) -> visa (State Department). Approval rate = approved / (approved + denied).",
+    "LCAs vs petitions": "Employers file far more LCAs than petitions: one worker can need several LCAs (new worksite, amendment, extension), and many LCAs are never used. Compare the two as a ratio per employer, and say that fiscal years do not line up exactly.",
     "wage level": "OFLC sets four prevailing-wage levels per occupation and area: Level I (entry) to Level IV (fully competent).",
     "wage-weighted lottery": "Since the DHS rule effective Feb 27, 2026 (FY2027 cap season onward), each H-1B registration is entered once per wage level of the offered wage: Level I = 1 entry, II = 2, III = 3, IV = 4. Higher-paid offers have proportionally better odds.",
     "lottery entries": "offer_lottery_entries: 1-4, from the level the offered wage reaches in the OFLC table. 0 means the wage is below Level I.",
@@ -614,10 +745,11 @@ GLOSSARY = {
 }
 
 LIMITATIONS = [
-    "Who actually won the lottery, got a petition approved, or got a visa: LCAs stop before the petition stage.",
+    "Who won the lottery or was issued a visa. (Approved and denied PETITIONS per employer and fiscal year ARE available, in `petitions`.)",
+    "Petition approvals or denials for a specific role, salary, wage level or city: `petitions` is employer-level only.",
     "Salaries actually paid: LCAs show the wage offered on the filing.",
     "Anything about an individual person, interview odds, offer rates or green-card (PERM) sponsorship.",
-    "Anything after FY2026 Q3 (June 30, 2026) or before FY2024.",
+    "LCA filings after FY2026 Q3 (June 30, 2026), petition decisions after FY2026 (Sep 30, 2026), or anything before FY2024.",
     "Whether the $100,000 H-1B fee applies to a specific case, or immigration/legal advice.",
     "Exact selection probability: entries are known, but the total pool of registrations by level is not in this data.",
 ]
@@ -626,6 +758,7 @@ JOIN_HINTS = [
     "lca.employer_id = employers.employer_id",
     "lca.area_code = wage_levels.area_code AND lca.soc_code = wage_levels.soc_code",
     "lca.area_code = areas.area_code",
+    "petitions.employer_id = lca.employer_id (aggregate lca per employer_id and fiscal_year BEFORE joining: petitions has one row per employer-year)",
 ]
 
 EXAMPLE_QUERIES = [
@@ -637,6 +770,10 @@ EXAMPLE_QUERIES = [
      "sql": "SELECT employer, sum(total_worker_positions) AS positions, count(*) AS filings FROM lca WHERE area_code = '12060' AND role_family = 'Software Engineer' AND case_status = 'CERTIFIED' GROUP BY 1 ORDER BY positions DESC LIMIT 10"},
     {"question": "Average lottery entries for offers by employer type",
      "sql": "SELECT employer_type, round(avg(offer_lottery_entries), 2) AS avg_entries, count(*) AS filings FROM lca WHERE case_status = 'CERTIFIED' AND offer_lottery_entries > 0 GROUP BY 1 ORDER BY avg_entries DESC"},
+    {"question": "One employer's petition approvals, denials and approval rate by fiscal year",
+     "sql": "SELECT fiscal_year, new_employment_approved, new_employment_denied, approved, denied, round(100.0 * approved / nullif(approved + denied, 0), 1) AS approval_pct FROM petitions WHERE employer_id = 42 ORDER BY 1"},
+    {"question": "Certified new-employment LCA positions per approved new-employment petition, for one employer and year",
+     "sql": "WITH f AS (SELECT employer_id, sum(new_employment) AS lca_new_positions FROM lca WHERE employer_id = 42 AND fiscal_year = 2025 AND case_status = 'CERTIFIED' GROUP BY 1) SELECT p.employer, f.lca_new_positions, p.new_employment_approved, round(f.lca_new_positions / nullif(p.new_employment_approved, 0), 1) AS lca_positions_per_approval FROM petitions p JOIN f USING (employer_id) WHERE p.fiscal_year = 2025"},
 ]
 
 
@@ -648,7 +785,7 @@ def write_mappings(con, synthetic: bool, path: Path):
             col = {"name": name, "type": dtype, "description": cols.get(name, "")}
             if dtype in ("VARCHAR", "INTEGER") and name not in {"case_number", "job_title", "title_norm", "employer",
                                                                 "employer_name_raw", "worksite_city_raw", "worksite_zip",
-                                                                "soc_title", "metro_name", "area_code", "naics_code"}:
+                                                                "soc_title", "metro_name", "area_code", "naics_code", "name_variants"}:
                 distinct = con.execute(f"SELECT count(DISTINCT {name}) FROM {table}").fetchone()[0]
                 if distinct <= 60:
                     col["enum_values"] = [v for (v,) in con.execute(
@@ -659,6 +796,8 @@ def write_mappings(con, synthetic: bool, path: Path):
     stats = dict(zip(["rows", "employers", "min_fy", "max_fy"], con.execute(
         "SELECT count(*), count(DISTINCT employer_id), min(fiscal_year), max(fiscal_year) FROM lca").fetchone()))
     max_q = con.execute(f"SELECT max(quarter) FROM lca WHERE fiscal_year = {stats['max_fy']}").fetchone()[0]
+    stats["petition_rows"], stats["petition_approvals"] = con.execute(
+        "SELECT count(*), coalesce(sum(approved), 0) FROM petitions").fetchone()
     mappings = {
         "synthetic": synthetic,
         "as_of": f"FY{stats['max_fy']} Q{max_q}",
@@ -700,6 +839,17 @@ def write_report(con, stats, synthetic):
         f"Employers after resolution: {stats['employers']:,}.", "",
         "Role families assigned by: " + ", ".join(f"{h} {n:,}" for h, n in by_how), "",
     ]
+    pet = con.execute("""SELECT fiscal_year, count(*), sum(approved), sum(denied), sum(new_employment_approved),
+                            100.0 * sum(approved) FILTER (in_lca) / nullif(sum(approved), 0),
+                            100.0 * count(*) FILTER (in_lca) / count(*)
+                     FROM petitions GROUP BY 1 ORDER BY 1""").fetchall()
+    if pet:
+        lines += [
+            "## USCIS petitions (H-1B Employer Data Hub)", "",
+            "| Fiscal year | Employers | Approved | Denied | New-employment approved | Approvals matched to an LCA employer | Employers matched |",
+            "| --- | --- | --- | --- | --- | --- | --- |",
+            *[f"| FY{fy} | {n:,} | {a:,} | {d:,} | {new:,} | {m:.1f}% | {em:.1f}% |" for fy, n, a, d, new, m, em in pet], "",
+        ]
     DOCS.mkdir(exist_ok=True)
     (DOCS / "build_report.md").write_text("\n".join(lines))
     print("\n".join(lines))
@@ -721,6 +871,7 @@ def main():
     map_locations(con)
     build_wage_levels(con)
     assemble(con)
+    load_petitions(con)
     write_db(con, DATA / "h1b.duckdb", sample=False)
     write_db(con, DATA / "h1b_sample.duckdb", sample=True)
     write_baseline(con, DATA / "baseline.duckdb")

@@ -3,9 +3,11 @@
   "as_of": "FY2026 Q3",
   "stats": {
     "rows": 1532089,
-    "employers": 107638,
+    "employers": 107631,
     "min_fy": 2024,
-    "max_fy": 2026
+    "max_fy": 2026,
+    "petition_rows": 158870,
+    "petition_approvals": 1200922
   },
   "tables": {
     "lca": {
@@ -808,10 +810,144 @@
           "description": "Filings with this title."
         }
       ]
+    },
+    "petitions": {
+      "description": "USCIS H-1B Employer Data Hub, FY2024 to FY2026: the FIRST DECISION U.S. Citizenship and Immigration Services made on H-1B petitions (Form I-129), one row per employer and fiscal year. This is the step AFTER the LCA. Employer-level only: no role, salary, wage level or worksite. An approved petition is not yet a visa. FY2026 covers the full fiscal year (to Sep 30, 2026), while lca stops at FY2026 Q3.",
+      "columns": [
+        {
+          "name": "fiscal_year",
+          "type": "INTEGER",
+          "description": "Fiscal year USCIS decided the petitions (Oct 1 - Sep 30). A petition is usually decided months after its LCA, often in the next fiscal year.",
+          "enum_values": [
+            2024,
+            2025,
+            2026
+          ]
+        },
+        {
+          "name": "employer_id",
+          "type": "INTEGER",
+          "description": "Same key as lca.employer_id and employers.employer_id; NULL when the petitioner has no LCA in this database. Get it from find_employer."
+        },
+        {
+          "name": "employer",
+          "type": "VARCHAR",
+          "description": "Canonical employer name (the lca name when matched, else the USCIS name)."
+        },
+        {
+          "name": "in_lca",
+          "type": "BOOLEAN",
+          "description": "True when the petitioner was matched to an employer in lca."
+        },
+        {
+          "name": "industry",
+          "type": "VARCHAR",
+          "description": "Employer's NAICS sector as USCIS reports it, e.g. '54 - Professional, Scientific, and Technical Services'.",
+          "enum_values": [
+            "11 - Agriculture, Forestry, Fishing and Hunting",
+            "21 - Mining, Quarrying, and Oil and Gas Extraction",
+            "22 - Utilities",
+            "23 - Construction",
+            "31-33 - Manufacturing",
+            "42 - Wholesale Trade",
+            "44-45 - Retail Trade",
+            "48-49 - Transportation and Warehousing",
+            "51 - Information",
+            "52 - Finance and Insurance",
+            "53 - Real Estate and Rental and Leasing",
+            "54 - Professional, Scientific, and Technical Services",
+            "55 - Management of Companies and Enterprises",
+            "56 - Administrative and Support and Waste Management and Remediation Services",
+            "61 - Educational Services",
+            "62 - Health Care and Social Assistance",
+            "71 - Arts, Entertainment, and Recreation",
+            "72 - Accommodation and Food Services",
+            "81 - Other Services (except Public Administration)",
+            "92 - Public Administration"
+          ]
+        },
+        {
+          "name": "name_variants",
+          "type": "INTEGER",
+          "description": "How many USCIS petitioner spellings were merged into this row."
+        },
+        {
+          "name": "new_employment_approved",
+          "type": "BIGINT",
+          "description": "Approved petitions for NEW employment: first-time H-1B workers, mostly lottery (cap) winners plus cap-exempt hires. The closest count to 'new H-1B hires approved'."
+        },
+        {
+          "name": "new_employment_denied",
+          "type": "BIGINT",
+          "description": "Denied new-employment petitions."
+        },
+        {
+          "name": "continuation_approved",
+          "type": "BIGINT",
+          "description": "Approved extensions for workers continuing with the same employer."
+        },
+        {
+          "name": "continuation_denied",
+          "type": "BIGINT",
+          "description": "Denied extensions."
+        },
+        {
+          "name": "change_same_employer_approved",
+          "type": "BIGINT",
+          "description": "Approved petitions changing the job terms with the same employer."
+        },
+        {
+          "name": "change_same_employer_denied",
+          "type": "BIGINT",
+          "description": "Denied same-employer change petitions."
+        },
+        {
+          "name": "new_concurrent_approved",
+          "type": "BIGINT",
+          "description": "Approved petitions for a second, concurrent H-1B job."
+        },
+        {
+          "name": "new_concurrent_denied",
+          "type": "BIGINT",
+          "description": "Denied concurrent petitions."
+        },
+        {
+          "name": "change_employer_approved",
+          "type": "BIGINT",
+          "description": "Approved transfers: workers already in H-1B status moving to this employer."
+        },
+        {
+          "name": "change_employer_denied",
+          "type": "BIGINT",
+          "description": "Denied transfers."
+        },
+        {
+          "name": "amended_approved",
+          "type": "BIGINT",
+          "description": "Approved amended petitions."
+        },
+        {
+          "name": "amended_denied",
+          "type": "BIGINT",
+          "description": "Denied amended petitions."
+        },
+        {
+          "name": "approved",
+          "type": "BIGINT",
+          "description": "All approved petitions that year (sum of the six *_approved columns)."
+        },
+        {
+          "name": "denied",
+          "type": "BIGINT",
+          "description": "All denied petitions that year (sum of the six *_denied columns)."
+        }
+      ]
     }
   },
   "glossary": {
     "LCA": "Labor Condition Application: the employer's wage attestation to the Department of Labor, filed before an H-1B petition. Certified LCA != approved petition != visa. Many LCAs are never used.",
+    "petition": "Form I-129, filed with USCIS after the LCA is certified. The `petitions` table has USCIS's first decisions (approved or denied) per employer and fiscal year. Pipeline: LCA (DOL) -> lottery registration (new cap-subject hires only) -> petition (USCIS) -> visa (State Department). Approval rate = approved / (approved + denied).",
+    "LCAs vs petitions": "Employers file far more LCAs than petitions: one worker can need several LCAs (new worksite, amendment, extension), and many LCAs are never used. Compare the two as a ratio per employer, and say that fiscal years do not line up exactly.",
     "wage level": "OFLC sets four prevailing-wage levels per occupation and area: Level I (entry) to Level IV (fully competent).",
     "wage-weighted lottery": "Since the DHS rule effective Feb 27, 2026 (FY2027 cap season onward), each H-1B registration is entered once per wage level of the offered wage: Level I = 1 entry, II = 2, III = 3, IV = 4. Higher-paid offers have proportionally better odds.",
     "lottery entries": "offer_lottery_entries: 1-4, from the level the offered wage reaches in the OFLC table. 0 means the wage is below Level I.",
@@ -823,13 +959,15 @@
   "join_hints": [
     "lca.employer_id = employers.employer_id",
     "lca.area_code = wage_levels.area_code AND lca.soc_code = wage_levels.soc_code",
-    "lca.area_code = areas.area_code"
+    "lca.area_code = areas.area_code",
+    "petitions.employer_id = lca.employer_id (aggregate lca per employer_id and fiscal_year BEFORE joining: petitions has one row per employer-year)"
   ],
   "limitations": [
-    "Who actually won the lottery, got a petition approved, or got a visa: LCAs stop before the petition stage.",
+    "Who won the lottery or was issued a visa. (Approved and denied PETITIONS per employer and fiscal year ARE available, in `petitions`.)",
+    "Petition approvals or denials for a specific role, salary, wage level or city: `petitions` is employer-level only.",
     "Salaries actually paid: LCAs show the wage offered on the filing.",
     "Anything about an individual person, interview odds, offer rates or green-card (PERM) sponsorship.",
-    "Anything after FY2026 Q3 (June 30, 2026) or before FY2024.",
+    "LCA filings after FY2026 Q3 (June 30, 2026), petition decisions after FY2026 (Sep 30, 2026), or anything before FY2024.",
     "Whether the $100,000 H-1B fee applies to a specific case, or immigration/legal advice.",
     "Exact selection probability: entries are known, but the total pool of registrations by level is not in this data."
   ],
@@ -849,6 +987,14 @@
     {
       "question": "Average lottery entries for offers by employer type",
       "sql": "SELECT employer_type, round(avg(offer_lottery_entries), 2) AS avg_entries, count(*) AS filings FROM lca WHERE case_status = 'CERTIFIED' AND offer_lottery_entries > 0 GROUP BY 1 ORDER BY avg_entries DESC"
+    },
+    {
+      "question": "One employer's petition approvals, denials and approval rate by fiscal year",
+      "sql": "SELECT fiscal_year, new_employment_approved, new_employment_denied, approved, denied, round(100.0 * approved / nullif(approved + denied, 0), 1) AS approval_pct FROM petitions WHERE employer_id = 42 ORDER BY 1"
+    },
+    {
+      "question": "Certified new-employment LCA positions per approved new-employment petition, for one employer and year",
+      "sql": "WITH f AS (SELECT employer_id, sum(new_employment) AS lca_new_positions FROM lca WHERE employer_id = 42 AND fiscal_year = 2025 AND case_status = 'CERTIFIED' GROUP BY 1) SELECT p.employer, f.lca_new_positions, p.new_employment_approved, round(f.lca_new_positions / nullif(p.new_employment_approved, 0), 1) AS lca_positions_per_approval FROM petitions p JOIN f USING (employer_id) WHERE p.fiscal_year = 2025"
     }
   ]
 }

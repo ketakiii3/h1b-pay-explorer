@@ -90,7 +90,7 @@ gcloud services enable aiplatform.googleapis.com run.googleapis.com cloudbuild.g
 
 # Bucket in the same region as Cloud Run, so the startup download is fast
 gcloud storage buckets create gs://$BUCKET --location=$REGION --uniform-bucket-level-access
-gcloud storage cp data/h1b.duckdb gs://$BUCKET/v1/h1b.duckdb
+gcloud storage cp data/h1b.duckdb gs://$BUCKET/v1/h1b.duckdb   # use a new prefix (v2/, v3/...) for each rebuilt database and update GCS_OBJECT to match
 
 # The identity the app runs as: it may call Gemini and read the bucket, nothing else
 gcloud iam service-accounts create h1b-runner --display-name="H-1B Pay Explorer runtime"

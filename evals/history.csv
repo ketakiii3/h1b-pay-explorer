@@ -3,3 +3,4 @@ timestamp,target,database,passed,total,p50_seconds,label
 20261109-160642,local,h1b.duckdb,1,1,26.3,replaced cognizant check
 20261109-165323,local,h1b.duckdb,3,3,22.0,AI-era role families
 20261109-165511,local,h1b.duckdb,1,1,17.2,Forward Deployed family incl. PMs
+20261110-152307,local,h1b.duckdb,33,33,15.2,USCIS petitions added

@@ -1,14 +1,34 @@
 # H-1B Pay Explorer: handoff
 
-Status as of **Nov 9, 2026**. Team: Ketaki Dabade (kvd2112) and Anamika Mishra (akm2259). Path: **Text2SQL**.
+Status as of **Nov 10, 2026**. Team: Ketaki Dabade (kvd2112) and Anamika Mishra (akm2259). Path: **Text2SQL**.
 
-**In one line:** the project is built, tested on the real data (26/26), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Continuous deploy from GitHub is on: every push to `main` redeploys automatically. Left: a few README items only we can write, collaborators, and submitting.
+**In one line:** the project is built, tested on the real data (33/33), pushed to GitHub and **live at https://h1b-pay-explorer-314308831335.us-east1.run.app**. Continuous deploy from GitHub is on: every push to `main` redeploys automatically. Left: ship the Nov 10 update (below), collaborators, and submitting.
+
+## Nov 10 update: USCIS petitions added (not deployed yet)
+
+A third data source, from a different agency: the **USCIS H-1B Employer Data Hub** (FY2024 to FY2026), exported from the hub's Crosstab View into `raw/uscis/`. `build.py` now writes a `petitions` table (approvals and denials per employer and fiscal year) on the same `employer_id` as `lca`; 97.2% of approvals match an `lca` employer. The agent can now answer "how many H-1Bs did Meta get approved?" (6,294 approved petitions in FY2025, 1,554 of them new employment) and compare filings with approvals.
+
+Changed locally, **not committed or pushed**: `build.py`, `app.py` (prompt), `index.html` (two Approvals chips, new Limits chip, USCIS in sources), `employer_overrides.csv` (EY spelling, Fidelity), `evals/checks.jsonl` (33 checks: Meta approvals is now a scored answer, plus 3 more petition checks and a new refusal), `tests/test_app.py` (49 tests, all pass), `data/mappings.json`, `data/h1b_sample.duckdb`, `docs/build_report.md`, `README.md`. `data/h1b.duckdb` was rebuilt locally (124 MB).
+
+To ship it, in this order:
+
+| # | Step | Command |
+| --- | --- | --- |
+| 1 ✅ 33/33 | Score the new database locally | `uv run python evals/check.py --label "USCIS petitions added"` |
+| 2 ✅ ours 3/3 | Record sample query 3 (no tools, plain agent, ours) | `uv run compare.py "How many H-1B visas did Meta get approved in 2025?" --gold "SELECT sum(approved) FROM petitions WHERE employer = 'Meta' AND fiscal_year = 2025" --runs 3` |
+| 3 ✅ | Fill the sample query 3 cell in the README from that trace, and add the eval row | done |
+| 4 | Upload the new database | `gcloud storage cp data/h1b.duckdb gs://ieor-project-1-kvd2112-h1b-data/v2/h1b.duckdb` |
+| 5 | Point Cloud Run at it | `gcloud run services update h1b-pay-explorer --region us-east1 --project ieor-project-1-kvd2112 --update-env-vars GCS_OBJECT=v2/h1b.duckdb` |
+| 6 | Commit and push (redeploys) | `git add -A && git commit -m "Add USCIS petition approvals as a third data source" && git push` |
+| 7 | Score the live app and add the row to the README | `uv run python evals/check.py --url https://h1b-pay-explorer-314308831335.us-east1.run.app --label deployed` |
+
+Do steps 4 to 6 close together: the new code expects the `petitions` table, and the old database doesn't have it.
 
 | Thing | Where |
 | --- | --- |
 | Code | https://github.com/ketakiii3/h1b-pay-explorer (private, branch `main`) |
 | GCP project | `ieor-project-1-kvd2112` (billing on, Vertex AI on) |
-| Database in GCS | `gs://ieor-project-1-kvd2112-h1b-data/v1/h1b.duckdb` (114 MB, region `us-east1`) |
+| Database in GCS | `gs://ieor-project-1-kvd2112-h1b-data/v1/h1b.duckdb` (114 MB, region `us-east1`); `v2/h1b.duckdb` after the Nov 10 update ships |
 | **Live app** | **https://h1b-pay-explorer-314308831335.us-east1.run.app** (Cloud Run, `us-east1`, public) |
 | Cloud Run console | https://console.cloud.google.com/run/detail/us-east1/h1b-pay-explorer/metrics?project=ieor-project-1-kvd2112 |
 | Deploy guide | [DEPLOY.md](DEPLOY.md) |
@@ -31,18 +51,18 @@ Status as of **Nov 9, 2026**. Team: Ketaki Dabade (kvd2112) and Anamika Mishra (
 
 | Section | Item | Status |
 | --- | --- | --- |
-| Basics (1) | README.md | ✅ written; 3 TODOs left (see below) |
+| Basics (1) | README.md | ✅ written; no placeholders left |
 | | Valid `submission.json` | ✅ has the live URL, both UNIs, `"path": "text2sql"` |
 | Functionality (9) | Deployed and reachable | ✅ live and tested (chat, chart, offer calculator), continuous deploy from GitHub `main` via a Cloud Build trigger |
 | | Clear purpose | ✅ the first screen says what it does, who it's for and how to use it |
-| | Answers correctly | ✅ self-check **26/26** locally on the full data, about 12 s per answer |
+| | Answers correctly | ✅ self-check **33/33** locally on the full data, about 15 s per answer |
 | Data (4) | Unique dataset or problem | ✅ the H-1B LCA plus wage-weighted lottery angle (confirm no one else on the sign-up sheet has it) |
 | | Data the model doesn't know | ✅ the no-tools model guesses or refuses on all 3 sample queries (in the README) |
 | | Admits what the data can't answer | ✅ 5/5 "can't answer" checks refused, with no SQL run |
 | Path (7) | Text2SQL items above | ✅ all four |
 | Creativity (4) | Frontend changed from the starter | ✅ fully new design, plus an instant offer calculator |
 | | Agent does something interesting | ✅ salary → wage level → lottery entries; shows the job code changes the entries (the $175k San Jose example) |
-| Team rule | One data source per member (2) | ✅ DOL LCA disclosure data and OFLC prevailing wage tables |
+| Team rule | One data source per member (2) | ✅ DOL LCA disclosure data, OFLC prevailing wage tables, and (Nov 10) the USCIS H-1B Employer Data Hub |
 | Submit | Grader collaborators added | ❌ not yet |
 | | Repo URL on CourseWorks | ❌ not yet (one person submits) |
 
@@ -55,13 +75,11 @@ Status as of **Nov 9, 2026**. Team: Ketaki Dabade (kvd2112) and Anamika Mishra (
 | 3 | Add collaborators `codeboi07`, `bhuvighosh3`, `nniishhh`, `x`, and Anamika, on GitHub → Settings → Collaborators | Ketaki | 2 min |
 | 4 | ~~Write README "Why we built this"~~ ✅ done | – | – |
 | 5 | ~~Role spot-check~~ ✅ done: 93/100, misses fixed (in README) | – | – |
-| 6 | Add a screenshot or GIF of a chart answer to the top of the README | either | 5 min |
 | 7 | Run the self-check against the live URL: `uv run python evals/check.py --url <URL> --label deployed`, and add the row to the README's evals table | Ketaki | 10 min |
 | 8 | Billing → Budgets & alerts: a budget for `ieor-project-1-kvd2112` | Ketaki | 2 min |
 | 9 | Open the live URL in a private window and on a phone, and click every example question | both | 5 min |
 | 10 | Submit the repo URL on CourseWorks | one person | 1 min |
 
-`grep -n TODO README.md` shows the 3 README spots (tasks 4, 5, 6).
 
 ## How to see it on the web (GCP)
 

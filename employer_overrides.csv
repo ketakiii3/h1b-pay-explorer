@@ -38,7 +38,7 @@ pattern,canonical_name,employer_type
 ^D E SHAW\b|^DE SHAW\b,D. E. Shaw,finance
 ^WALMART\b|^WAL MART\b,Walmart,other
 ^DELOITTE\b,Deloitte,consulting
-^ERNST AND YOUNG\b|^EY\b,EY,consulting
+^ERNST AND YOUNG\b|^ERNST YOUNG\b|^EY\b,EY,consulting
 ^PRICEWATERHOUSECOOPERS\b|^PWC\b,PwC,consulting
 ^KPMG\b,KPMG,consulting
 ^MCKINSEY\b,McKinsey,consulting
@@ -65,3 +65,4 @@ pattern,canonical_name,employer_type
 ^PRESIDENT AND FELLOWS OF HARVARD\b|^HARVARD\b,Harvard University,university
 ^STANFORD\b|^THE BOARD OF TRUSTEES OF THE LELAND STANFORD\b|^BOARD OF TRUSTEES OF THE LELAND STANFORD\b|^LELAND STANFORD\b,Stanford University,university
 ^CARNEGIE MELLON\b,Carnegie Mellon University,university
+^FIDELITY TECHNOLOGY GROUP\b|^FIDELITY INVESTMENTS\b|^FMR\b,Fidelity Investments,finance

@@ -30,6 +30,7 @@ def test_guardrail_rejects(q):
     "SELECT median(wage_annual_from) FROM lca WHERE employer_id = 1 AND wage_flag = 'ok'",
     "WITH x AS (SELECT * FROM lca WHERE role_family = 'Quant') SELECT count(*) FROM x",
     "SELECT employer, count(*) FROM lca WHERE area_code = '35620' GROUP BY 1;",
+    "SELECT fiscal_year, approved, denied FROM petitions WHERE employer_id = 7 ORDER BY 1",
 ])
 def test_guardrail_allows(q):
     assert app.check_sql(q) is None
@@ -77,6 +78,36 @@ def test_offer_calculator():
     r = app.compute_wage_level(150_000, "data scientist", "NYC")
     assert r["soc_code"] == "15-2051" and 1 <= r["wage_level"] <= 4
     assert r["lottery_entries"] == r["wage_level"]
+
+
+def test_petitions_one_row_per_employer_year():
+    dupes = app.store.q("""SELECT count(*) FROM (SELECT fiscal_year, employer_id FROM petitions
+                           WHERE employer_id IS NOT NULL GROUP BY 1, 2 HAVING count(*) > 1)""")[0][0]
+    assert dupes == 0
+
+
+def test_petitions_share_employer_ids_with_lca():
+    eid = app.match_employers("Meta")[0]["employer_id"]
+    rows = app.store.q("SELECT fiscal_year, approved, new_employment_approved FROM petitions WHERE employer_id = ? ORDER BY 1", [eid])
+    assert [r[0] for r in rows] == [2024, 2025, 2026]
+    assert all(approved >= new > 0 for _, approved, new in rows)
+
+
+def test_petition_totals_add_up():
+    bad = app.store.q("""SELECT count(*) FROM petitions WHERE approved <> new_employment_approved + continuation_approved
+                         + change_same_employer_approved + new_concurrent_approved + change_employer_approved + amended_approved""")[0][0]
+    assert bad == 0
+
+
+@pytest.mark.parametrize("uscis,dol", [
+    ("LOWES COMPANIES INC", "Lowe's Companies, Inc."),
+    ("NORDSTROM INC D B A NORDSTROM", "Nordstrom, Inc."),
+    ("MAPLEBEAR INC D B A INSTACART", "Maplebear Inc. d/b/a Instacart"),
+])
+def test_loose_key_bridges_uscis_and_dol_spellings(uscis, dol):
+    import build
+
+    assert build.loose_key(uscis) == build.loose_key(dol)
 
 
 def test_db_is_read_only():

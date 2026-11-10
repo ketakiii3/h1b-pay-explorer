@@ -256,12 +256,12 @@ footer { padding: 18px 0 40px; font-size: 12.5px; color: var(--muted); display: 
   <section id="feed" aria-live="polite"></section>
 
   <section class="how" id="how">
-    <div><h3>The data</h3>Every H-1B Labor Condition Application the Department of Labor published from FY2024 to <span id="asof2">FY2026 Q3</span>, plus the OFLC 2026-27 prevailing wage tables. An LCA is the wage filing an employer makes before a petition. It is not an approval or a visa.</div>
+    <div><h3>The data</h3>Every H-1B Labor Condition Application the Department of Labor published from FY2024 to <span id="asof2">FY2026 Q3</span>, plus the OFLC 2026-27 prevailing wage tables and USCIS's petition approvals and denials per employer for FY2024 to FY2026. An LCA is the wage filing an employer makes before a petition. It is not an approval or a visa; an approved petition is not a visa either.</div>
     <div><h3>The cleanup</h3>Built offline: wages converted to yearly amounts, an employer's many legal names merged into one, free-text job titles sorted into role families, every worksite mapped to its official wage area, and each offer's wage level and lottery entries computed.</div>
     <div><h3>The agent</h3>Gemini writes DuckDB SQL over the cleaned tables, using lookup tools for employers, roles and places. Guardrails block known mistakes, and it says plainly when the data can't answer something.</div>
   </section>
   <footer>
-    <div>Sources: <a href="https://www.dol.gov/agencies/eta/foreign-labor/performance" target="_blank" rel="noopener">DOL OFLC LCA disclosure data</a> · <a href="https://flag.dol.gov/wage-data/wage-data-downloads" target="_blank" rel="noopener">OFLC prevailing wage tables 2026-27</a></div>
+    <div>Sources: <a href="https://www.dol.gov/agencies/eta/foreign-labor/performance" target="_blank" rel="noopener">DOL OFLC LCA disclosure data</a> · <a href="https://flag.dol.gov/wage-data/wage-data-downloads" target="_blank" rel="noopener">OFLC prevailing wage tables 2026-27</a> · <a href="https://www.uscis.gov/tools/reports-and-studies/h-1b-employer-data-hub" target="_blank" rel="noopener">USCIS H-1B Employer Data Hub</a></div>
     <div>Lottery entries follow the wage-weighted selection rule (Level I = 1 … Level IV = 4). Not legal advice.</div>
   </footer>
 </div>
@@ -282,7 +282,9 @@ const CHIPS = [
   ["New grads", "Who files new grads at Level I?", "Which employers file the most software engineer new-employment LCAs at wage Level I in FY2025? Show the share of their filings at Level I."],
   ["Lottery", "Lottery entries by employer type", "For new-employment filings in FY2025, how do average lottery entries compare across employer types?"],
   ["Trend", "Did Amazon's filings drop in 2026?", "How did Amazon's certified H-1B filings change from FY2024 to FY2026 by quarter?"],
-  ["Limits", "How many H-1Bs did Meta get approved?", "How many H-1B visas did Meta get approved in 2025?", true],
+  ["Approvals", "How many H-1Bs did Meta get approved?", "How many H-1B petitions did USCIS approve for Meta in each fiscal year from FY2024 to FY2026, and how many were new employment?"],
+  ["Approvals", "Filings vs approvals: who over-files?", "For FY2025, compare certified new-employment LCA positions with approved new-employment petitions for Amazon, Google, Meta, Microsoft, Infosys, Tata Consultancy Services, Cognizant and NVIDIA. Show LCA positions per approval."],
+  ["Limits", "What are my exact lottery odds?", "What's my exact probability of winning the H-1B lottery next year with a Level II offer?", true],
 ];
 
 const STEPS = ["Reading the schema and its limits", "Matching employers, roles and places", "Writing the SQL", "Checking the numbers", "Drawing the chart"];

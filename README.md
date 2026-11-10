@@ -1,12 +1,10 @@
 # H-1B Pay Explorer
 
-Who sponsors your role, what they actually offer, and what your offer is worth in the new wage-weighted H-1B lottery, answered from every H-1B filing the Department of Labor published from FY2024 to FY2026 Q3.
+Who sponsors your role, what they actually offer, and what your offer is worth in the new wage-weighted H-1B lottery, answered from every H-1B filing the Department of Labor published from FY2024 to FY2026 Q3, plus the petition approvals and denials USCIS published for the same employers.
 
 **Live app:** https://h1b-pay-explorer-314308831335.us-east1.run.app
 
 **Team:** Ketaki Dabade (kvd2112) and Anamika Mishra (akm2259) · **Path:** Text2SQL
-
-<!-- TODO: screenshot or GIF of a chart answer -->
 
 ## Why we built this
 
@@ -30,17 +28,17 @@ Since February 27, 2026, the H-1B lottery is no longer one ticket per person. A 
 
 | # | Question | Expected answer | Source |
 | --- | --- | --- | --- |
-| 1 | What was the median offered salary for software engineers at Google in the New York City area in FY2025? | **$186,000**, across 465 certified filings with valid wages | `lca` table in `h1b.duckdb` (GCS): `employer = 'Google'`, `role_family = 'Software Engineer'`, `area_code = '35620'`, `fiscal_year = 2025`, certified, `wage_flag = 'ok'` |
+| 1 | What was the median offered salary for software engineers at Google in the New York City area in FY2025? | **$186,000**, across 460 certified filings with valid wages | `lca` table in `h1b.duckdb` (GCS): `employer = 'Google'`, `role_family = 'Software Engineer'`, `area_code = '35620'`, `fiscal_year = 2025`, certified, `wage_flag = 'ok'` |
 | 2 | How many lottery entries would a $175,000 machine learning engineer offer in San Jose get? | **1 entry (Level I)** if filed as Software Developer (SOC 15-1252, the most common code): Level I is $152,797 and Level II $187,075. **2 entries** if filed as Data Scientist (SOC 15-2051, Level II from $169k). The agent explains both. | `wage_levels` table (OFLC `ALC_Export.csv`, wage year 2026-27) and `lca` for which codes employers use |
-| 3 | How many H-1B visas did Meta get approved in 2025? | A clear "the data can't answer this": LCAs are filings, not approvals or visas. No SQL is run, and the agent offers Meta's certified LCAs instead. | `limitations` in `data/mappings.json` |
+| 3 | How many H-1B visas did Meta get approved in 2025? | **6,294 approved petitions in FY2025, of which 1,554 were new employment** (59 denied), with a note that an approved petition is not a visa issued. | `petitions` table (USCIS H-1B Employer Data Hub export), joined to the same `employer_id` as `lca` |
 
 **Same model with no tools and no system prompt, next to our agent** (`uv run compare.py`, traces in `traces/`):
 
 | # | No tools, no system prompt | H-1B Pay Explorer |
 | --- | --- | --- |
-| 1 | Doesn't know FY2025 data. It guesses from "late 2024 and early 2025 LCA filings" that the median is "approximately **$190,000 to $210,000**", then quotes crowdsourced levels. | **$186,000**, from 465 certified FY2025 filings in the New York-Newark-Jersey City area. |
-| 2 | Reads "lottery entries" as startup stock options first. For the H-1B it says "**Exactly 1 entry**", which was right before the 2026 wage-weighted rule and is wrong now. | **1 or 2 entries depending on the SOC code**: Level I as a Software Developer ($12k short of Level II), Level II as a Data Scientist, with 1,551 and 899 San Jose filings under each code. |
-| 3 | Says it has no access to USCIS data and points to the USCIS Employer Data Hub. | Says LCAs stop before the petition, so approvals aren't in the data, runs no SQL, and offers Meta's certified LCAs for FY2025. |
+| 1 | Doesn't know FY2025 data. It guesses from "late 2024 and early 2025 LCA filings" that the median is "approximately **$190,000 to $210,000**", then quotes crowdsourced levels. | **$186,000**, from 460 certified FY2025 filings in the New York-Newark-Jersey City area. |
+| 2 | Reads "lottery entries" as startup stock options first. For the H-1B it says "**Exactly 1 entry**", which was right before the 2026 wage-weighted rule and is wrong now. | **1 or 2 entries depending on the SOC code**: Level I as a Software Developer ($12k short of Level II), Level II as a Data Scientist, with 1,475 and 878 San Jose filings under each code. |
+| 3 | Says official 2025 data "is not yet fully available". It recalls "roughly **1,300 to 1,500**" initial approvals for FY2023 and points to the USCIS Employer Data Hub. | **6,294 approved petitions in FY2025**, from the `petitions` table: 1,554 for new employment, 1,975 transfers from other employers, 59 denied (99.1% approved). It notes that an approved petition is not a visa issued or a lottery win. |
 
 ## Plain `run_sql` agent vs this agent
 
@@ -481,14 +479,17 @@ ORDER BY pw_wage_level;
 
 ## Data
 
-Two sources, one per team member:
+Three sources from two agencies (the team rule asks for one per member; we are two):
 
 | Source | What it is | Rows | Where |
 | --- | --- | --- | --- |
 | [DOL OFLC LCA disclosure data](https://www.dol.gov/agencies/eta/foreign-labor/performance) | Every Labor Condition Application decided FY2024 Q1 - FY2026 Q3 (9 `.xlsx` files, 1 GB: FY2024 and FY2025 by quarter, FY2026 as one cumulative file) | 1,532,089 H-1B filings after deduplication (532,850 in FY2024, 572,287 in FY2025, 426,952 in FY2026 Q1-Q3) | `lca` table |
 | [OFLC prevailing wage tables, wage year 2026-27](https://flag.dol.gov/wage-data/wage-data-downloads) | Level I-IV wages for every occupation (SOC) x wage area, plus the area-to-county map | 442,919 SOC x area rows | `wage_levels`, `areas` tables |
+| [USCIS H-1B Employer Data Hub](https://www.uscis.gov/tools/reports-and-studies/h-1b-employer-data-hub) (Department of Homeland Security) | USCIS's first decision on every H-1B petition, per employer: approvals and denials for new employment, continuations, transfers and amendments, FY2024 - FY2026 | 190,139 petitioner rows → 158,870 employer-years | `petitions` table |
 
-**To rebuild:** download the 9 LCA files in a browser (dol.gov blocks scripts) into `raw/lca/`, unzip `OFLC_Wages_2026-27.zip` into `raw/pw/`, then run `uv run build.py`. **Hosting:** the full database (`data/h1b.duckdb`, 121 MB, over GitHub's 100 MB limit) lives in a Google Cloud Storage bucket. At startup the Cloud Run service copies it from GCS and DuckDB opens it read-only, so every question is answered with DuckDB SQL over data hosted in GCS. A 2% sample (`data/h1b_sample.duckdb`) and `data/mappings.json` are committed, so `uv run app.py` works from a fresh clone.
+The first two are DOL data about the step before a petition: what employers offered, and what counts as Level I-IV. The third is from a different agency and covers the step after: what USCIS approved. The LCA files have no approvals and the hub has no roles or salaries, so the agent needs both to answer "who files a lot but gets few approved".
+
+**To rebuild:** download the 9 LCA files in a browser (dol.gov blocks scripts) into `raw/lca/`, unzip `OFLC_Wages_2026-27.zip` into `raw/pw/`, export FY2024-FY2026 from the USCIS hub (Crosstab View → Download to Excel → CSV; the bulk-file page stops at FY2023) into `raw/uscis/`, then run `uv run build.py`. **Hosting:** the full database (`data/h1b.duckdb`, 124 MB, over GitHub's 100 MB limit) lives in a Google Cloud Storage bucket. At startup the Cloud Run service copies it from GCS and DuckDB opens it read-only, so every question is answered with DuckDB SQL over data hosted in GCS. A 2% sample (`data/h1b_sample.duckdb`) and `data/mappings.json` are committed, so `uv run app.py` works from a fresh clone.
 
 **Dropped:** E-3 and H-1B1 filings (not H-1B), and earlier copies of amended cases (we keep each case's latest decision). Withdrawn and denied filings are kept, with `case_status`, and excluded by default.
 
@@ -506,18 +507,20 @@ The raw data has traps that make naive SQL wrong. Each one is fixed once, offlin
 | Filings vs workers | one LCA can cover 10 positions | `total_worker_positions` documented; agent sums it for "how many jobs" |
 | Withdrawn, denied and amended cases mixed together | | dedupe by case, `case_status` enum, guardrail note |
 | No wage level for the offer itself | only the employer's chosen PW level is filed | `offer_wage_level` and `offer_lottery_entries` computed against the 2026-27 OFLC table |
+| Approvals live in another agency's file, under other spellings | USCIS writes `LOWES COMPANIES INC` and `MAPLEBEAR INC D B A INSTACART`; DOL has `Lowe's Companies, Inc.` and `Maplebear Inc. d/b/a Instacart` | the same normalization and overrides, plus a looser second-chance key, put every petitioner on the `lca` `employer_id` → `petitions` |
 
-It also writes `data/mappings.json`, the agent's offline context: every table and column with a hand-written description and its exact enum values, a glossary (LCA vs petition vs visa, wage levels, cap-exempt), join hints, four example queries, and the list of things the data cannot answer.
+It also writes `data/mappings.json`, the agent's offline context: every table and column with a hand-written description and its exact enum values, a glossary (LCA vs petition vs visa, wage levels, cap-exempt), join hints, six example queries, and the list of things the data cannot answer.
 
 **Build quality** (from `docs/build_report.md`, certified filings):
 
 | Check | Result |
 | --- | --- |
 | Usable annual wage (`wage_flag = 'ok'`) | 99.85% |
-| Resolved to an employer | 100% (126,465 raw name spellings → 107,638 employers; Amazon alone had 53) |
-| Assigned a role family | 98.7% (title rules 74%, SOC-code fallback 24%) |
+| Resolved to an employer | 100% (126,465 raw name spellings → 107,631 employers; Amazon alone had 53) |
+| Assigned a role family | 98.6% (title rules 74%, SOC-code fallback 24%) |
 | Mapped to an OFLC wage area | 99.9% |
 | Offer wage level computed | 98.4% |
+| USCIS approvals matched to an `lca` employer | 97.2% (95.1% in FY2024, 98.0% in FY2025, 98.5% in FY2026); the rest are mostly universities and hospitals under abbreviated names |
 
 **What the build taught us:**
 
@@ -525,6 +528,8 @@ It also writes `data/mappings.json`, the agent's offline context: every table an
 - **AI-era roles get their own families.** About 7,900 filings have AI in the title, and they were scattered across Software Engineer, Data Scientist, ML Engineer and even Hardware. The build now separates **AI Engineer (GenAI / LLM)** (AI engineer, GenAI, LLM, agentic, prompt engineer, applied AI) and **Forward Deployed** (forward-deployed engineers, AI scientists and PMs) from **Machine Learning Engineer** (ML, MLOps, computer vision, NLP), **Research Scientist** (applied, AI and ML scientists) and **Data Scientist**.
 - **AI engineer filings grew about 5x:** 335 certified in FY2024, 923 in FY2025, and 1,734 in just the first three quarters of FY2026.
 - **Forward Deployed** is led by Palantir (90 certified filings), Boston Consulting Group (57) and Salesforce (35).
+- **Filings and approvals are different things.** In FY2025, Meta had 1.2 certified new-employment LCA positions per approved new-employment petition and Cognizant 1.8, while Infosys had 21.5 and NVIDIA 28.2. An LCA count alone says little about how many people an employer actually brings in.
+- **FY2025 new-employment approvals** were led by Amazon (4,698), Meta (1,554), Microsoft (1,394), Google (1,042) and TikTok / ByteDance (861).
 - **FY2025 median offers:** ML Engineer $175k, Forward Deployed $163k, Research Scientist $159k, AI Engineer $138k, Data Scientist $135k, Software Engineer $130k.
 
 **Role classifier accuracy: 93/100** on a random sample of 100 filings (`evals/role_spotcheck.csv`, seed 42, every label marked with a note on each miss). The misses showed three patterns, all now fixed and covered by tests in `tests/test_app.py`: SOC 15-1299 ("computer occupations, all other") was treated as project management, "Field Engineer" on a civil-engineering code was treated as sales, and "Technical Architect" went to Software Engineer instead of IT Architect. The other two misses were judgment calls where the SOC code overrode a vague title ("Sr. Director", "Project Delivery Specialist"). The same review found "Habilitation Counselor" filed as a lawyer ("counsel"), fixed before the sample was scored.
@@ -546,22 +551,23 @@ It also writes `data/mappings.json`, the agent's offline context: every table an
 
 **Guardrails** (`check_sql`, a tool input guardrail): the model reads the rejection and rewrites its query. It rejects aggregating raw wages, filtering on employer names, job titles or raw city spellings, pay statistics without `wage_flag = 'ok'`, and anything that isn't a single `SELECT`/`WITH`. A query on `lca` without a `case_status` filter comes back with a note.
 
-**Admitting limits:** the prompt makes the agent check `limitations` first. If a question needs data we don't have (approvals, visas, actual salaries, individuals, green cards, after June 2026, exact lottery odds), it says so in one sentence, runs no SQL and suggests what it can answer instead.
+**Admitting limits:** the prompt makes the agent check `limitations` first. If a question needs data we don't have (lottery results, visas issued, approvals for one role or city, actual salaries, individuals, green cards, after the data ends, exact lottery odds), it says so in one sentence, runs no SQL and suggests what it can answer instead.
 
 `/chat` keeps the Project 1 shape (`response`, `session_id`, `tool_calls`), and every tool call carries an `agent` field. It adds `chart` (Vega-Lite) and `table` (the last result) for the page.
 
 ## Self-check (evals)
 
-`evals/checks.jsonl` holds 29 questions with gold SQL: 13 numbers, 3 offer calculations, 8 top-k rankings and 5 questions the data can't answer. Gold values come from running the gold SQL on the same database. `uv run python evals/check.py` scores the agent (`--url` scores the deployed app). None of them is a few-shot example in the prompt.
+`evals/checks.jsonl` holds 33 questions with gold SQL: 16 numbers, 3 offer calculations, 9 top-k rankings and 5 questions the data can't answer. Gold values come from running the gold SQL on the same database. `uv run python evals/check.py` scores the agent (`--url` scores the deployed app). None of them is a few-shot example in the prompt.
 
 | Date | Target | Score | Change |
 | --- | --- | --- | --- |
 | 2026-11-09 | local, full database | **26/26** (p50 12 s per answer) | first run on real data |
 | 2026-11-09 | local, full database | **3/3** new checks; 26/26 unchanged | added AI Engineer (GenAI / LLM) and Forward Deployed role families |
+| 2026-11-10 | local, full database | **33/33** (p50 15 s per answer) | added USCIS petitions: 4 approval checks and 1 new refusal |
 
 ## What it can't answer
 
-LCAs stop before the petition. The data can't tell you who won the lottery, who got a visa, what people were actually paid, anything about an individual, green-card sponsorship, or your exact odds (the pool of registrations by level isn't public). Ask "How many H-1Bs did Meta get approved?" and the agent says so, then offers Meta's certified filings and offered pay instead.
+The data can't tell you who won the lottery, who was issued a visa, what people were actually paid, anything about an individual, green-card sponsorship, or your exact odds (the pool of registrations by level isn't public). Petition approvals are per employer only, so it also can't say how many data scientists Meta got approved, or what the approved workers earn. Ask "What's my exact probability of winning the H-1B lottery next year?" and the agent says the data can't answer that, runs no SQL, and offers the number of entries your offer would get instead.
 
 ## Run it locally
 
@@ -569,14 +575,14 @@ LCAs stop before the petition. The data can't tell you who won the lottery, who 
 uv sync
 gcloud auth application-default login
 uv run app.py            # http://localhost:8000, on the committed 2% sample unless data/h1b.duckdb exists
-uv run pytest            # 32 deterministic checks, no model calls
+uv run pytest            # 49 deterministic checks, no model calls
 ```
 
 ## Files
 
 | File | Role |
 | --- | --- |
-| `build.py` | Offline build: raw DOL files → `data/h1b.duckdb`, the sample, `mappings.json`, `docs/build_report.md` |
+| `build.py` | Offline build: raw DOL and USCIS files → `data/h1b.duckdb`, the sample, `mappings.json`, `docs/build_report.md` |
 | `h1b_common.py` | Normalizers shared by the build and the agent (employers, titles, cities, wages) |
 | `employer_overrides.csv` | Hand-curated grouping of big employers' legal entities |
 | `app.py` | FastAPI server, the agent, its tools and guardrails |
@@ -589,4 +595,6 @@ uv run pytest            # 32 deterministic checks, no model calls
 - The wage levels use the 2026-27 OFLC table for every year, so levels for FY2024 filings are approximate.
 - A petition with several worksites uses the lowest level across them; the calculator assumes one worksite.
 - Role families come from titles and SOC codes; some titles are ambiguous ("Consultant", "Engineer II").
-- An LCA is a filing, not a hire. Staffing firms file many LCAs that never become petitions.
+- An LCA is a filing, not a hire. Many LCAs never become petitions.
+- Petition counts are USCIS's first decisions in a fiscal year. A petition is decided months after its LCA, so one year's filings and approvals are not the same people, and FY2026 filings stop at Q3 while FY2026 petitions cover the full year.
+- About 3% of approvals belong to petitioners we could not match to an `lca` employer (mostly universities and hospitals). They are in `petitions` with no `employer_id`.

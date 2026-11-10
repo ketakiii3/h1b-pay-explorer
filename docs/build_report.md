@@ -1,6 +1,6 @@
 # Build report
 
-Generated 2026-11-09 16:54 by `uv run build.py`.
+Generated 2026-11-10 19:54 by `uv run build.py`.
 
 | Fiscal year | Filings | Certified | Certified positions |
 | --- | --- | --- | --- |
@@ -16,6 +16,14 @@ Generated 2026-11-09 16:54 by `uv run build.py`.
 | has area_code | 99.92% | >= 97% |
 | has offer_wage_level | 98.43% | >= 90% |
 
-Employers after resolution: 107,638.
+Employers after resolution: 107,631.
 
 Role families assigned by: title_rule 1,176,854, soc_code 331,945, unmatched 23,290
+
+## USCIS petitions (H-1B Employer Data Hub)
+
+| Fiscal year | Employers | Approved | Denied | New-employment approved | Approvals matched to an LCA employer | Employers matched |
+| --- | --- | --- | --- | --- | --- | --- |
+| FY2024 | 51,085 | 399,399 | 8,230 | 139,692 | 95.1% | 86.7% |
+| FY2025 | 52,531 | 406,347 | 8,925 | 113,458 | 98.0% | 95.3% |
+| FY2026 | 55,254 | 395,176 | 11,990 | 125,992 | 98.5% | 95.3% |
