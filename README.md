@@ -20,7 +20,7 @@ Since February 27, 2026, the H-1B lottery is no longer one ticket per person. A 
 
 ## How to use it
 
-1. **Check an offer** (the ticket at the top): the headline is a sentence you can edit. Type a salary, a role and a city. The sentence fills in your lottery entries and the four stubs on the ticket light up, one per wage level, each with its official threshold. Below it you get the raise needed to reach the next level and where your salary sits among real filings for that role and metro. This runs instantly and calls no model.
+1. **Check an offer** (the ticket at the top): the headline is a question, "How many H-1B lottery entries does a $120,000 Data Scientist offer in New York City get?". The salary, role and city are boxes you can click and change. The answer appears under it and the four stubs on the ticket light up, one per wage level, each with its official threshold. Below it you get the raise needed to reach the next level and where your salary sits among real filings for that role and metro. This runs instantly and calls no model.
 2. **Ask a question** (under the ticket): click one of the example questions or type your own. The agent answers in a few sentences with a chart and the table behind it. You can sort the table and download it as a CSV.
 3. **Open "How I got this"** under any answer to see each tool call: the names it resolved, the exact SQL and what came back.
 

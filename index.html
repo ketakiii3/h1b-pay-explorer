@@ -52,17 +52,25 @@ button:disabled { opacity: .45; cursor: progress; }
 /* The ticket */
 .ticket { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 38%); background: var(--surface); border: 2px solid var(--ink); border-radius: 20px; position: relative; }
 .ticket-body { padding: 30px 32px 26px; min-width: 0; }
-h1 { font: 700 clamp(30px, 4.3vw, 54px)/1.16 var(--display); font-stretch: 82%; color: var(--ink); letter-spacing: -.012em; }
-h1 input { font: inherit; font-stretch: inherit; letter-spacing: inherit; color: var(--accent); background: transparent; border: 0; border-bottom: 3px solid var(--accent); border-radius: 0; padding: 0 .06em; max-width: 100%; min-width: 2ch; }
-h1 input:focus { outline: none; background: var(--accent-soft); }
+h1 { font: 700 clamp(26px, 3.3vw, 42px)/1.2 var(--display); font-stretch: 82%; color: var(--ink); letter-spacing: -.012em; }
+/* Each editable value is a boxed field with its name underneath, so it reads as a form inside a question. */
+h1 .slot { display: inline-flex; flex-direction: column; vertical-align: baseline; margin: 0 .08em .5em; max-width: 100%; }
+h1 .box { display: inline-flex; align-items: baseline; background: var(--accent-soft); border: 2px solid var(--accent); border-radius: 12px; padding: .02em .32em .06em; color: var(--accent); cursor: text; max-width: 100%; }
+h1 .box:hover, h1 .box:focus-within { background: var(--surface); box-shadow: 0 0 0 4px var(--accent-soft); }
+h1 .box.pick::after { content: ""; flex: none; align-self: center; margin-left: .25em; border: .2em solid transparent; border-top-color: currentColor; border-bottom: 0; }
+h1 .slot small { font: 500 12.5px/1.2 "Public Sans", sans-serif; letter-spacing: 0; color: var(--muted); margin: 5px 0 0 4px; }
+h1 input { font: inherit; font-stretch: inherit; letter-spacing: inherit; color: inherit; background: transparent; border: 0; padding: 0; min-width: 2ch; max-width: 100%; }
+h1 input:focus { outline: none; }
 h1 input::-webkit-calendar-picker-indicator { display: none !important; }
-h1 output { color: var(--accent); white-space: nowrap; }
 h1 .measure { position: absolute; visibility: hidden; white-space: pre; pointer-events: none; }
+.result { display: none; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; margin-top: 18px; }
+.result output { font: 800 clamp(34px, 4.6vw, 58px)/1 var(--display); font-stretch: 80%; color: var(--ink); }
+.result span { font-size: 16px; font-weight: 600; color: var(--muted); }
 .btn { background: var(--ink); color: var(--bg); border-radius: 99px; padding: 12px 22px; font-weight: 600; }
 .btn:hover { background: var(--accent); color: var(--accent-ink); }
-.ticket-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 20px; }
+.ticket-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 8px; }
 .ticket-actions p { font-size: 13.5px; color: var(--muted); }
-.offer-out { display: none; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+.offer-out { display: none; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
 .facts { list-style: none; display: grid; gap: 6px; font-size: 14.5px; max-width: 62ch; }
 .facts li:first-child { font-weight: 600; color: var(--ink); }
 .next { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
@@ -201,14 +209,17 @@ footer { padding: 18px 0 40px; font-size: 13px; color: var(--muted); display: gr
   <section class="ticket" aria-label="Offer check">
     <div class="ticket-body">
       <form id="offer-form">
-        <h1>A $<input id="salary" inputmode="numeric" value="120,000" autocomplete="off" aria-label="Yearly salary in dollars" />
-          <input id="role" list="roles" value="Data Scientist" autocomplete="off" aria-label="Role" /><datalist id="roles"></datalist>
-          offer in <input id="place" list="places" value="New York City" autocomplete="off" aria-label="City or metro" /><datalist id="places"></datalist>
-          gets <output id="o-count" for="salary role place" aria-live="polite">…</output> in the H-1B lottery.</h1>
+        <h1>How many H-1B lottery entries does a
+          <label class="slot"><span class="box">$<input id="salary" inputmode="numeric" value="120,000" autocomplete="off" /></span><small>Yearly salary</small></label>
+          <label class="slot"><span class="box pick"><input id="role" list="roles" value="Data Scientist" autocomplete="off" /></span><small>Role</small></label><datalist id="roles"></datalist>
+          offer in
+          <label class="slot"><span class="box pick"><input id="place" list="places" value="New York City" autocomplete="off" /></span><small>City or metro</small></label><datalist id="places"></datalist>
+          get?</h1>
         <div class="ticket-actions">
           <button class="btn" id="offer-btn" type="submit">Count my entries</button>
-          <p>Change the salary, role or city. No model is involved, so it answers at once.</p>
+          <p>Click a box to change it. The answer comes straight from the wage table, with no model involved.</p>
         </div>
+        <div class="result" id="o-result" aria-live="polite"><output id="o-count" for="salary role place"></output><span id="o-level"></span></div>
       </form>
       <div class="offer-out" id="offer-out" aria-live="polite">
         <ul class="facts" id="o-facts"></ul>
@@ -288,9 +299,9 @@ async function loadMeta() {
 // ---------- Offer check (deterministic, no model) ----------
 // The three inputs sit inside the headline, so each one is sized to its text.
 const measure = el("span", "measure"); document.querySelector("h1").appendChild(measure);
-function fit(inp) { measure.textContent = inp.value || "   "; inp.style.width = (measure.offsetWidth + 8) + "px"; }
+function fit(inp) { measure.textContent = inp.value || "   "; inp.style.width = (measure.offsetWidth + 6) + "px"; }
 const offerInputs = ["salary", "role", "place"].map($);
-offerInputs.forEach((inp) => inp.addEventListener("input", () => fit(inp)));
+offerInputs.forEach((inp) => { inp.addEventListener("input", () => fit(inp)); inp.addEventListener("change", () => checkOffer(false)); });
 const fitAll = () => offerInputs.forEach(fit);
 fitAll(); window.addEventListener("resize", fitAll);
 document.fonts?.load('700 40px "Bricolage Grotesque"').then(fitAll); document.fonts?.ready.then(fitAll); window.addEventListener("load", fitAll);
@@ -321,17 +332,19 @@ $("offer-form").addEventListener("submit", (e) => { e.preventDefault(); checkOff
 function showOffer(r) {
   $("offer-out").style.display = "block";
   if (r.error) {
-    $("o-count").textContent = "…"; drawStubs(null);
+    $("o-result").style.display = "none"; drawStubs(null);
     $("o-next").innerHTML = ""; $("o-fine").textContent = "";
     $("o-facts").innerHTML = `<li>${esc(r.error)}</li>`; return;
   }
   const n = r.wage_level ? r.lottery_entries : 0;
-  $("o-count").textContent = n ? `${n} of 4 entries` : "no entries";
+  $("o-result").style.display = "flex";
+  $("o-count").textContent = n ? `${n} of 4 entries` : "No entries";
+  $("o-level").textContent = n ? `Level ${ROMAN[r.wage_level]} for ${r.role_family} in ${r.metro_name.split(",")[0]}` : "Below Level I for this role and area";
   drawStubs(r);
   const facts = [];
   if (!r.wage_level) facts.push(`That is below Level I for this role and area (${full$(r.thresholds.level_1)}), so the filing can't be certified at this wage.`);
   else facts.push(r.raise_needed_for_next_level != null
-    ? `Level ${ROMAN[r.wage_level]}. ${full$(r.raise_needed_for_next_level)} more reaches Level ${ROMAN[r.wage_level + 1]} and ${r.wage_level + 1} entries.`
+    ? `${full$(r.raise_needed_for_next_level)} more reaches Level ${ROMAN[r.wage_level + 1]} and ${r.wage_level + 1} entries.`
     : "Level IV, the top level: the most entries an offer can get.");
   if (r.peer_filings_fy2025_on >= 5) facts.push(`It beats ${Math.round(r.salary_percentile_among_peer_filings)}% of ${r.peer_filings_fy2025_on.toLocaleString()} certified ${r.role_family} filings in this metro since FY2025 (median ${k$(r.peer_median_offer)}).`);
   facts.push(`Wage table: SOC ${r.soc_code} ${r.soc_title}, ${r.metro_name}.`);
